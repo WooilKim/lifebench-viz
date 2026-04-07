@@ -153,7 +153,7 @@
                         </div>
                     </div>
                     <div class="text-right text-sm text-teal-400">
-                        
+                        <div>실행 시간: ~5-10분/인물</div>
                         <div class="text-xs text-slate-500 mt-1">LLM 호출: ~3-4회/인물</div>
                     </div>
                 </div>
@@ -247,6 +247,7 @@
 <div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">출력</span><span class="font-semibold text-white text-sm">persona.json 저장</span></div><div class="text-xs text-slate-400 font-mono mb-1">각 사용자 폴더</div><div class="text-xs text-slate-500 italic mb-2">gen_persons() 결과로 relation 배열이 채워진 최종 페르소나. 영어로 번역된 버전이 각 사용자 폴더에 저장됨.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">완성된 페르소나 + 인간관계망</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">persona.json</span></div></div><div class="flex gap-1"></div></div>
     </div>
 </div>
+
         <div id="step-draft" class="mb-16">
             <div class="step-card bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-8 border border-purple-600">
                 <div class="flex items-center justify-between mb-6">
@@ -257,7 +258,10 @@
                             <p class="text-purple-200 mt-1">연간 생활 이벤트 타임라인 초안 생성</p>
                         </div>
                     </div>
-                    
+                    <div class="text-right">
+                        <div class="text-sm text-purple-300">실행 시간</div>
+                        <div class="text-2xl font-bold">~30-60분</div>
+                    </div>
                 </div>
 
                 <!-- Tabs -->
@@ -414,6 +418,7 @@ Finance（15개）
 <div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">출력</span><span class="font-semibold text-white text-sm">daily_draft.json</span></div><div class="text-xs text-slate-400 font-mono mb-1">각 사용자 폴더</div><div class="text-xs text-slate-500 italic mb-2">Scheduler 전체 결과가 월별/일별 구조로 저장. Simulator가 이 파일을 하루 단위로 읽어 상세 이벤트를 생성.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">충돌 해결된 타임라인</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">daily_draft.json (월별/일별 이벤트)</span></div></div><div class="flex gap-1"></div></div>
     </div>
 </div>
+
         <div id="step-simulator" class="mb-16">
             <div class="step-card bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-8 border border-green-600">
                 <div class="flex items-center justify-between mb-6">
@@ -424,7 +429,10 @@ Finance（15개）
                             <p class="text-green-200 mt-1">상세 이벤트 + 건강 상태 시뮬레이션</p>
                         </div>
                     </div>
-                    
+                    <div class="text-right">
+                        <div class="text-sm text-green-300">실행 시간</div>
+                        <div class="text-2xl font-bold">~1-2시간</div>
+                    </div>
                 </div>
 
                 <!-- Tabs -->
@@ -506,6 +514,180 @@ Finance（15개）
                     </div>
                 </div>
 
+                <div class="tab-content hidden" data-step="simulator" data-tab="flow">
+    <h3 class="text-xl font-bold text-green-300 mb-2">Simulator 내부 실행 흐름</h3>
+    <p class="text-slate-400 text-sm mb-4">📋 프롬프트 · 📊 데이터 예시 버튼을 클릭하세요.</p>
+    <div class="flex flex-col gap-0 max-w-3xl">
+<div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">1회</span><span class="font-semibold text-white text-sm">FuzzyMemoryBuilder.build_all_summaries()</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/fuzzy_memory_builder.py</div><div class="text-xs text-slate-500 italic mb-2">daily_draft를 평탄화한 event_transfer.json으로 월별·누적 요약 생성. Mind.get_plan4()가 "지난 달에 무슨 일이 있었나"를 참조하는 기반.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">event_transfer.json (daily_draft 평탄화)</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">monthly_summaries.json + cumulative_summaries.json</span></div></div><div class="flex gap-1"><div class="mt-1"><button onclick="var e=document.getElementById('io-s-n1');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n1" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// event_transfer.json
+[{"date": ["2025-01-01"],
+  "name": "New Year Morning Run",
+  "description": "5km run..."},
+ {"date": ["2025-01-15"],
+  "name": "CFA Study Start"},
+ ...]</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// monthly_summaries.json
+{"2025-01": "January: Feng Haoran
+  started with disciplined morning runs.
+  CFA studies began mid-month...",
+ "2025-02": "..."}
+
+// cumulative_summaries.json
+{"2025-01": "Life pattern: early riser,
+  3x/week runner, works at Huatai..."}</pre></div></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div><span class="text-xs text-slate-500 italic ml-2">매일 반복 — 병렬 스레드 (max_workers=30)</span></div>
+<div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">매일</span><span class="font-semibold text-white text-sm">Mind.get_plan4(date)</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/mind.py</div><div class="text-xs text-slate-500 italic mb-2">FuzzyMemory에서 해당 월 요약을 읽고, daily_draft에서 당일 참조 이벤트를 가져와 당일 계획 컨텍스트 구성. LLM 없음 — 순수 데이터 조회.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">FuzzyMemory 월별 요약 + daily_draft 당일 참조</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">당일 계획 컨텍스트 (plan dict)</span></div></div><div class="flex gap-1"><div class="mt-1"><button onclick="var e=document.getElementById('io-s-n2');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n2" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// FuzzyMemory (월 요약)
+"January: disciplined morning runs,
+ CFA studies begin..."
+
+// daily_draft 당일 이벤트
+{"date": "2025-01-01",
+ "events": [
+   {"name": "New Year Morning Run"}
+ ]}</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"date": "2025-01-01",
+ "reference_events": [
+   {"name": "New Year Morning Run",
+    "time": "06:40~08:00"}
+ ],
+ "memory_context": "Early riser, runner...",
+ "monthly_summary": "Jan: disciplined..."}</pre></div></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">Mind._generate_subjective_thought()</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/mind.py <span class="text-yellow-400 text-xs">→ template_daily_event_subjective_plan</span></div><div class="text-xs text-slate-500 italic mb-2">인물이 "나"로서 오늘 일정을 주관적으로 계획. 성격(ENTJ)·기억(CFA 공부 시작 예정)·날짜(공휴일)를 반영. 현실 제약은 이 단계에서 고려하지 않음.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">plan (당일 참조) + cognition (자아인식+기억)</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">1인칭 주관적 계획 JSON</span></div></div><div class="flex gap-1"><div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-daily-event-subjective-plan', 'template_daily_event_subjective_plan')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 프롬프트</button><div id="p-template-daily-event-subjective-plan" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-daily-event-subjective-plan-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-daily-event-subjective-plan-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-1"><button onclick="var e=document.getElementById('io-s-n3');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n3" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// plan
+{"reference_events": [
+  {"name": "New Year Morning Run"}
+ ]}
+
+// cognition (자아인식 + 장기기억)
+{"self_awareness": "ENTJ, disciplined",
+ "long_term_memory": [
+  "2025-01-02: CFA 공부 시작 예정"
+ ]}</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"thought": "새해 첫날, 아침 일찍 유악산에서
+  달리기를 해야겠다. 오후엔 가족에게
+  전화하고 2025 목표를 정리할 계획.",
+ "plan": [
+  {"time": "06:40", "activity": "유악산 달리기"},
+  {"time": "13:30", "activity": "가족 새해 통화"},
+  {"time": "14:00", "activity": "2025 목표 정리"}
+ ]}</pre></div></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">Mind._generate_objective_events()</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/mind.py <span class="text-yellow-400 text-xs">→ template_daily_event_objective_optimize</span></div><div class="text-xs text-slate-500 italic mb-2">주관적 계획에 현실 제약 반영. 빈 시간대 채우기, 일상 패턴(출퇴근) 추가, 이전 날과 차별화. 날씨·교통·피로도 등 객관적 요소 고려.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">subjective_thought + date</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">시간순 이벤트 배열 (현실 제약 반영)</span></div></div><div class="flex gap-1"><div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-daily-event-objective-optimize', 'template_daily_event_objective_optimize')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 프롬프트</button><div id="p-template-daily-event-objective-optimize" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-daily-event-objective-optimize-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-daily-event-objective-optimize-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-1"><button onclick="var e=document.getElementById('io-s-n4');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n4" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// subjective_thought
+{"plan": [
+  {"time": "06:40", "activity": "달리기"},
+  {"time": "13:30", "activity": "가족 통화"}
+ ]}
+// date: "2025-01-01 (New Year, Wed)"</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">[{"time": "06:00~06:40", "name": "기상·준비"},
+ {"time": "06:40~08:00",
+  "name": "New Year Morning Run",
+  "location_type": "outdoor_sports"},
+ {"time": "08:00~08:30", "name": "귀가·샤워"},
+ {"time": "08:30~09:30", "name": "아침식사"},
+ {"time": "13:30~14:45",
+  "name": "가족 새해 영상통화"},
+ ... (공백 시간대 채워짐)]</pre></div></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">Mind.map() + _adjust_event_trajectory()</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/mind.py <span class="text-yellow-400 text-xs">→ template_event_traffic_adjust</span></div><div class="text-xs text-slate-500 italic mb-2">location_type("outdoor_sports") → 실제 POI 검색(고더지도) → 상세 주소+GPS 배정. 이동 시간 계산하여 이벤트 사이에 "버스 이동 15분" 같은 이동 이벤트 자동 삽입.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">objective_events → POI 검색 → 이동경로 조정</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">최종 이벤트 시퀀스 (실제 주소 + 이동시간)</span></div></div><div class="flex gap-1"><div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-event-traffic-adjust', 'template_event_traffic_adjust')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 프롬프트</button><div id="p-template-event-traffic-adjust" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-event-traffic-adjust-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-event-traffic-adjust-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-1"><button onclick="var e=document.getElementById('io-s-n5');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n5" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// objective_events
+[{"time": "06:40~08:00",
+  "name": "New Year Morning Run",
+  "location_type": "outdoor_sports"}, ...]
+
+// POI 검색 결과
+[{"name": "岳麓山风景区",
+  "address": "岳麓区登高路58号",
+  "travel_time": "15min by bus"}]</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">[{"time": "06:00~06:40",
+  "name": "기상 및 이동 준비",
+  "location": "Jinxing Residential, Shuangtang Rd"},
+ {"time": "06:40~06:55",
+  "name": "버스 이동 (305번)",
+  "note": "집→유악산 15분"},
+ {"time": "06:55~08:10",
+  "name": "New Year Morning Run",
+  "location": "Yuelu Mountain Scenic Area,
+    Yuelu District, Changsha"},
+ ...]</pre></div></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">Mind._generate_reflection()</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/mind.py <span class="text-yellow-400 text-xs">→ template_daily_reflection</span></div><div class="text-xs text-slate-500 italic mb-2">하루 마무리 회고 생성. 오늘 감정·자아 통찰·후속 약속 기록·생각 반성 포함. 미래 계획에 반드시 날짜 명시 → 장기기억 업데이트 시 활용.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">adjusted_events + plan + date</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">하루 회고 + 미래 계획 JSON</span></div></div><div class="flex gap-1"><div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-daily-reflection', 'template_daily_reflection')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 프롬프트</button><div id="p-template-daily-reflection" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-daily-reflection-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-daily-reflection-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-1"><button onclick="var e=document.getElementById('io-s-n6');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n6" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// 오늘의 최종 이벤트
+[{"time": "06:55~08:10",
+  "name": "New Year Morning Run",
+  "location": "Yuelu Mountain"},
+ {"time": "13:30~14:45",
+  "name": "가족 새해 영상통화"}, ...]
+// date: "2025-01-01"</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"date": "2025-01-01",
+ "thought": "새해 첫날을 달리기로 시작했다.
+  유악산의 아침 공기가 상쾌했다.
+  가족과의 통화도 따뜻했다.",
+ "future_plans": [
+  {"date": "2025-01-02",
+   "plan": "CFA 공부 시작 (하루 2시간)"},
+  {"date": "2025-01-15",
+   "plan": "1차 모의고사 응시"}
+ ]}</pre></div></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">Mind._update_long_term_memory()</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/mind.py <span class="text-yellow-400 text-xs">→ template_update_long_term_memory</span></div><div class="text-xs text-slate-500 italic mb-2">회고의 미래 계획·핵심 이벤트·고정 선호만 장기기억에 저장. 이미 지난 미래 이벤트·1회성 사건 제거. 이 기억이 다음 날 get_plan4()의 cognition으로 들어감.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">plan + reflection</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">업데이트된 장기기억 JSON</span></div></div><div class="flex gap-1"><div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-update-long-term-memory', 'template_update_long_term_memory')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 프롬프트</button><div id="p-template-update-long-term-memory" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-update-long-term-memory-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-update-long-term-memory-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-1"><button onclick="var e=document.getElementById('io-s-n7');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n7" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// reflection
+{"thought": "새해 달리기로 시작...",
+ "future_plans": [
+  {"date": "2025-01-02", "plan": "CFA 공부 시작"}
+ ]}
+// 기존 장기기억
+{"key_events": [], "upcoming_plans": []}</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"long_term_memory": {
+  "key_events": [
+   "2025-01-01: 새해 유악산 달리기 (건강 습관 강화)"
+  ],
+  "fixed_preferences": [
+   "매일 아침 달리기", "가족과 명절 영상통화"
+  ],
+  "upcoming_plans": [
+   "2025-01-02: CFA 공부 시작 (하루 2시간)",
+   "2025-01-15: 1차 모의고사"
+  ]
+}}</pre></div></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div><span class="text-xs text-slate-500 italic ml-2">월 단위 실행</span></div>
+<div class="bg-blue-900 border border-blue-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-blue-700 text-blue-200 px-2 py-0.5 rounded">LLM 월별</span><span class="font-semibold text-white text-sm">EventRefiner.health_analysis()</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/event_refiner.py <span class="text-yellow-400 text-xs">→ template_impact_events_analysis</span></div><div class="text-xs text-slate-500 italic mb-2">월별 이벤트를 분석해 15일 중간·말일 건강 상태 스냅샷 생성. 입력 데이터에 없어도 논리적으로 추론한 변화 이벤트 3-5개 추가 (날씨·업무·부상 등). QA 추론 문제의 핵심 근거.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">persona + 월별 이벤트 + 이전 달 건강 상태</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">15일/말일 건강 상태 + 변화 노드</span></div></div><div class="flex gap-1"><div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-impact-events-analysis', 'template_impact_events_analysis')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 프롬프트</button><div id="p-template-impact-events-analysis" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-impact-events-analysis-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-impact-events-analysis-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-1"><button onclick="var e=document.getElementById('io-s-n8');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n8" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// persona
+{"age": 27, "body": {"weight": 75, "BMI": 20.9}}
+
+// 이전 달 말 건강 상태
+{"weight_record": "75kg",
+ "sleep_time": {"bedtime": "23:00", "wakeup": "06:30"}}
+
+// 1월 이벤트 (일별)
+[{"date":"2025-01-01","events":[...]},
+ {"date":"2025-01-20","events":["독감"]}]</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"mid_month_state": {
+  "weight_record": "74.5kg",
+  "sleep_time": {"bedtime": "23:30", "wakeup": "06:40"},
+  "health_status": {"summary": "독감 회복 중"}
+ },
+ "end_of_month_state": {
+  "weight_record": "74.2kg",
+  "health_status": {"summary": "완전 회복"}
+ },
+ "change_nodes": [
+  {"date": "2025-01-20",
+   "event": "독감 발병",
+   "impact": "수면 패턴 변화, 체중 0.3kg 감소"}
+ ]}</pre></div></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">EventFormatter._extract_events()</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/event_formatter.py <span class="text-yellow-400 text-xs">→ template_event_format_sequence</span></div><div class="text-xs text-slate-500 italic mb-2">하루의 비정형 이벤트 텍스트를 최대 20개의 구조화된 JSON으로 변환. 인접 이벤트 병합, type/participant/location/date 표준 필드 채우기.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">adjusted_events + poi_data + date</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">daily_event.json 최종 이벤트 (최대 20개/일)</span></div></div><div class="flex gap-1"><div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-event-format-sequence', 'template_event_format_sequence')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 프롬프트</button><div id="p-template-event-format-sequence" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-event-format-sequence-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-event-format-sequence-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-1"><button onclick="var e=document.getElementById('io-s-n9');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n9" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">"06:00-06:40 기상 및 준비
+  (집, 샤워, 옷 입기...)
+06:40-06:55 버스 이동
+  (버스 305번, Yuelu Mountain행)
+06:55-08:10 새해 달리기
+  (Yuelu Mountain, 5km...)"
+
+// date: "2025-01-01"</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"event_id": "1",
+ "name": "Morning Preparations and Departure",
+ "date": ["From 06:00:00 to 06:55:00 on Jan 1"],
+ "type": "Personal Life",
+ "description": "Awakened by biological clock,
+   washed up, changed into running gear...",
+ "participant": [
+   {"name": "Feng Haoran", "relation": "Self"}
+ ],
+ "location": "Jinxing Residential Community,
+   Shuangtang Rd, Yuelu District"}
+// + 하루 최대 19개 더</pre></div></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">출력</span><span class="font-semibold text-white text-sm">daily_event.json</span></div><div class="text-xs text-slate-400 font-mono mb-1">각 사용자 폴더</div><div class="text-xs text-slate-500 italic mb-2">EventFormatter 전체 365일 결과 합산. Simulator의 최종 산출물. QA 생성, Phone Data 생성의 인풋으로 사용.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">EventFormatter 전체 결과</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">4878개 이벤트 (fenghaoran 기준)</span></div></div><div class="flex gap-1"></div></div>
+    </div>
+    <div class="mt-4 p-3 bg-slate-800 rounded text-xs text-slate-400"><p>• <span class="text-purple-400">하루 처리</span>: 2~6주 단위 병렬 스레드 (max_workers=30)</p><p>• <span class="text-blue-400">건강/생활 분석</span>: 월별 1회 (모든 일별 처리 후)</p><p>• <span class="text-yellow-400">총 LLM 호출</span>: 하루당 약 7회 × 365일 + 월별 분석 ≈ 2,600회/인물</p></div>
+</div>
+
         <div id="step-phone" class="mb-16">
             <div class="step-card bg-gradient-to-br from-orange-900 to-orange-800 rounded-lg p-8 border border-orange-600">
                 <div class="flex items-center justify-between mb-6">
@@ -516,16 +698,16 @@ Finance（15개）
                             <p class="text-orange-200 mt-1">7가지 스마트폰 데이터 생성 (병렬 실행)</p>
                         </div>
                     </div>
-                    
+                    <div class="text-right">
+                        <div class="text-sm text-orange-300">실행 시간</div>
+                        <div class="text-2xl font-bold">~30-45분</div>
+                    </div>
                 </div>
 
                 <!-- Tabs -->
                 <div class="flex gap-2 mb-6 border-b border-orange-700">
                     <button class="tab-button active px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="phone" data-tab="overview">개요</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="phone" data-tab="flow">🔀 내부 플로우</button>
-                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="phone" data-tab="code">코드 경로</button>
-                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="phone" data-tab="generators">7개 생성기</button>
-                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="phone" data-tab="output">아웃풋 예시</button>
 
 
                 </div>
@@ -590,357 +772,62 @@ Finance（15개）
 
 
                 <div class="tab-content hidden" data-step="phone" data-tab="flow">
-                    <div class="space-y-4">
-                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                            <h3 class="text-xl font-bold mb-3 text-orange-300">🔄 Phone Data Generation 내부 실행 흐름</h3>
-                            <p class="text-gray-300 text-sm mb-4">7개 생성기가 병렬로 실행되어 각각의 스마트폰 데이터 생성</p>
-                        </div>
+    <h3 class="text-xl font-bold text-orange-300 mb-2">Phone Data Generation 내부 흐름</h3>
+    <p class="text-slate-400 text-sm mb-4">날짜별 반복. 📊 버튼으로 아웃풋 예시를 확인하세요.</p>
+    <div class="flex flex-col gap-0 max-w-4xl">
+<div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">입력</span><span class="font-semibold text-white text-sm">persona.json + daily_event.json (날짜별)</span></div><div class="text-xs text-slate-400 font-mono mb-1">run/phone_gen.py → event/phone_data_gen.py</div><div class="text-xs text-slate-500 italic mb-2">날짜별 반복. 각 날짜의 이벤트 + 페르소나를 인풋으로 7개 생성기 병렬 실행.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">persona + 해당 날짜 daily_event</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">7개 생성기 초기화</span></div></div><div class="flex gap-1"><div class="mt-1"><button onclick="var e=document.getElementById('io-ph-n1');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-ph-n1" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// persona (핵심)
+{"name":"Feng Haoran","hobbies":["running","basketball"],
+ "relation":[{"name":"Gao Yunfei","relation":"Close friend"}]}
 
-                        <!-- Parallel Generators -->
-                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                            <h4 class="font-semibold text-orange-300 mb-4 flex items-center gap-2">
-                                <span>⚡</span>
-                                <span>병렬 실행 생성기 (7개 동시 실행)</span>
-                            </h4>
-                            <div class="grid grid-cols-2 gap-3">
-                                <!-- Generator 1: Communication -->
-                                <div class="bg-slate-800 rounded-lg p-4 border-2 border-purple-600 hover:border-purple-400 transition-colors cursor-pointer" onclick="console.log('CommunicationOperationGenerator: call.json + sms.json 생성')">
-                                    <div class="flex items-start gap-3">
-                                        <div class="flex-shrink-0 bg-purple-700 text-white px-2 py-1 rounded font-bold text-xs">LLM</div>
-                                        <div class="flex-1">
-                                            <div class="font-bold text-base text-purple-200 mb-1">CommunicationOperationGenerator</div>
-                                            <div class="text-xs text-gray-400 mb-2">전화 통화 + 문자 메시지 생성</div>
-                                            <div class="text-xs">
-                                                <div><span class="text-blue-400">📤</span> call.json, sms.json</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Generator 2: Push -->
-                                <div class="bg-slate-800 rounded-lg p-4 border-2 border-purple-600 hover:border-purple-400 transition-colors cursor-pointer" onclick="console.log('PushOperationGenerator: push.json 생성')">
-                                    <div class="flex items-start gap-3">
-                                        <div class="flex-shrink-0 bg-purple-700 text-white px-2 py-1 rounded font-bold text-xs">LLM</div>
-                                        <div class="flex-1">
-                                            <div class="font-bold text-base text-purple-200 mb-1">PushOperationGenerator</div>
-                                            <div class="text-xs text-gray-400 mb-2">앱 푸시 알림 생성</div>
-                                            <div class="text-xs">
-                                                <div><span class="text-blue-400">📤</span> push.json</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Generator 3: Note & Calendar -->
-                                <div class="bg-slate-800 rounded-lg p-4 border-2 border-purple-600 hover:border-purple-400 transition-colors cursor-pointer" onclick="console.log('NoteCalendarOperationGenerator: note.json + calendar.json 생성')">
-                                    <div class="flex items-start gap-3">
-                                        <div class="flex-shrink-0 bg-purple-700 text-white px-2 py-1 rounded font-bold text-xs">LLM</div>
-                                        <div class="flex-1">
-                                            <div class="font-bold text-base text-purple-200 mb-1">NoteCalendarOperationGenerator</div>
-                                            <div class="text-xs text-gray-400 mb-2">메모 + 캘린더 일정 생성</div>
-                                            <div class="text-xs">
-                                                <div><span class="text-blue-400">📤</span> note.json, calendar.json</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Generator 4: Gallery -->
-                                <div class="bg-slate-800 rounded-lg p-4 border-2 border-purple-600 hover:border-purple-400 transition-colors cursor-pointer" onclick="console.log('GalleryOperationGenerator: photo.json (메타데이터만) 생성')">
-                                    <div class="flex items-start gap-3">
-                                        <div class="flex-shrink-0 bg-purple-700 text-white px-2 py-1 rounded font-bold text-xs">LLM</div>
-                                        <div class="flex-1">
-                                            <div class="font-bold text-base text-purple-200 mb-1">GalleryOperationGenerator</div>
-                                            <div class="text-xs text-gray-400 mb-2">사진 메타데이터 생성</div>
-                                            <div class="text-xs">
-                                                <div><span class="text-blue-400">📤</span> photo.json</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Generator 5: Fitness & Health -->
-                                <div class="bg-slate-800 rounded-lg p-4 border-2 border-purple-600 hover:border-purple-400 transition-colors cursor-pointer" onclick="console.log('FitnessHealthOperationGenerator: fitness_health.json 생성')">
-                                    <div class="flex items-start gap-3">
-                                        <div class="flex-shrink-0 bg-purple-700 text-white px-2 py-1 rounded font-bold text-xs">LLM</div>
-                                        <div class="flex-1">
-                                            <div class="font-bold text-base text-purple-200 mb-1">FitnessHealthOperationGenerator</div>
-                                            <div class="text-xs text-gray-400 mb-2">피트니스 + 건강 데이터 생성</div>
-                                            <div class="text-xs">
-                                                <div><span class="text-blue-400">📤</span> fitness_health.json</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Generator 6: Chat -->
-                                <div class="bg-slate-800 rounded-lg p-4 border-2 border-purple-600 hover:border-purple-400 transition-colors cursor-pointer" onclick="console.log('ChatOperationGenerator: agent_chat.json 생성')">
-                                    <div class="flex items-start gap-3">
-                                        <div class="flex-shrink-0 bg-purple-700 text-white px-2 py-1 rounded font-bold text-xs">LLM</div>
-                                        <div class="flex-1">
-                                            <div class="font-bold text-base text-purple-200 mb-1">ChatOperationGenerator</div>
-                                            <div class="text-xs text-gray-400 mb-2">채팅 대화 생성</div>
-                                            <div class="text-xs">
-                                                <div><span class="text-blue-400">📤</span> agent_chat.json</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Generator 7: Perception -->
-                                <div class="bg-slate-800 rounded-lg p-4 border-2 border-gray-600 hover:border-gray-400 transition-colors cursor-pointer col-span-2" onclick="console.log('PerceptionDataGenerator: perception.json 생성 (LLM 없음)')">
-                                    <div class="flex items-start gap-3">
-                                        <div class="flex-shrink-0 bg-gray-700 text-white px-2 py-1 rounded font-bold text-xs">함수</div>
-                                        <div class="flex-1">
-                                            <div class="font-bold text-base text-gray-200 mb-1">PerceptionDataGenerator</div>
-                                            <div class="text-xs text-gray-400 mb-2">위치 + 네트워크 센서 데이터 생성</div>
-                                            <div class="text-xs">
-                                                <div><span class="text-blue-400">📤</span> perception.json</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Common Input -->
-                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                            <h4 class="font-semibold text-orange-300 mb-3">공통 인풋</h4>
-                            <div class="text-sm text-gray-400 space-y-2">
-                                <div class="flex items-start gap-2">
-                                    <span class="text-green-400">📥</span>
-                                    <div>
-                                        <div class="font-semibold text-gray-300">persona.json</div>
-                                        <div class="text-xs">인물 프로필 (연락처, 습관, 성격)</div>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-2">
-                                    <span class="text-green-400">📥</span>
-                                    <div>
-                                        <div class="font-semibold text-gray-300">daily_event.json</div>
-                                        <div class="text-xs">상세 이벤트 데이터 (Simulator 출력)</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Legend -->
-                        <div class="bg-slate-900 rounded-lg p-4 border border-slate-700">
-                            <h4 class="font-semibold text-gray-300 mb-2">범례</h4>
-                            <div class="grid grid-cols-2 gap-2 text-sm">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-4 h-4 border-2 border-purple-600 rounded"></div>
-                                    <span class="text-gray-400">보라색 테두리 = LLM 호출</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <div class="w-4 h-4 border-2 border-gray-600 rounded"></div>
-                                    <span class="text-gray-400">회색 테두리 = 일반 함수</span>
-                                </div>
-                            </div>
-                            <div class="mt-2 text-xs text-gray-500">💡 각 생성기를 클릭하면 콘솔에 상세 정보 출력</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tab-content hidden" data-step="phone" data-tab="code">
-                    <div class="space-y-4">
-                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                            <h3 class="text-xl font-bold mb-4 text-green-400">📂 실행 파일 경로</h3>
-                            <div class="space-y-3">
-                                <div>
-                                    <div class="text-gray-400 text-sm mb-1">메인 실행 파일</div>
-                                    <div class="code-path">run/phone_gen.py</div>
-                                </div>
-                                <div>
-                                    <div class="text-gray-400 text-sm mb-1">핵심 로직</div>
-                                    <div class="code-path">event/phone_data_gen.py</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                            <h3 class="text-xl font-bold mb-4 text-blue-400">🔧 생성기 클래스</h3>
-                            <div class="space-y-3 text-sm">
-                                <div>
-                                    <div class="function-name mb-1">CommunicationOperationGenerator</div>
-                                    <div class="text-gray-400 ml-4">전화 + 문자 생성 (context: '手机数据专家和深度用户')</div>
-                                </div>
-                                <div>
-                                    <div class="function-name mb-1">PushOperationGenerator</div>
-                                    <div class="text-gray-400 ml-4">푸시 알림 생성 (뉴스, 앱 알림)</div>
-                                </div>
-                                <div>
-                                    <div class="function-name mb-1">NoteCalendarOperationGenerator</div>
-                                    <div class="text-gray-400 ml-4">메모 + 캘린더 일정 생성</div>
-                                </div>
-                                <div>
-                                    <div class="function-name mb-1">GalleryOperationGenerator</div>
-                                    <div class="text-gray-400 ml-4">사진 메타데이터 생성 (실제 이미지 생성 X)</div>
-                                </div>
-                                <div>
-                                    <div class="function-name mb-1">FitnessHealthOperationGenerator</div>
-                                    <div class="text-gray-400 ml-4">피트니스 데이터 생성 (걸음수, 심박수, 수면)</div>
-                                </div>
-                                <div>
-                                    <div class="function-name mb-1">ChatOperationGenerator</div>
-                                    <div class="text-gray-400 ml-4">채팅 대화 생성 (WeChat 스타일)</div>
-                                </div>
-                                <div>
-                                    <div class="function-name mb-1">PerceptionDataGenerator</div>
-                                    <div class="text-gray-400 ml-4">감지 데이터 생성 (위치, 네트워크)</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                    <div class="space-y-4">
-                        <p class="text-gray-300 mb-4">각 생성기의 역할과 생성 규칙</p>
-
-                        <div class="accordion-item">
-                            <div class="accordion-header" onclick="toggleAccordion(this)">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-semibold">1. CommunicationOperationGenerator (전화 + 문자)</span>
-                                    <span class="text-xl">▼</span>
-                                </div>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="p-4 bg-slate-900 space-y-3">
-                                    <div>
-                                        <div class="text-sm font-semibold text-orange-300 mb-1">생성 규칙</div>
-                                        <ul class="text-sm text-gray-300 list-disc list-inside space-y-1">
-                                            <li>각 이벤트의 참여자와 전화/문자 매핑</li>
-                                            <li>직장: 업무 관련 통화 (평균 5-10분)</li>
-                                            <li>가족: 개인 통화 (평균 15-30분)</li>
-                                            <li>친구: 짧은 통화 + 많은 문자</li>
-                                            <li>문자 내용은 이벤트 컨텍스트 반영</li>
-                                        </ul>
-                                    </div>
-                                    <div>
-                                        <div class="text-sm font-semibold text-orange-300 mb-1">Context 프롬프트</div>
-                                        <div class="text-xs text-gray-400 bg-slate-800 p-2 rounded">
-                                            '你是一位手机数据专家和深度用户，深谙用户使用手机的习惯和行为模式'
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <div class="accordion-header" onclick="toggleAccordion(this)">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-semibold">2. FitnessHealthOperationGenerator (피트니스)</span>
-                                    <span class="text-xl">▼</span>
-                                </div>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="p-4 bg-slate-900 space-y-3">
-                                    <div>
-                                        <div class="text-sm font-semibold text-orange-300 mb-1">생성 규칙</div>
-                                        <ul class="text-sm text-gray-300 list-disc list-inside space-y-1">
-                                            <li>daily_event의 운동 이벤트 → 상세 피트니스 데이터 변환</li>
-                                            <li>걸음수: 하루 평균 6000-12000보</li>
-                                            <li>심박수: 휴식 시 60-80bpm, 운동 시 120-160bpm</li>
-                                            <li>수면 데이터: 취침/기상 시간 + 수면 단계</li>
-                                            <li>건강 상태(health_analysis)와 일관성 유지</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <div class="accordion-header" onclick="toggleAccordion(this)">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-semibold">3. ChatOperationGenerator (채팅)</span>
-                                    <span class="text-xl">▼</span>
-                                </div>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="p-4 bg-slate-900 space-y-3">
-                                    <div>
-                                        <div class="text-sm font-semibold text-orange-300 mb-1">생성 규칙</div>
-                                        <ul class="text-sm text-gray-300 list-disc list-inside space-y-1">
-                                            <li>각 이벤트마다 자연스러운 대화 생성</li>
-                                            <li>친구와 저녁 약속 → "오늘 7시에 어디서 만날까?" 스타일 대화</li>
-                                            <li>가족 통화 예고 → "엄마, 오늘 저녁 통화할게요" 메시지</li>
-                                            <li>이모티콘, 스티커 포함 (중국 WeChat 스타일)</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <div class="accordion-header" onclick="toggleAccordion(this)">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-semibold">4. PushOperationGenerator (푸시 알림)</span>
-                                    <span class="text-xl">▼</span>
-                                </div>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="p-4 bg-slate-900 space-y-3">
-                                    <div>
-                                        <div class="text-sm font-semibold text-orange-300 mb-1">생성 규칙</div>
-                                        <ul class="text-sm text-gray-300 list-disc list-inside space-y-1">
-                                            <li>인물의 직업/관심사에 맞는 앱 알림</li>
-                                            <li>금융 어드바이저 → 금융 뉴스, 주식 알림</li>
-                                            <li>운동 좋아함 → 피트니스 앱 알림</li>
-                                            <li>일반: 날씨, 택배, 소셜미디어 알림</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tab-content hidden" data-step="phone" data-tab="output">
-                    <div class="space-y-4">
-                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                            <h3 class="text-xl font-bold mb-3 text-blue-400">📤 Output 1: call.json</h3>
-                            <pre><code class="language-json">[
-  {
-    "type": "call",
-    "event_id": "5",
-    "phoneNumber": "+8613917128765",
-    "contactName": "Li Xiuying",
-    "datetime": "2025-01-01 13:30:00",
-    "datetime_end": "2025-01-01 13:45:20",
-    "direction": 0,
-    "call_result": "Connected",
-    "phone_id": 0
-  }
-]</code></pre>
-                        </div>
-
-                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                            <h3 class="text-xl font-bold mb-3 text-blue-400">📤 Output 2: sms.json</h3>
-                            <pre><code class="language-json">[
-  {
-    "type": "sms",
-    "event_id": "2",
-    "message_content": "Happy New Year! How was your New Year's Day morning run? The air here is exceptionally fresh, and I felt invigorated after the run. How is the weather over there?",
-    "contactName": "Gao Yunfei",
-    "phoneNumber": "+8613787054321",
-    "datetime": "2025-01-01 08:20:15",
-    "message_type": "Send",
-    "phone_id": 0
-  }
-]</code></pre>
-                        </div>
-
-                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
-                            <h4 class="font-semibold text-yellow-300 mb-2">💡 주요 특징</h4>
-                            <ul class="text-sm text-gray-300 space-y-1 list-disc list-inside">
-                                <li>event_id 연결: 각 데이터가 어떤 이벤트에서 발생했는지 추적 가능</li>
-                                <li>실제 중국 전화번호 형식 (+86으로 시작)</li>
-                                <li>문자 내용이 이벤트 맥락 반영 (운동 → 운동 관련 대화)</li>
-                                <li>direction: 0=발신, 1=수신</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+// daily_event (2025-01-01)
+[{"name":"New Year Morning Run","type":"Personal Life","location":"Yuelu Mountain"},
+ {"name":"가족 새해 영상통화","participant":[{"name":"Feng Guohua","relation":"Father"}]}]</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">7개 생성기 인스턴스 준비</pre></div></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="border-2 border-dashed border-orange-500 rounded-xl p-4 w-full"><div class="text-center text-orange-400 text-xs font-semibold mb-3">⚡ ThreadPoolExecutor(max_workers=7) — 7개 생성기 동시 실행</div><div class="grid grid-cols-2 gap-3"><div class="bg-orange-900 border border-orange-600 rounded-lg p-3"><div class="font-semibold text-orange-200 text-xs mb-1">CommunicationOperationGenerator</div><div class="text-xs text-slate-400 font-mono mb-1">event/phone_data_gen.py</div><div class="text-xs text-slate-500 italic mb-1">이벤트 참여자·관계에 따라 통화/문자 생성</div><div class="text-xs"><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">call.json + sms.json</span></div><div class="mt-1"><button onclick="var e=document.getElementById('io-ph-n2a');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 예시</button><div id="io-ph-n2a" class="hidden mt-1 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-800"><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-48 overflow-auto">[{"type":"call","contactName":"Li Xiuying",
+  "datetime":"2025-01-01 13:30:00",
+  "direction":0,"call_result":"Connected"},
+ {"type":"sms","contactName":"Gao Yunfei",
+  "message_content":"Happy New Year! How was your run?",
+  "message_type":"Send"}]</pre></div></div></div></div>
+<div class="bg-orange-900 border border-orange-600 rounded-lg p-3"><div class="font-semibold text-orange-200 text-xs mb-1">PushOperationGenerator</div><div class="text-xs text-slate-400 font-mono mb-1">event/phone_data_gen.py</div><div class="text-xs text-slate-500 italic mb-1">활동 패턴에 맞는 앱 알림 생성</div><div class="text-xs"><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">push.json</span></div><div class="mt-1"><button onclick="var e=document.getElementById('io-ph-n2b');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 예시</button><div id="io-ph-n2b" class="hidden mt-1 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-800"><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-48 overflow-auto">[{"title":"NetEase Music: Daily Recommendations",
+  "content":"Morning Run Energy Rhythm updated",
+  "source":"NetEase Cloud Music",
+  "datetime":"2025-01-01 06:00:00","push_status":"Read"}]</pre></div></div></div></div>
+<div class="bg-orange-900 border border-orange-600 rounded-lg p-3"><div class="font-semibold text-orange-200 text-xs mb-1">NoteCalendarOperationGenerator</div><div class="text-xs text-slate-400 font-mono mb-1">event/phone_data_gen.py</div><div class="text-xs text-slate-500 italic mb-1">이벤트에서 일정·메모 필요 항목 추출</div><div class="text-xs"><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">note.json + calendar.json</span></div><div class="mt-1"><button onclick="var e=document.getElementById('io-ph-n2c');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 예시</button><div id="io-ph-n2c" class="hidden mt-1 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-800"><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-48 overflow-auto">// calendar.json
+[{"title":"CFA Study","start":"2025-01-02 09:00","recurrence":"daily"}]
+// note.json
+[{"title":"2025 Goals","content":"1. CFA pass\n2. Save 50k"}]</pre></div></div></div></div>
+<div class="bg-slate-900 border border-slate-600 rounded-lg p-3"><div class="font-semibold text-slate-200 text-xs mb-1">GalleryOperationGenerator</div><div class="text-xs text-slate-400 font-mono mb-1">event/phone_data_gen.py</div><div class="text-xs text-slate-500 italic mb-1">장소·활동 기반 사진 메타데이터. LLM 없음.</div><div class="text-xs"><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">photo.json (메타데이터)</span></div><div class="mt-1"><button onclick="var e=document.getElementById('io-ph-n2d');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 예시</button><div id="io-ph-n2d" class="hidden mt-1 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-800"><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-48 overflow-auto">[{"filename":"IMG_20250101_0723.jpg",
+  "datetime":"2025-01-01 07:23:15",
+  "location":{"lat":28.1845,"lng":112.9319},
+  "album":"Morning Run"}]</pre></div></div></div></div>
+<div class="bg-orange-900 border border-orange-600 rounded-lg p-3"><div class="font-semibold text-orange-200 text-xs mb-1">FitnessHealthOperationGenerator</div><div class="text-xs text-slate-400 font-mono mb-1">event/phone_data_gen.py</div><div class="text-xs text-slate-500 italic mb-1">운동 이벤트 + 건강 상태로 걸음수·심박수·수면 생성</div><div class="text-xs"><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">fitness_health.json</span></div><div class="mt-1"><button onclick="var e=document.getElementById('io-ph-n2e');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 예시</button><div id="io-ph-n2e" class="hidden mt-1 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-800"><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-48 overflow-auto">[{"date":"2025-01-01","steps":8523,
+  "heart_rate":{"resting":62,"peak":148},
+  "sleep":{"bedtime":"23:00","total_min":450},
+  "workout":{"type":"running","duration_min":75}}]</pre></div></div></div></div>
+<div class="bg-orange-900 border border-orange-600 rounded-lg p-3"><div class="font-semibold text-orange-200 text-xs mb-1">ChatOperationGenerator</div><div class="text-xs text-slate-400 font-mono mb-1">event/phone_data_gen.py</div><div class="text-xs text-slate-500 italic mb-1">이벤트 컨텍스트 기반 AI 어시스턴트 대화 생성</div><div class="text-xs"><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">agent_chat.json</span></div><div class="mt-1"><button onclick="var e=document.getElementById('io-ph-n2f');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 예시</button><div id="io-ph-n2f" class="hidden mt-1 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-800"><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-48 overflow-auto">[{"context":"CFA 공부 시작 예정",
+  "dialog":[
+    {"role":"user","content":"CFA Level 1 어떻게 준비해?"},
+    {"role":"assistant","content":"보통 300시간 공부가 필요합니다..."}
+  ]}]</pre></div></div></div></div>
+<div class="bg-slate-900 border border-slate-600 rounded-lg p-3"><div class="font-semibold text-slate-200 text-xs mb-1">PerceptionDataGenerator</div><div class="text-xs text-slate-400 font-mono mb-1">event/phone_data_gen.py</div><div class="text-xs text-slate-500 italic mb-1">GPS·Wi-Fi·블루투스·가속도계 데이터. LLM 없음.</div><div class="text-xs"><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">perception.json</span></div><div class="mt-1"><button onclick="var e=document.getElementById('io-ph-n2g');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 예시</button><div id="io-ph-n2g" class="hidden mt-1 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-800"><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-48 overflow-auto">[{"datetime":"2025-01-01 06:55:00",
+  "gps":{"lat":28.1845,"lng":112.9319},
+  "location_name":"Yuelu Mountain",
+  "bluetooth":["Xiaomi Band 7"],
+  "accelerometer":"high_activity"}]</pre></div></div></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-orange-900 border border-orange-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-orange-700 text-orange-200 px-2 py-0.5 rounded">병합</span><span class="font-semibold text-white text-sm">PhoneEventMatcher.match()</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/phone_data_gen.py</div><div class="text-xs text-slate-500 italic mb-2">7개 생성기 결과 취합 + daily_event와 매핑.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">7개 생성기 결과 합산</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">phone_data/ 폴더 (9개 JSON)</span></div></div><div class="flex gap-1"><div class="mt-1"><button onclick="var e=document.getElementById('io-ph-n3');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-ph-n3" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"call":[...],"sms":[...],"push":[...],"note":[...],"calendar":[...],"photo":[...],"fitness_health":[...],"agent_chat":[...],"perception":[...]}</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">phone_data/
+├── call.json
+├── sms.json
+├── push.json
+├── note.json
+├── calendar.json
+├── photo.json
+├── fitness_health.json
+├── agent_chat.json
+└── contact.json</pre></div></div></div></div></div>
+    </div>
+</div>
 
         <div id="step-qa" class="mb-16">
             <div class="step-card bg-gradient-to-br from-red-900 to-red-800 rounded-lg p-8 border border-red-600">
@@ -952,7 +839,10 @@ Finance（15개）
                             <p class="text-red-200 mt-1">3가지 난이도 질의응답 데이터 생성</p>
                         </div>
                     </div>
-                    
+                    <div class="text-right">
+                        <div class="text-sm text-red-300">실행 시간</div>
+                        <div class="text-2xl font-bold">~20-30분</div>
+                    </div>
                 </div>
 
                 <!-- Tabs -->
@@ -1163,6 +1053,21 @@ Finance（15개）
                     </div>
                 </div>
 
+                
+    <script>
+        // Tab switching
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('tab-button')) {
+                const step = e.target.dataset.step;
+                const tab = e.target.dataset.tab;
+                
+                // Update active button
+                document.querySelectorAll(`.tab-button[data-step="${step}"]`).forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                e.target.classList.add('active');
+                
+                // Show/hide content
                 document.querySelectorAll(`.tab-content[data-step="${step}"]`).forEach(content => {
                     content.classList.add('hidden');
                 });
