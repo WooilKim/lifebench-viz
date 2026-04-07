@@ -165,29 +165,33 @@
                 </div>
 
                 <!-- 개요 -->
-                <div class="tab-content" data-step="persona" data-tab="overview">
-                    <div class="grid grid-cols-3 gap-6 mb-6">
-                        <div class="bg-slate-800 rounded-lg p-4">
-                            <div class="text-teal-400 font-semibold mb-2">파이프라인 역할</div>
-                            <p class="text-sm text-slate-300">실제 시뮬레이션에 사용될 실제적인 인물 프로파일 생성. 모든 이후 단계의 기반이 됨</p>
+                <div class="tab-content hidden" data-step="persona" data-tab="overview">
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="col-span-3 bg-slate-800 rounded-lg p-4">
+                                <div class="text-teal-400 font-semibold text-xs mb-2">🎯 목적</div>
+                                <p class="text-sm text-slate-200">실제 수집된 10명의 기본 인물 데이터(person.json)를 바탕으로, 성격·취미·건강·경제·인간관계까지 포함한 풍부한 페르소나를 생성합니다. 이후 모든 파이프라인 단계의 기반이 됩니다.</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-slate-800 rounded-lg p-4">
+                                <div class="text-blue-400 font-semibold text-xs mb-2">📥 인풋</div>
+                                <p class="text-sm text-slate-300">person.json (실제 수집 데이터 10명) + refer.json (취미·가치관·직업 등 속성 풀)</p>
+                            </div>
+                            <div class="bg-slate-800 rounded-lg p-4">
+                                <div class="text-orange-400 font-semibold text-xs mb-2">📤 아웃풋</div>
+                                <p class="text-sm text-slate-300">persona.json — 30+ 필드의 상세 인물 프로파일 (MBTI·건강 상태·경제 상황·인간관계망 20~26명 포함)</p>
+                            </div>
                         </div>
                         <div class="bg-slate-800 rounded-lg p-4">
-                            <div class="text-teal-400 font-semibold mb-2">핵심 입력</div>
-                            <p class="text-sm text-slate-300">person.json (실제 수집 데이터 10명) + refer.json (속성 풀 럨덤 선택)</p>
+                            <div class="text-slate-400 font-semibold text-xs mb-2">⚙️ 실행 방식</div>
+                            <p class="text-sm text-slate-300">LLM을 3단계 순차 호출: ① 기본 프로파일 생성(template_refine) → ② 인간관계망 목록 생성(template_relation_1) → ③ 각 연락처 상세 정보 생성(template_person). 10명 × 3 LLM 호출.</p>
                         </div>
-                        <div class="bg-slate-800 rounded-lg p-4">
-                            <div class="text-teal-400 font-semibold mb-2">핵심 산출</div>
-                            <p class="text-sm text-slate-300">persona.json — 상세 인물 프로파일 (30+ 필드, 인간관계망 포함)</p>
-                        </div>
-                    </div>
-                    <div class="bg-slate-800 rounded-lg p-4 text-sm text-slate-300">
-                        <p class="font-semibold text-teal-300 mb-2">⚠️ 주의</p>
-                        <p>프롬프트는 전부 <span class="text-yellow-400 font-semibold">중국어</span>로 작성되어 있어요. 데이터는 중국어로 생성된 후 영어 버전으로 종간 번역됩니다. 이후 모든 파이프라인 단계의 프롬프트도 중국어입니다.</p>
+                        <div class="bg-yellow-900/20 border border-yellow-700 rounded p-3 text-xs text-yellow-300"><p class="font-semibold mb-1">⚠️ 참고</p><p>모든 프롬프트는 <strong>중국어</strong>로 작성되어 있습니다. 생성된 데이터는 중국어로 저장된 후 영어 버전으로 번역됩니다.</p></div>
                     </div>
                 </div>
 
-                <!-- 내부 플로우 -->
-                                <div class="tab-content hidden" data-step="persona" data-tab="flow">
+                <div class="tab-content hidden" data-step="persona" data-tab="flow">
     <h3 class="text-xl font-bold text-teal-300 mb-2">Persona 생성 내부 흐름</h3>
     <p class="text-slate-400 text-sm mb-4">📋 프롬프트 · 📊 데이터 예시 버튼을 클릭하세요.</p>
     <div class="flex flex-col gap-0 max-w-3xl">
@@ -273,64 +277,33 @@
                 </div>
 
                 <!-- Tab Content -->
-                <div class="tab-content" data-step="draft" data-tab="overview">
+                <div class="tab-content hidden" data-step="draft" data-tab="overview">
                     <div class="space-y-4">
-                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                            <h3 class="text-xl font-bold mb-3 text-purple-300">🎯 목적</h3>
-                            <p class="text-gray-300 leading-relaxed">
-                                persona.json을 기반으로 2025년 1월 1일부터 12월 31일까지 365일간의 주요 생활 이벤트 타임라인을 생성합니다.
-                                이 단계에서는 "큰 그림"만 그립니다 - 각 날짜의 개략적인 이벤트 목록과 간단한 설명만 포함됩니다.
-                            </p>
-                        </div>
-
-                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                            <h3 class="text-xl font-bold mb-3 text-purple-300">⚙️ 실행 흐름</h3>
-                            <div class="space-y-3 text-sm">
-                                <div class="flex items-start gap-3">
-                                    <span class="bg-purple-600 text-white px-2 py-1 rounded text-xs font-bold">1</span>
-                                    <div>
-                                        <div class="font-semibold">연간 주요 이벤트 생성 (100개)</div>
-                                        <div class="text-gray-400">genevent_yearterm() → 4개 프롬프트 순차 실행</div>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-3">
-                                    <span class="bg-purple-600 text-white px-2 py-1 rounded text-xs font-bold">2</span>
-                                    <div>
-                                        <div class="font-semibold">중요 사건 추출</div>
-                                        <div class="text-gray-400">_extract_impact_events() → 인생 변화 이벤트만 필터링</div>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-3">
-                                    <span class="bg-purple-600 text-white px-2 py-1 rounded text-xs font-bold">3</span>
-                                    <div>
-                                        <div class="font-semibold">월별 세부 이벤트 생성</div>
-                                        <div class="text-gray-400">_analyze_monthly_events() → 각 월마다 일별 이벤트 생성</div>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-3">
-                                    <span class="bg-purple-600 text-white px-2 py-1 rounded text-xs font-bold">4</span>
-                                    <div>
-                                        <div class="font-semibold">타임라인 충돌 해소</div>
-                                        <div class="text-gray-400">optimize_merged_timelines() → 시간/공간적 모순 제거</div>
-                                    </div>
-                                </div>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="col-span-3 bg-slate-800 rounded-lg p-4">
+                                <div class="text-purple-400 font-semibold text-xs mb-2">🎯 목적</div>
+                                <p class="text-sm text-slate-200">persona.json을 기반으로 2025년 한 해의 주요 생활 이벤트 타임라인을 초안으로 생성합니다. 직업·가족·건강·재무 등 다양한 차원에서 약 190개 이벤트를 생성하고, 타임라인 간 충돌을 해소합니다.</p>
                             </div>
                         </div>
-
                         <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-green-900/30 border border-green-700 rounded-lg p-4">
-                                <h4 class="font-semibold text-green-300 mb-2">📥 Input</h4>
-                                <div class="text-sm text-gray-300">persona.json (Step 0에서 생성)</div>
+                            <div class="bg-slate-800 rounded-lg p-4">
+                                <div class="text-blue-400 font-semibold text-xs mb-2">📥 인풋</div>
+                                <p class="text-sm text-slate-300">persona.json</p>
                             </div>
-                            <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
-                                <h4 class="font-semibold text-blue-300 mb-2">📤 Output</h4>
-                                <div class="text-sm text-gray-300">daily_draft.json (365일 이벤트 목록)</div>
+                            <div class="bg-slate-800 rounded-lg p-4">
+                                <div class="text-orange-400 font-semibold text-xs mb-2">📤 아웃풋</div>
+                                <p class="text-sm text-slate-300">daily_draft.json — 월별/일별 이벤트 초안 구조 (각 날짜의 이벤트 목록과 간단한 설명)</p>
                             </div>
                         </div>
+                        <div class="bg-slate-800 rounded-lg p-4">
+                            <div class="text-slate-400 font-semibold text-xs mb-2">⚙️ 실행 방식</div>
+                            <p class="text-sm text-slate-300">Scheduler를 통해 순차 실행: ① 연간 이벤트 1라운드 생성(100개) → ② 2라운드 보완(90개) → ③ 영향 이벤트 추출 → ④ 월별 최적화 → ⑤ 타임라인 충돌 해결. 총 5단계 LLM 호출.</p>
+                        </div>
+                        
                     </div>
                 </div>
 
-                                <div class="tab-content hidden" data-step="draft" data-tab="flow">
+                <div class="tab-content hidden" data-step="draft" data-tab="flow">
     <h3 class="text-xl font-bold text-purple-300 mb-2">Draft Generation 내부 흐름</h3>
     <p class="text-slate-400 text-sm mb-4">📋 프롬프트 · 📊 데이터 예시 버튼을 클릭하세요.</p>
     <div class="flex flex-col gap-0 max-w-3xl">
@@ -446,75 +419,29 @@ Finance（15개）
                 </div>
 
                 <!-- Tab Content -->
-                <div class="tab-content" data-step="simulator" data-tab="overview">
+                <div class="tab-content hidden" data-step="simulator" data-tab="overview">
                     <div class="space-y-4">
-                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                            <h3 class="text-xl font-bold mb-3 text-green-300">🎯 목적</h3>
-                            <p class="text-gray-300 leading-relaxed">
-                                daily_draft.json의 간단한 이벤트 목록을 상세한 시간별 이벤트로 확장하고,
-                                건강 상태 (신체/정신/수면/에너지) 추적 시스템을 추가합니다.
-                                이 단계에서 "Mind" 시스템이 작동하여 인물의 주관적 계획과 객관적 제약을 반영합니다.
-                            </p>
-                        </div>
-
-                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                            <h3 class="text-xl font-bold mb-3 text-green-300">⚙️ 실행 흐름</h3>
-                            <div class="space-y-3 text-sm">
-                                <div class="flex items-start gap-3">
-                                    <span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">1</span>
-                                    <div>
-                                        <div class="font-semibold">주관적 계획 생성</div>
-                                        <div class="text-gray-400">_generate_subjective_thought() → 인물이 하루를 어떻게 보내고 싶은지</div>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-3">
-                                    <span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">2</span>
-                                    <div>
-                                        <div class="font-semibold">객관적 최적화</div>
-                                        <div class="text-gray-400">_generate_objective_events() → 현실적 제약 반영 (날씨, 교통, 시간)</div>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-3">
-                                    <span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">3</span>
-                                    <div>
-                                        <div class="font-semibold">이벤트 궤적 조정</div>
-                                        <div class="text-gray-400">_adjust_event_trajectory() → 교통 시간, 동선 최적화</div>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-3">
-                                    <span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">4</span>
-                                    <div>
-                                        <div class="font-semibold">POI 매핑</div>
-                                        <div class="text-gray-400">map() → 실제 지도 좌표로 장소 변환</div>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-3">
-                                    <span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">5</span>
-                                    <div>
-                                        <div class="font-semibold">일일 회고 생성</div>
-                                        <div class="text-gray-400">_generate_reflection() → 하루를 돌아보는 생각</div>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-3">
-                                    <span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">6</span>
-                                    <div>
-                                        <div class="font-semibold">건강 상태 분석</div>
-                                        <div class="text-gray-400">health_analysis() + life_analysis() → 건강/생활 상태 추적</div>
-                                    </div>
-                                </div>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="col-span-3 bg-slate-800 rounded-lg p-4">
+                                <div class="text-green-400 font-semibold text-xs mb-2">🎯 목적</div>
+                                <p class="text-sm text-slate-200">daily_draft.json의 간략한 이벤트 목록을 하루 단위 상세 이벤트 시퀀스로 확장합니다. Mind 시스템이 인물의 주관적 의도와 객관적 제약(날씨·교통·장소)을 반영하여 365일의 생생한 일상을 생성합니다.</p>
                             </div>
                         </div>
-
                         <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-green-900/30 border border-green-700 rounded-lg p-4">
-                                <h4 class="font-semibold text-green-300 mb-2">📥 Input</h4>
-                                <div class="text-sm text-gray-300">persona.json + daily_draft.json</div>
+                            <div class="bg-slate-800 rounded-lg p-4">
+                                <div class="text-blue-400 font-semibold text-xs mb-2">📥 인풋</div>
+                                <p class="text-sm text-slate-300">persona.json + daily_draft.json</p>
                             </div>
-                            <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
-                                <h4 class="font-semibold text-blue-300 mb-2">📤 Output</h4>
-                                <div class="text-sm text-gray-300">daily_event.json (상세 이벤트 + 건강 상태)</div>
+                            <div class="bg-slate-800 rounded-lg p-4">
+                                <div class="text-orange-400 font-semibold text-xs mb-2">📤 아웃풋</div>
+                                <p class="text-sm text-slate-300">daily_event.json — 총 4,000~5,000개 이벤트 (하루 최대 20개, 실제 주소·참여자·시간 포함)</p>
                             </div>
                         </div>
+                        <div class="bg-slate-800 rounded-lg p-4">
+                            <div class="text-slate-400 font-semibold text-xs mb-2">⚙️ 실행 방식</div>
+                            <p class="text-sm text-slate-300">하루 처리는 7단계 순차 LLM 호출: 주관적 계획 → 객관적 최적화 → POI 매핑+이동경로 → 반성 → 장기기억 업데이트. 365일을 max_workers=30 스레드로 병렬 처리. 월별로 EventRefiner가 건강 상태 분석 추가.</p>
+                        </div>
+                        
                     </div>
                 </div>
 
@@ -719,63 +646,31 @@ Finance（15개）
                 </div>
 
                 <!-- Tab Content -->
-                <div class="tab-content" data-step="phone" data-tab="overview">
+                <div class="tab-content hidden" data-step="phone" data-tab="overview">
                     <div class="space-y-4">
-                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                            <h3 class="text-xl font-bold mb-3 text-orange-300">🎯 목적</h3>
-                            <p class="text-gray-300 leading-relaxed">
-                                daily_event.json의 이벤트를 기반으로 스마트폰에서 발생하는 데이터를 생성합니다.
-                                전화, 문자, 알림, 캘린더, 메모, 사진, 피트니스 데이터 등 7가지 카테고리가 병렬로 생성됩니다.
-                            </p>
-                        </div>
-
-                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                            <h3 class="text-xl font-bold mb-3 text-orange-300">⚙️ 7개 생성기 (병렬 실행)</h3>
-                            <div class="grid grid-cols-2 gap-3 text-sm">
-                                <div class="bg-blue-900/20 border border-blue-700 rounded p-3">
-                                    <div class="font-bold text-blue-300">1. Communication</div>
-                                    <div class="text-gray-400">call.json + sms.json</div>
-                                </div>
-                                <div class="bg-blue-900/20 border border-blue-700 rounded p-3">
-                                    <div class="font-bold text-blue-300">2. Push</div>
-                                    <div class="text-gray-400">push.json</div>
-                                </div>
-                                <div class="bg-blue-900/20 border border-blue-700 rounded p-3">
-                                    <div class="font-bold text-blue-300">3. Note & Calendar</div>
-                                    <div class="text-gray-400">note.json + calendar.json</div>
-                                </div>
-                                <div class="bg-blue-900/20 border border-blue-700 rounded p-3">
-                                    <div class="font-bold text-blue-300">4. Gallery</div>
-                                    <div class="text-gray-400">photo.json (메타데이터만)</div>
-                                </div>
-                                <div class="bg-blue-900/20 border border-blue-700 rounded p-3">
-                                    <div class="font-bold text-blue-300">5. Fitness & Health</div>
-                                    <div class="text-gray-400">fitness_health.json</div>
-                                </div>
-                                <div class="bg-blue-900/20 border border-blue-700 rounded p-3">
-                                    <div class="font-bold text-blue-300">6. Chat</div>
-                                    <div class="text-gray-400">agent_chat.json</div>
-                                </div>
-                                <div class="bg-blue-900/20 border border-blue-700 rounded p-3 col-span-2">
-                                    <div class="font-bold text-blue-300">7. Contact</div>
-                                    <div class="text-gray-400">contact.json (연락처 목록)</div>
-                                </div>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="col-span-3 bg-slate-800 rounded-lg p-4">
+                                <div class="text-orange-400 font-semibold text-xs mb-2">🎯 목적</div>
+                                <p class="text-sm text-slate-200">daily_event.json의 이벤트를 기반으로 실제 스마트폰에서 발생하는 7가지 종류의 데이터를 생성합니다. 통화·문자·알림·메모·캘린더·사진·피트니스 데이터를 날짜별로 병렬 생성합니다.</p>
                             </div>
                         </div>
-
                         <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-green-900/30 border border-green-700 rounded-lg p-4">
-                                <h4 class="font-semibold text-green-300 mb-2">📥 Input</h4>
-                                <div class="text-sm text-gray-300">persona.json + daily_event.json</div>
+                            <div class="bg-slate-800 rounded-lg p-4">
+                                <div class="text-blue-400 font-semibold text-xs mb-2">📥 인풋</div>
+                                <p class="text-sm text-slate-300">persona.json + daily_event.json (날짜별)</p>
                             </div>
-                            <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
-                                <h4 class="font-semibold text-blue-300 mb-2">📤 Output</h4>
-                                <div class="text-sm text-gray-300">phone_data/ (7개 JSON 파일)</div>
+                            <div class="bg-slate-800 rounded-lg p-4">
+                                <div class="text-orange-400 font-semibold text-xs mb-2">📤 아웃풋</div>
+                                <p class="text-sm text-slate-300">phone_data/ 폴더 내 9개 JSON 파일 (call, sms, push, note, calendar, photo, fitness_health, agent_chat, contact)</p>
                             </div>
                         </div>
+                        <div class="bg-slate-800 rounded-lg p-4">
+                            <div class="text-slate-400 font-semibold text-xs mb-2">⚙️ 실행 방식</div>
+                            <p class="text-sm text-slate-300">날짜별 반복 실행. 각 날짜마다 7개 Generator가 ThreadPoolExecutor(max_workers=7)로 동시 실행. Communication·Push·NoteCalendar·Chat은 LLM 호출, Gallery·Perception은 확률 기반 생성(LLM 없음).</p>
+                        </div>
+                        
                     </div>
                 </div>
-
 
                 <div class="tab-content hidden" data-step="phone" data-tab="flow">
     <h3 class="text-xl font-bold text-orange-300 mb-2">Phone Data Generation 내부 흐름</h3>
@@ -941,57 +836,29 @@ reasoning_qa.json:   ~50개 질문</pre></div><div class="p-3 bg-slate-800"><div
     </div>
 </div>
 
-                <div class="tab-content" data-step="qa" data-tab="overview">
+                <div class="tab-content  " data-step="qa" data-tab="overview">
                     <div class="space-y-4">
-                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                            <h3 class="text-xl font-bold mb-3 text-red-300">🎯 목적</h3>
-                            <p class="text-gray-300 leading-relaxed">
-                                생성된 모든 데이터 (daily_event + phone_data)를 기반으로
-                                LLM 벤치마크용 질의응답 데이터를 생성합니다.
-                                단순 사실 확인부터 복잡한 추론까지 3가지 난이도로 구성됩니다.
-                            </p>
-                        </div>
-
-                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                            <h3 class="text-xl font-bold mb-3 text-red-300">📊 QA 타입</h3>
-                            <div class="grid grid-cols-3 gap-4 text-sm">
-                                <div class="bg-green-900/20 border border-green-700 rounded p-4">
-                                    <div class="font-bold text-green-300 mb-2">Single-hop QA</div>
-                                    <div class="text-gray-400 mb-2">100+ 문제</div>
-                                    <div class="text-xs text-gray-400">
-                                        단일 데이터 소스에서 직접 답변 가능<br>
-                                        예: "1월 1일 몇 시에 일어났나?"
-                                    </div>
-                                </div>
-                                <div class="bg-yellow-900/20 border border-yellow-700 rounded p-4">
-                                    <div class="font-bold text-yellow-300 mb-2">Multi-hop QA</div>
-                                    <div class="text-gray-400 mb-2">50+ 문제</div>
-                                    <div class="text-xs text-gray-400">
-                                        2-3개 정보 연결 필요<br>
-                                        예: "왜 에너지가 감소했나?"
-                                    </div>
-                                </div>
-                                <div class="bg-red-900/20 border border-red-700 rounded p-4">
-                                    <div class="font-bold text-red-300 mb-2">Reasoning QA</div>
-                                    <div class="text-gray-400 mb-2">20+ 문제</div>
-                                    <div class="text-xs text-gray-400">
-                                        패턴 인식, 예측 필요<br>
-                                        예: "내일 운동할 확률은?"
-                                    </div>
-                                </div>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="col-span-3 bg-slate-800 rounded-lg p-4">
+                                <div class="text-red-400 font-semibold text-xs mb-2">🎯 목적</div>
+                                <p class="text-sm text-slate-200">생성된 모든 데이터(daily_event + phone_data)를 기반으로 LLM 평가용 질의응답 데이터를 생성합니다. 단순 사실 확인(single-hop)부터 여러 이벤트 연결 추론(multi-hop), 상태 변화 추적(updating)까지 3가지 유형으로 구성됩니다.</p>
                             </div>
                         </div>
-
                         <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-green-900/30 border border-green-700 rounded-lg p-4">
-                                <h4 class="font-semibold text-green-300 mb-2">📥 Input</h4>
-                                <div class="text-sm text-gray-300">daily_event.json + phone_data/ (모든 파일)</div>
+                            <div class="bg-slate-800 rounded-lg p-4">
+                                <div class="text-blue-400 font-semibold text-xs mb-2">📥 인풋</div>
+                                <p class="text-sm text-slate-300">persona.json + daily_event.json + phone_data/ (전체)</p>
                             </div>
-                            <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
-                                <h4 class="font-semibold text-blue-300 mb-2">📤 Output</h4>
-                                <div class="text-sm text-gray-300">QA/*.json (3개 파일)</div>
+                            <div class="bg-slate-800 rounded-lg p-4">
+                                <div class="text-orange-400 font-semibold text-xs mb-2">📤 아웃풋</div>
+                                <p class="text-sm text-slate-300">QA/QA.json — 수백 개의 질의응답 쌍 (question, answer, question_type, source_events 포함)</p>
                             </div>
                         </div>
+                        <div class="bg-slate-800 rounded-lg p-4">
+                            <div class="text-slate-400 font-semibold text-xs mb-2">⚙️ 실행 방식</div>
+                            <p class="text-sm text-slate-300">3개 Generator(Single/Multi/Reasoning)가 병렬 실행. 각 Generator는 월별로 질문 생성 후 필터링·최적화 거침. 최종적으로 ask_time 기준 정렬하여 QA.json으로 병합.</p>
+                        </div>
+                        
                     </div>
                 </div>
 
