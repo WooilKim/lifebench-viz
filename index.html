@@ -1780,6 +1780,39 @@
             }
         });
 
+        // 프롬프트 동적 로드
+        function toggleAndLoadPrompt(pid, name) {
+            const el = document.getElementById(pid);
+            if (!el) return;
+            el.classList.toggle('hidden');
+            if (!el.classList.contains('hidden')) {
+                loadPromptContent(name);
+            }
+        }
+
+        function loadPromptContent(name) {
+            if (typeof PROMPTS === 'undefined') return;
+            const pid = name.replace(/_/g, '-');
+            const zhEl = document.getElementById('p-' + pid + '-zh');
+            const krEl = document.getElementById('p-' + pid + '-kr');
+            if (!zhEl || !krEl || zhEl.dataset.loaded) return;
+            const data = PROMPTS[name];
+            if (!data) return;
+            zhEl.innerHTML = hlVars(escHtml(data.zh));
+            krEl.innerHTML = hlVars(escHtml(data.kr));
+            zhEl.dataset.loaded = '1';
+        }
+
+        function escHtml(t) {
+            return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
+
+        function hlVars(t) {
+            return t.replace(/\{(\w+)\}/g,
+                '<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{$1}</span>'
+            );
+        }
+
         // Accordion toggle
         function toggleAccordion(header) {
             const content = header.nextElementSibling;
