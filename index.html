@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeBench Data Pipeline Visualization</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        .pipeline-arrow {
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(to right, #64748b 0%, #64748b 100%);
+            position: relative;
+        }
+        .pipeline-arrow::after {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid #64748b;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+        .variable-highlight {
+            background-color: rgb(251 191 36 / 0.3);
+            color: #fbbf24;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        .step-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .step-card:hover {
+            transform: translateY(-4px);
+        }
+        .step-card.active {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+            transform: scale(1.02);
+        }
+        .tab-button {
+            transition: all 0.2s ease;
+        }
+        .tab-button.active {
+            background: linear-gradient(to bottom, #3b82f6, #2563eb);
+            color: white;
+        }
+        .modified-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        pre code {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .step-card:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-slate-800 border-b border-slate-700 px-6 py-4">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="text-3xl font-bold text-blue-400">LifeBench Data Pipeline</h1>
+            <p class="text-gray-400 mt-1">생성형 AI 기반 개인 생활 데이터 시뮬레이션 파이프라인</p>
+            <div class="mt-2 text-sm text-gray-500">
+                <span class="inline-block px-3 py-1 bg-slate-700 rounded-full">
+                    ⏱️ 전체 실행 시간: ~2-4시간 (1년치 데이터)
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Pipeline Flow -->
+    <div class="max-w-7xl mx-auto px-6 py-8">
+        <div class="flex items-center justify-center gap-4 mb-12 overflow-x-auto pb-4">
+            <!-- Step 1: Persona -->
+            <div class="step-card bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-6 min-w-[200px] relative" data-step="persona">
+                <div class="text-center">
+                    <div class="text-4xl mb-2">👤</div>
+                    <h3 class="font-bold text-lg">Step 1</h3>
+                    <p class="text-sm">Persona</p>
+                    <p class="text-xs text-blue-200 mt-1">인물 프로필 생성</p>
+                </div>
+                <div class="tooltip absolute -bottom-16 left-1/2 transform -translate-x-1/2 bg-slate-800 text-xs p-2 rounded shadow-lg w-48 text-center border border-slate-700">
+                    나이, 직업, 성격(MBTI), 연봉 등 기본 인물 정보 생성
+                </div>
+            </div>
+
+            <div class="pipeline-arrow"></div>
+
+            <!-- Step 2: Draft -->
+            <div class="step-card bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg p-6 min-w-[200px] relative" data-step="draft">
+                <div class="text-center">
+                    <div class="text-4xl mb-2">📝</div>
+                    <h3 class="font-bold text-lg">Step 2</h3>
+                    <p class="text-sm">Draft Generator</p>
+                    <p class="text-xs text-purple-200 mt-1">연간 타임라인 초안</p>
+                </div>
+                <div class="tooltip absolute -bottom-16 left-1/2 transform -translate-x-1/2 bg-slate-800 text-xs p-2 rounded shadow-lg w-48 text-center border border-slate-700">
+                    1년간 주요 생활 이벤트 타임라인 생성 (일별 이벤트 목록)
+                </div>
+            </div>
+
+            <div class="pipeline-arrow"></div>
+
+            <!-- Step 3: Simulator -->
+            <div class="step-card bg-gradient-to-br from-green-600 to-green-700 rounded-lg p-6 min-w-[200px] relative" data-step="simulator">
+                <div class="text-center">
+                    <div class="text-4xl mb-2">🎮</div>
+                    <h3 class="font-bold text-lg">Step 3</h3>
+                    <p class="text-sm">Simulator</p>
+                    <p class="text-xs text-green-200 mt-1">상세 이벤트 시뮬레이션</p>
+                </div>
+                <div class="tooltip absolute -bottom-16 left-1/2 transform -translate-x-1/2 bg-slate-800 text-xs p-2 rounded shadow-lg w-48 text-center border border-slate-700">
+                    일별 상세 이벤트 + 건강 상태 추적 (신체/정신/수면/에너지)
+                </div>
+            </div>
+
+            <div class="pipeline-arrow"></div>
+
+            <!-- Step 4: Phone Data -->
+            <div class="step-card bg-gradient-to-br from-orange-600 to-orange-700 rounded-lg p-6 min-w-[200px] relative" data-step="phone">
+                <div class="text-center">
+                    <div class="text-4xl mb-2">📱</div>
+                    <h3 class="font-bold text-lg">Step 4</h3>
+                    <p class="text-sm">Phone Data</p>
+                    <p class="text-xs text-orange-200 mt-1">스마트폰 데이터 생성</p>
+                </div>
+                <div class="tooltip absolute -bottom-16 left-1/2 transform -translate-x-1/2 bg-slate-800 text-xs p-2 rounded shadow-lg w-48 text-center border border-slate-700">
+                    전화, SMS, 푸시알림, 캘린더, 메모, 사진, 피트니스 데이터 생성
+                </div>
+            </div>
+
+            <div class="pipeline-arrow"></div>
+
+            <!-- Step 5: QA -->
+            <div class="step-card bg-gradient-to-br from-red-600 to-red-700 rounded-lg p-6 min-w-[200px] relative" data-step="qa">
+                <div class="text-center">
+                    <div class="text-4xl mb-2">❓</div>
+                    <h3 class="font-bold text-lg">Step 5</h3>
+                    <p class="text-sm">QA Generator</p>
+                    <p class="text-xs text-red-200 mt-1">질의응답 데이터 생성</p>
+                </div>
+                <div class="tooltip absolute -bottom-16 left-1/2 transform -translate-x-1/2 bg-slate-800 text-xs p-2 rounded shadow-lg w-48 text-center border border-slate-700">
+                    단일/다중 홉 QA, 추론 문제 생성 (생성된 데이터 기반)
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail Panel -->
+        <div id="detailPanel" class="bg-slate-800 rounded-lg border border-slate-700 p-6 hidden">
+            <div class="flex items-center justify-between mb-6">
+                <h2 id="panelTitle" class="text-2xl font-bold"></h2>
+                <span id="modifiedBadge" class="modified-badge hidden px-3 py-1 bg-yellow-500 text-slate-900 text-sm font-bold rounded-full">
+                    수정됨
+                </span>
+            </div>
+
+            <!-- Tabs -->
+            <div class="flex gap-2 mb-6 border-b border-slate-700">
+                <button class="tab-button active px-4 py-2 rounded-t-lg" data-tab="input">① 인풋</button>
+                <button class="tab-button px-4 py-2 rounded-t-lg" data-tab="prompt">② 프롬프트</button>
+                <button class="tab-button px-4 py-2 rounded-t-lg" data-tab="output">③ 아웃풋</button>
+                <button class="tab-button px-4 py-2 rounded-t-lg" data-tab="insights">④ 수정 포인트</button>
+            </div>
+
+            <!-- Tab Content -->
+            <div id="tabContent">
+                <!-- Content will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Pipeline data structure
+        const pipelineData = {
+            persona: {
+                title: "Step 1: Persona Generation",
+                input: {
+                    description: "기본 설정값 (나이 범위, 직업 목록, MBTI 타입 등)",
+                    example: {
+                        "age_range": [25, 35],
+                        "job_categories": ["Finance", "Tech", "Healthcare", "Education"],
+                        "mbti_types": ["ENTJ", "INTJ", "ENFP", "INFP"]
+                    }
+                },
+                output: {
+                    description: "persona.json - 생성된 인물 프로필",
+                    example: {
+                        "name": "Feng Haoran",
+                        "age": 27,
+                        "gender": "Male",
+                        "job": "Financial Investment Advisor",
+                        "personality": {
+                            "mbti": "ENTJ",
+                            "traits": ["Ambitious", "Strategic thinker", "Confident", "Results-oriented"]
+                        },
+                        "salary": 200000.0,
+                        "education": "Master's degree in Finance",
+                        "location": "Shanghai, China",
+                        "marital_status": "Single",
+                        "hobbies": ["Reading financial news", "Gym workout", "Playing tennis", "Wine tasting"],
+                        "health_state": {
+                            "physical_health": {"score": 85, "description": "Good physical condition"},
+                            "mental_health": {"score": 80, "description": "Generally positive, occasional work stress"},
+                            "sleep_quality": {"score": 75, "description": "Average sleep"},
+                            "energy_level": {"score": 85, "description": "High energy, driven and motivated"}
+                        }
+                    }
+                },
+                prompt: `Based on the configuration parameters, generate a realistic persona profile.
+
+## Configuration
+{age_range}, {job_categories}, {mbti_types}
+
+## Requirements
+1. Create a coherent personality profile
+2. Match job with appropriate education and salary
+3. Generate realistic hobbies based on personality and job
+4. Set initial health state scores (1-100 scale)
+5. Consider cultural context for location
+
+## Output Format
+Return a JSON object with all persona attributes including health_state.`,
+                insights: [
+                    "✏️ MBTI 타입을 바꾸면 → 전체 이벤트의 성향이 달라집니다 (ENTJ는 업무 중심, ENFP는 사교 중심)",
+                    "✏️ 직업을 바꾸면 → 일정, 연락처, 이벤트 종류가 완전히 달라집니다",
+                    "✏️ 초기 건강 점수를 낮추면 → 시뮬레이션 중 건강 관련 이벤트가 더 자주 발생합니다",
+                    "💡 연봉은 소비 패턴과 생활 수준에 영향을 미칩니다"
+                ]
+            },
+            draft: {
+                title: "Step 2: Draft Generation",
+                input: {
+                    description: "persona.json (Step 1의 출력)",
+                    example: {
+                        "name": "Feng Haoran",
+                        "job": "Financial Investment Advisor",
+                        "personality": {"mbti": "ENTJ"}
+                    }
+                },
+                output: {
+                    description: "daily_draft.json - 연간 주요 이벤트 타임라인",
+                    example: {
+                        "2024-01-01": [
+                            {"time": "09:00", "event_type": "work", "description": "New Year market analysis meeting", "importance": "high"}
+                        ],
+                        "2024-01-15": [
+                            {"time": "19:00", "event_type": "social", "description": "Dinner with college friends", "importance": "medium"}
+                        ],
+                        "2024-02-10": [
+                            {"time": "08:00", "event_type": "personal", "description": "Annual health checkup", "importance": "high"}
+                        ]
+                    }
+                },
+                prompt: `Based on the following persona, create a realistic annual timeline of major life events.
+
+## Persona
+{persona}
+
+## Requirements
+1. Generate events that match the person's job, personality, age, and lifestyle
+2. Include work events, personal milestones, social activities, and daily routines
+3. Events should be realistic and culturally appropriate
+4. Consider seasonal factors and holidays (Chinese New Year, Golden Week, etc.)
+5. Balance work-life events appropriately for MBTI type
+6. ENTJ types: More work meetings, networking, achievement-oriented events
+7. Other types: Adjust event distribution accordingly
+
+## Output Format
+Provide a JSON object with dates as keys and arrays of events as values for the entire year.`,
+                insights: [
+                    "✏️ 이벤트 분포를 조정하면 → 일-생활 균형이 달라집니다 (업무 이벤트 비율 조정)",
+                    "✏️ 주요 이벤트 추가/삭제 → 연간 스토리라인을 수정할 수 있습니다",
+                    "💡 이 단계는 '큰 그림'만 그립니다. 상세 내용은 Step 3에서 생성됩니다",
+                    "💡 계절 이벤트(명절, 휴가)는 자동으로 문화권에 맞게 생성됩니다"
+                ]
+            },
+            simulator: {
+                title: "Step 3: Simulator (Detailed Event Generation)",
+                input: {
+                    description: "persona.json + daily_draft.json",
+                    example: {
+                        "persona": {"name": "Feng Haoran", "job": "Financial Investment Advisor"},
+                        "draft_events": [
+                            {"date": "2024-01-01", "event": "New Year market analysis meeting"}
+                        ]
+                    }
+                },
+                output: {
+                    description: "daily_event.json - 일별 상세 이벤트 + 건강 상태 추적",
+                    example: {
+                        "2024-01-01": {
+                            "events": [
+                                {
+                                    "timestamp": "2024-01-01 09:00:00",
+                                    "event_type": "work_meeting",
+                                    "title": "Q1 Investment Strategy Meeting",
+                                    "description": "Discussed portfolio adjustments for new year",
+                                    "participants": ["Team lead", "Senior analysts"],
+                                    "location": "Office conference room",
+                                    "emotional_impact": "neutral",
+                                    "energy_cost": 2
+                                }
+                            ],
+                            "health_state": {
+                                "physical_health": 85,
+                                "mental_health": 80,
+                                "sleep_quality": 75,
+                                "energy_level": 83
+                            }
+                        }
+                    }
+                },
+                prompt: `请基于以下人物画像、初始健康状态和指定时间段内的事件列表，分析并生成该月15号中间状态、结束时的健康状态记录和完整变化节点：
+
+## 人物画像
+{persona}
+
+## 初始健康状态
+{initial_health_state}
+
+## 输入数据
+分析以下指定时间段内的事件列表，生成该月15号的中间状态、月末健康状态，并记录所有变化节点：
+{daily_data}
+
+## 要求
+1. 仔细分析每个事件对健康状态的潜在影响
+2. 生成15号的中间健康状态
+3. 生成月末的最终健康状态
+4. 记录所有导致健康状态变化的节点（包括日期和具体事件）
+
+## 输出格式
+请严格按照以下JSON格式输出：
+{
+    "middle_health_state": {
+        "date": "2024-XX-15",
+        "physical_health": {"score": <int>, "description": "<string>"},
+        "mental_health": {"score": <int>, "description": "<string>"},
+        "sleep_quality": {"score": <int>, "description": "<string>"},
+        "energy_level": {"score": <int>, "description": "<string>"}
+    },
+    "final_health_state": {
+        "date": "2024-XX-XX",
+        "physical_health": {"score": <int>, "description": "<string>"},
+        "mental_health": {"score": <int>, "description": "<string>"},
+        "sleep_quality": {"score": <int>, "description": "<string>"},
+        "energy_level": {"score": <int>, "description": "<string>"}
+    },
+    "change_nodes": [
+        {
+            "date": "2024-XX-XX",
+            "event": "<触发变化的事件>",
+            "impact": "<对健康状态的具体影响>"
+        }
+    ]
+}`,
+                insights: [
+                    "✏️ 이벤트의 emotional_impact를 수정하면 → 정신 건강 점수 변화가 달라집니다",
+                    "✏️ energy_cost를 조정하면 → 에너지 레벨 감소 속도를 제어할 수 있습니다",
+                    "💡 건강 상태는 월 중간(15일)과 월말에 체크포인트가 생성됩니다",
+                    "💡 건강 변화 노드는 QA 생성 시 인과관계 질문의 소스가 됩니다",
+                    "⚠️ 이 단계가 가장 시간이 오래 걸립니다 (LLM 호출 횟수가 많음)"
+                ]
+            },
+            phone: {
+                title: "Step 4: Phone Data Generation",
+                input: {
+                    description: "persona.json + daily_event.json",
+                    example: {
+                        "persona": {"name": "Feng Haoran"},
+                        "events": [
+                            {"timestamp": "2024-01-01 10:00:00", "title": "Client meeting"}
+                        ]
+                    }
+                },
+                output: {
+                    description: "7가지 스마트폰 데이터 파일",
+                    example: {
+                        "call.json": {
+                            "calls": [
+                                {"timestamp": "2024-01-01 10:30:00", "direction": "outgoing", "contact": "Client - Li Wei", "duration": 420}
+                            ]
+                        },
+                        "sms.json": {
+                            "messages": [
+                                {"timestamp": "2024-01-01 09:30:00", "direction": "sent", "contact": "Client - Wang Jing", "content": "Meeting confirmed for 2pm"}
+                            ]
+                        },
+                        "push.json": {
+                            "notifications": [
+                                {"timestamp": "2024-01-01 07:00:00", "app": "Financial Times", "title": "Market Update"}
+                            ]
+                        }
+                    }
+                },
+                prompt: `Based on the persona and daily events, generate realistic phone data records.
+
+## Persona
+{persona}
+
+## Daily Events
+{daily_events}
+
+## Requirements
+1. Generate calls and SMS that relate to the events
+2. Include work contacts, family, friends based on persona's social circle
+3. Message content should be natural and contextual
+4. Call duration should be realistic (work calls: 3-10min, personal: 2-5min)
+5. Consider time of day appropriateness
+6. Push notifications from apps relevant to persona (work apps, social media, news, finance)
+7. Calendar entries should sync with events
+8. Notes should capture thoughts, todos, meeting notes
+
+## Generators (parallel execution)
+- CommunicationOperationGenerator → call.json, sms.json
+- PushOperationGenerator → push.json
+- NoteCalendarOperationGenerator → note.json, calendar.json
+- GalleryOperationGenerator → photo.json (metadata only)
+- FitnessHealthOperationGenerator → fitness_health.json
+- ChatOperationGenerator → agent_chat.json
+
+## Output Format
+Generate 7 separate JSON files with realistic phone data.`,
+                insights: [
+                    "✏️ 연락처 목록을 수정하면 → 전화/문자의 상대방이 달라집니다",
+                    "✏️ 푸시알림 빈도를 조정하면 → 스마트폰 사용 패턴이 변경됩니다",
+                    "💡 7개의 생성기가 병렬로 실행되어 시간을 절약합니다",
+                    "💡 사진은 메타데이터만 생성됩니다 (실제 이미지는 생성하지 않음)",
+                    "💡 fitness_health 데이터는 daily_event의 건강 상태와 연동됩니다"
+                ]
+            },
+            qa: {
+                title: "Step 5: QA Generation",
+                input: {
+                    description: "daily_event.json + 모든 phone data",
+                    example: {
+                        "daily_events": {"2024-01-01": {"events": [...]}},
+                        "call_data": {"calls": [...]},
+                        "sms_data": {"messages": [...]}
+                    }
+                },
+                output: {
+                    description: "3가지 유형의 QA 데이터",
+                    example: {
+                        "single_hop_qa.json": [
+                            {
+                                "question": "What time was Feng Haoran's Q1 meeting on Jan 1st?",
+                                "answer": "9:00 AM",
+                                "source": "daily_event.json"
+                            }
+                        ],
+                        "multi_hop_qa.json": [
+                            {
+                                "question": "Why did Feng's energy level decrease on Jan 1st?",
+                                "answer": "Meeting cost 2 energy points + long work call",
+                                "reasoning_steps": ["Check energy_cost", "Check call duration"]
+                            }
+                        ]
+                    }
+                },
+                prompt: `Generate question-answer pairs from the combined life data.
+
+## Data Sources
+- Daily Events: {daily_events}
+- Phone Data: {call_data}, {sms_data}, {push_data}, {calendar_data}, {note_data}
+
+## Single-hop QA Requirements
+1. Questions should be directly answerable from a single data source
+2. Focus on factual information (who, what, when, where)
+3. Questions should be natural and realistic
+4. Categories: factual_time, factual_person, factual_location, factual_activity
+
+## Multi-hop QA Requirements
+1. Questions require connecting 2-3 pieces of information
+2. Test temporal reasoning, causal reasoning, or inference
+3. Cannot be answered from a single data point
+4. Should feel natural and purposeful
+5. Must include reasoning steps and source citations
+
+## Reasoning QA Requirements
+1. Complex inference requiring deep understanding
+2. May involve counterfactual reasoning or prediction
+3. Test understanding of person's habits, personality, relationships
+4. Require synthesizing patterns across multiple days
+
+## Output Format
+Generate 3 separate JSON files:
+- single_hop_qa.json (100+ questions)
+- multi_hop_qa.json (50+ questions)
+- reasoning_qa.json (20+ questions)`,
+                insights: [
+                    "✏️ 질문 카테고리 비율을 조정하면 → 벤치마크 난이도가 변경됩니다",
+                    "✏️ reasoning_steps 상세도를 높이면 → 모델 평가 시 더 정밀한 분석이 가능합니다",
+                    "💡 Single-hop: 사실 확인 능력 테스트 (기본 검색)",
+                    "💡 Multi-hop: 추론 능력 테스트 (정보 결합)",
+                    "💡 Reasoning: 고급 이해 능력 테스트 (패턴 인식, 예측)",
+                    "⚡ QA는 LLM 벤치마크 평가의 최종 목적물입니다"
+                ]
+            }
+        };
+
+        let currentStep = null;
+        let modifiedPrompts = {};
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Step card click handlers
+            document.querySelectorAll('.step-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const step = card.dataset.step;
+                    selectStep(step);
+                });
+            });
+
+            // Tab click handlers
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('tab-button')) {
+                    const tab = e.target.dataset.tab;
+                    switchTab(tab);
+                }
+            });
+
+            // Select first step by default
+            selectStep('persona');
+        });
+
+        function selectStep(step) {
+            currentStep = step;
+            
+            // Update active state
+            document.querySelectorAll('.step-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.querySelector(`[data-step="${step}"]`).classList.add('active');
+
+            // Show detail panel
+            const panel = document.getElementById('detailPanel');
+            panel.classList.remove('hidden');
+
+            // Update panel title
+            document.getElementById('panelTitle').textContent = pipelineData[step].title;
+
+            // Show modified badge if applicable
+            const badge = document.getElementById('modifiedBadge');
+            if (modifiedPrompts[step]) {
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            // Reset to first tab
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector('[data-tab="input"]').classList.add('active');
+            
+            renderTabContent('input');
+        }
+
+        function switchTab(tab) {
+            // Update active state
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+
+            renderTabContent(tab);
+        }
+
+        function renderTabContent(tab) {
+            const content = document.getElementById('tabContent');
+            const data = pipelineData[currentStep];
+
+            switch(tab) {
+                case 'input':
+                    content.innerHTML = `
+                        <div class="space-y-4">
+                            <p class="text-gray-300">${data.input.description}</p>
+                            <div class="bg-slate-900 rounded-lg p-4 border border-slate-700">
+                                <h4 class="text-sm font-semibold text-gray-400 mb-2">📄 데이터 예시</h4>
+                                <pre><code class="language-json">${JSON.stringify(data.input.example, null, 2)}</code></pre>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'prompt':
+                    const promptText = modifiedPrompts[currentStep] || data.prompt;
+                    const highlightedPrompt = highlightVariables(promptText);
+                    content.innerHTML = `
+                        <div class="space-y-4">
+                            <p class="text-gray-300">이 단계에서 LLM에 전송되는 프롬프트 템플릿</p>
+                            <div class="bg-slate-900 rounded-lg p-4 border border-slate-700">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h4 class="text-sm font-semibold text-gray-400">🤖 LLM 프롬프트</h4>
+                                    <span class="text-xs text-gray-500">수정 가능 (편집 후 자동 저장)</span>
+                                </div>
+                                <textarea 
+                                    id="promptEditor" 
+                                    class="w-full h-96 bg-slate-800 text-gray-100 font-mono text-sm p-4 rounded border border-slate-600 focus:border-blue-500 focus:outline-none"
+                                    spellcheck="false"
+                                >${promptText}</textarea>
+                                <div class="mt-2 text-xs text-gray-500">
+                                    💡 Tip: <span class="variable-highlight">{변수명}</span> 형태로 표시된 부분은 실행 시 실제 데이터로 치환됩니다
+                                </div>
+                            </div>
+                            <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
+                                <h4 class="text-sm font-semibold text-blue-300 mb-2">🔧 주요 변수</h4>
+                                <div class="grid grid-cols-2 gap-2 text-sm">
+                                    ${extractVariables(promptText).map(v => `
+                                        <div class="flex items-center gap-2">
+                                            <span class="variable-highlight">${v}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    // Add change listener
+                    document.getElementById('promptEditor').addEventListener('input', (e) => {
+                        modifiedPrompts[currentStep] = e.target.value;
+                        document.getElementById('modifiedBadge').classList.remove('hidden');
+                    });
+                    break;
+
+                case 'output':
+                    content.innerHTML = `
+                        <div class="space-y-4">
+                            <p class="text-gray-300">${data.output.description}</p>
+                            <div class="bg-slate-900 rounded-lg p-4 border border-slate-700">
+                                <h4 class="text-sm font-semibold text-gray-400 mb-2">📦 출력 데이터 예시</h4>
+                                <pre><code class="language-json">${JSON.stringify(data.output.example, null, 2)}</code></pre>
+                            </div>
+                            ${currentStep === 'phone' ? `
+                                <div class="bg-orange-900/30 border border-orange-700 rounded-lg p-4">
+                                    <h4 class="text-sm font-semibold text-orange-300 mb-2">📱 생성되는 파일 목록</h4>
+                                    <ul class="grid grid-cols-2 gap-2 text-sm">
+                                        <li>✓ call.json - 통화 기록</li>
+                                        <li>✓ sms.json - 문자 메시지</li>
+                                        <li>✓ push.json - 푸시 알림</li>
+                                        <li>✓ calendar.json - 캘린더 일정</li>
+                                        <li>✓ note.json - 메모</li>
+                                        <li>✓ photo.json - 사진 메타데이터</li>
+                                        <li>✓ fitness_health.json - 피트니스/건강</li>
+                                        <li>✓ agent_chat.json - 채팅 대화</li>
+                                    </ul>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                    break;
+
+                case 'insights':
+                    content.innerHTML = `
+                        <div class="space-y-3">
+                            <p class="text-gray-300 mb-4">이 단계에서 수정 가능한 부분과 그 영향</p>
+                            ${data.insights.map(insight => {
+                                const type = insight.startsWith('✏️') ? 'yellow' : 
+                                           insight.startsWith('💡') ? 'blue' : 'red';
+                                const bgColor = type === 'yellow' ? 'bg-yellow-900/30 border-yellow-700' :
+                                              type === 'blue' ? 'bg-blue-900/30 border-blue-700' :
+                                              'bg-red-900/30 border-red-700';
+                                return `
+                                    <div class="${bgColor} border rounded-lg p-4">
+                                        <p class="text-sm">${insight}</p>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    `;
+                    break;
+            }
+
+            // Syntax highlighting for code blocks
+            document.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+            });
+        }
+
+        function highlightVariables(text) {
+            return text.replace(/\{([^}]+)\}/g, '<span class="variable-highlight">{$1}</span>');
+        }
+
+        function extractVariables(text) {
+            const matches = text.matchAll(/\{([^}]+)\}/g);
+            const vars = new Set();
+            for (const match of matches) {
+                vars.add(`{${match[1]}}`);
+            }
+            return Array.from(vars);
+        }
+    </script>
+</body>
+</html>
