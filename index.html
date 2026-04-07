@@ -153,7 +153,7 @@
                         </div>
                     </div>
                     <div class="text-right text-sm text-teal-400">
-                        <div>실행 시간: ~5-10분/인물</div>
+                        
                         <div class="text-xs text-slate-500 mt-1">LLM 호출: ~3-4회/인물</div>
                     </div>
                 </div>
@@ -162,7 +162,6 @@
                 <div class="flex gap-1 mb-0 border-b border-teal-700">
                     <button class="tab-button active px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="persona" data-tab="overview">개요</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="persona" data-tab="flow">🔀 내부 플로우</button>
-                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="persona" data-tab="tuning">수정 가이드</button>
                 </div>
 
                 <!-- 개요 -->
@@ -248,37 +247,6 @@
 <div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">출력</span><span class="font-semibold text-white text-sm">persona.json 저장</span></div><div class="text-xs text-slate-400 font-mono mb-1">각 사용자 폴더</div><div class="text-xs text-slate-500 italic mb-2">gen_persons() 결과로 relation 배열이 채워진 최종 페르소나. 영어로 번역된 버전이 각 사용자 폴더에 저장됨.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">완성된 페르소나 + 인간관계망</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">persona.json</span></div></div><div class="flex gap-1"></div></div>
     </div>
 </div>
-<div class="tab-content hidden" data-step="persona" data-tab="tuning">
-                    <div class="space-y-4">
-                        <div class="bg-slate-800 rounded-lg p-4">
-                            <div class="font-semibold text-teal-300 mb-2">person.json 수정 → 전혀 다른 인물</div>
-                            <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
-                                <li>age를 45로 올리면 → 직업/수입/가족 구성이 달라짘</li>
-                                <li>job을 "의사"로 매핑하면 → 병원 관련 이벤트 비율 증가</li>
-                                <li>salary를 올리면 → 고급 레스토랑/건강클럽 이벤트 늘어남</li>
-                            </ul>
-                        </div>
-                        <div class="bg-slate-800 rounded-lg p-4">
-                            <div class="font-semibold text-teal-300 mb-2">refer.json 수정 → 속성 풀 확장</div>
-                            <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
-                                <li>취미 목록에 특이한 항목 추가 → 해당 취미 만나는 이벤트 생성 증가</li>
-                                <li>맥락 유형 다양화 → 더 다양한 생활 패턴</li>
-                            </ul>
-                        </div>
-                        <div class="bg-slate-800 rounded-lg p-4">
-                            <div class="font-semibold text-teal-300 mb-2">template_refine 수정 → 검증 기준 변경</div>
-                            <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
-                                <li>검증 엄격도 높이면 → 더 현실적인 페르소나 (but LLM 호출 늘어남)</li>
-                                <li>속성간 일관성 체크 항목 수정 → 가중치 변경 가능</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- Step 1: Draft Generation -->
         <div id="step-draft" class="mb-16">
             <div class="step-card bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-8 border border-purple-600">
                 <div class="flex items-center justify-between mb-6">
@@ -289,17 +257,13 @@
                             <p class="text-purple-200 mt-1">연간 생활 이벤트 타임라인 초안 생성</p>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <div class="text-sm text-purple-300">실행 시간</div>
-                        <div class="text-2xl font-bold">~30-60분</div>
-                    </div>
+                    
                 </div>
 
                 <!-- Tabs -->
                 <div class="flex gap-2 mb-6 border-b border-purple-700">
                     <button class="tab-button active px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="draft" data-tab="overview">개요</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="draft" data-tab="flow">🔀 내부 플로우</button>
-                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="draft" data-tab="tuning">수정 가이드</button>
                 </div>
 
                 <!-- Tab Content -->
@@ -450,61 +414,6 @@ Finance（15개）
 <div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">출력</span><span class="font-semibold text-white text-sm">daily_draft.json</span></div><div class="text-xs text-slate-400 font-mono mb-1">각 사용자 폴더</div><div class="text-xs text-slate-500 italic mb-2">Scheduler 전체 결과가 월별/일별 구조로 저장. Simulator가 이 파일을 하루 단위로 읽어 상세 이벤트를 생성.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">충돌 해결된 타임라인</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">daily_draft.json (월별/일별 이벤트)</span></div></div><div class="flex gap-1"></div></div>
     </div>
 </div>
-<div class="tab-content hidden" data-step="draft" data-tab="tuning">
-                    <div class="space-y-3">
-                        <p class="text-gray-300 mb-4">프롬프트 수정을 통한 결과 제어 방법</p>
-                        
-                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
-                            <h4 class="text-sm font-bold text-yellow-300 mb-2">✏️ MBTI 타입 변경의 영향</h4>
-                            <div class="text-sm text-gray-300">
-                                <strong>ENTJ</strong> → 업무 중심 이벤트 많음 (회의, 네트워킹, 성과)<br>
-                                <strong>ENFP</strong> → 사교 중심 이벤트 많음 (모임, 여행, 창의적 활동)<br>
-                                <strong>INTJ</strong> → 혼자 하는 활동 많음 (독서, 연구, 개인 프로젝트)
-                            </div>
-                        </div>
-
-                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
-                            <h4 class="text-sm font-bold text-yellow-300 mb-2">✏️ 직업 변경의 영향</h4>
-                            <div class="text-sm text-gray-300">
-                                <strong>금융 어드바이저</strong> → 고객 미팅, 시장 분석, 보고서 작성<br>
-                                <strong>소프트웨어 엔지니어</strong> → 코딩, 코드 리뷰, 기술 학습<br>
-                                <strong>의사</strong> → 진료, 회진, 학회 참석
-                            </div>
-                        </div>
-
-                        <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
-                            <h4 class="text-sm font-bold text-blue-300 mb-2">💡 이벤트 밀도 조절</h4>
-                            <div class="text-sm text-gray-300">
-                                template_yearterm_eventgen에서<br>
-                                <code class="bg-slate-800 px-2 py-1 rounded">生成 2025 年内可能发生的 100 件</code> → 숫자 변경<br>
-                                • 50개: 느슨한 일정 (여유로운 생활)<br>
-                                • 150개: 빡빡한 일정 (바쁜 생활)
-                            </div>
-                        </div>
-
-                        <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
-                            <h4 class="text-sm font-bold text-blue-300 mb-2">💡 부정적 이벤트 비율</h4>
-                            <div class="text-sm text-gray-300">
-                                template_yearterm_complete_3에서<br>
-                                <code class="bg-slate-800 px-2 py-1 rounded">补充创作不超过 10 个</code> → 숫자 변경<br>
-                                • 5개: 평온한 1년<br>
-                                • 20개: 파란만장한 1년
-                            </div>
-                        </div>
-
-                        <div class="bg-red-900/30 border border-red-700 rounded-lg p-4">
-                            <h4 class="text-sm font-bold text-red-300 mb-2">⚠️ 주의사항</h4>
-                            <div class="text-sm text-gray-300">
-                                • 이 단계는 "큰 그림"만 그립니다 - 세부 사항은 Simulator에서 생성<br>
-                                • 프롬프트 수정 후 전체 파이프라인 재실행 필요 (~2시간)
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Step 2: Simulator -->
         <div id="step-simulator" class="mb-16">
             <div class="step-card bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-8 border border-green-600">
                 <div class="flex items-center justify-between mb-6">
@@ -515,17 +424,13 @@ Finance（15개）
                             <p class="text-green-200 mt-1">상세 이벤트 + 건강 상태 시뮬레이션</p>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <div class="text-sm text-green-300">실행 시간</div>
-                        <div class="text-2xl font-bold">~1-2시간</div>
-                    </div>
+                    
                 </div>
 
                 <!-- Tabs -->
                 <div class="flex gap-2 mb-6 border-b border-green-700">
                     <button class="tab-button active px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="overview">개요</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="flow">🔀 내부 플로우</button>
-                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="tuning">수정 가이드</button>
                 </div>
 
                 <!-- Tab Content -->
@@ -601,234 +506,6 @@ Finance（15개）
                     </div>
                 </div>
 
-                <div class="tab-content hidden" data-step="simulator" data-tab="tuning">
-                    <div class="space-y-3">
-                        <p class="text-gray-300 mb-4">Simulator 프롬프트 수정 가이드</p>
-                        
-                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
-                            <h4 class="text-sm font-bold text-yellow-300 mb-2">✏️ 이벤트 상세도 조절</h4>
-                            <div class="text-sm text-gray-300">
-                                template_daily_event_objective_optimize에서<br>
-                                <strong>높은 상세도</strong>: "每个事件包含详细的准备、执行、结束过程"<br>
-                                <strong>낮은 상세도</strong>: "只记录主要事件，省略过渡细节"
-                            </div>
-                        </div>
-
-                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
-                            <h4 class="text-sm font-bold text-yellow-300 mb-2">✏️ 건강 변화 속도</h4>
-                            <div class="text-sm text-gray-300">
-                                template_impact_events_analysis에서<br>
-                                <code class="bg-slate-800 px-2 py-1 rounded">体重有合理的波动和最终变化</code><br>
-                                • "轻微波动(0.1-0.3kg)" → 안정적인 건강<br>
-                                • "明显波动(0.5-1kg)" → 불안정한 생활
-                            </div>
-                        </div>
-
-                        <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
-                            <h4 class="text-sm font-bold text-blue-300 mb-2">💡 날씨 영향 강도</h4>
-                            <div class="text-sm text-gray-300">
-                                template_daily_event_objective_optimize의 "客观约束"에서<br>
-                                <strong>강한 영향</strong>: "下雨必须取消所有户外活动"<br>
-                                <strong>약한 영향</strong>: "下雨可以考虑穿雨衣继续户外活动"
-                            </div>
-                        </div>
-
-                        <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
-                            <h4 class="text-sm font-bold text-blue-300 mb-2">💡 교통 시간 리얼리즘</h4>
-                            <div class="text-sm text-gray-300">
-                                template_event_traffic_adjust에서<br>
-                                "计算实际交通时间" 파라미터 조정:<br>
-                                • 평균 속도: 도심 30km/h, 고속도로 80km/h<br>
-                                • 추가 시간: 주차 10분, 엘리베이터 대기 5분
-                            </div>
-                        </div>
-
-                        <div class="bg-red-900/30 border border-red-700 rounded-lg p-4">
-                            <h4 class="text-sm font-bold text-red-300 mb-2">⚠️ 주의사항</h4>
-                            <div class="text-sm text-gray-300">
-                                • 이 단계가 가장 시간이 오래 걸립니다 (365일 × 10분 = 60시간 → 병렬화로 1-2시간)<br>
-                                • 건강 상태는 15일/말일에만 체크포인트 생성 (매일 추적하면 너무 느림)<br>
-                                • POI 매핑은 실제 Google Maps API 호출 (비용 발생 가능)
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 내부 플로우 탭 -->
-                                <div class="tab-content hidden" data-step="simulator" data-tab="flow">
-    <h3 class="text-xl font-bold text-green-300 mb-2">Simulator 내부 실행 흐름</h3>
-    <p class="text-slate-400 text-sm mb-4">📋 프롬프트 · 📊 데이터 예시 버튼을 클릭하세요.</p>
-    <div class="flex flex-col gap-0 max-w-3xl">
-<div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">1회</span><span class="font-semibold text-white text-sm">FuzzyMemoryBuilder.build_all_summaries()</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/fuzzy_memory_builder.py</div><div class="text-xs text-slate-500 italic mb-2">daily_draft를 평탄화한 event_transfer.json으로 월별·누적 요약 생성. Mind.get_plan4()가 "지난 달에 무슨 일이 있었나"를 참조하는 기반.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">event_transfer.json (daily_draft 평탄화)</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">monthly_summaries.json + cumulative_summaries.json</span></div></div><div class="flex gap-1"><div class="mt-1"><button onclick="var e=document.getElementById('io-s-n1');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n1" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// event_transfer.json
-[{"date": ["2025-01-01"],
-  "name": "New Year Morning Run",
-  "description": "5km run..."},
- {"date": ["2025-01-15"],
-  "name": "CFA Study Start"},
- ...]</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// monthly_summaries.json
-{"2025-01": "January: Feng Haoran
-  started with disciplined morning runs.
-  CFA studies began mid-month...",
- "2025-02": "..."}
-
-// cumulative_summaries.json
-{"2025-01": "Life pattern: early riser,
-  3x/week runner, works at Huatai..."}</pre></div></div></div></div></div>
-<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div><span class="text-xs text-slate-500 italic ml-2">매일 반복 — 병렬 스레드 (max_workers=30)</span></div>
-<div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">매일</span><span class="font-semibold text-white text-sm">Mind.get_plan4(date)</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/mind.py</div><div class="text-xs text-slate-500 italic mb-2">FuzzyMemory에서 해당 월 요약을 읽고, daily_draft에서 당일 참조 이벤트를 가져와 당일 계획 컨텍스트 구성. LLM 없음 — 순수 데이터 조회.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">FuzzyMemory 월별 요약 + daily_draft 당일 참조</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">당일 계획 컨텍스트 (plan dict)</span></div></div><div class="flex gap-1"><div class="mt-1"><button onclick="var e=document.getElementById('io-s-n2');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n2" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// FuzzyMemory (월 요약)
-"January: disciplined morning runs,
- CFA studies begin..."
-
-// daily_draft 당일 이벤트
-{"date": "2025-01-01",
- "events": [
-   {"name": "New Year Morning Run"}
- ]}</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"date": "2025-01-01",
- "reference_events": [
-   {"name": "New Year Morning Run",
-    "time": "06:40~08:00"}
- ],
- "memory_context": "Early riser, runner...",
- "monthly_summary": "Jan: disciplined..."}</pre></div></div></div></div></div>
-<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">Mind._generate_subjective_thought()</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/mind.py <span class="text-yellow-400 text-xs">→ template_daily_event_subjective_plan</span></div><div class="text-xs text-slate-500 italic mb-2">인물이 "나"로서 오늘 일정을 주관적으로 계획. 성격(ENTJ)·기억(CFA 공부 시작 예정)·날짜(공휴일)를 반영. 현실 제약은 이 단계에서 고려하지 않음.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">plan (당일 참조) + cognition (자아인식+기억)</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">1인칭 주관적 계획 JSON</span></div></div><div class="flex gap-1"><div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-daily-event-subjective-plan', 'template_daily_event_subjective_plan')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 프롬프트</button><div id="p-template-daily-event-subjective-plan" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-daily-event-subjective-plan-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-daily-event-subjective-plan-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-1"><button onclick="var e=document.getElementById('io-s-n3');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n3" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// plan
-{"reference_events": [
-  {"name": "New Year Morning Run"}
- ]}
-
-// cognition (자아인식 + 장기기억)
-{"self_awareness": "ENTJ, disciplined",
- "long_term_memory": [
-  "2025-01-02: CFA 공부 시작 예정"
- ]}</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"thought": "새해 첫날, 아침 일찍 유악산에서
-  달리기를 해야겠다. 오후엔 가족에게
-  전화하고 2025 목표를 정리할 계획.",
- "plan": [
-  {"time": "06:40", "activity": "유악산 달리기"},
-  {"time": "13:30", "activity": "가족 새해 통화"},
-  {"time": "14:00", "activity": "2025 목표 정리"}
- ]}</pre></div></div></div></div></div>
-<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">Mind._generate_objective_events()</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/mind.py <span class="text-yellow-400 text-xs">→ template_daily_event_objective_optimize</span></div><div class="text-xs text-slate-500 italic mb-2">주관적 계획에 현실 제약 반영. 빈 시간대 채우기, 일상 패턴(출퇴근) 추가, 이전 날과 차별화. 날씨·교통·피로도 등 객관적 요소 고려.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">subjective_thought + date</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">시간순 이벤트 배열 (현실 제약 반영)</span></div></div><div class="flex gap-1"><div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-daily-event-objective-optimize', 'template_daily_event_objective_optimize')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 프롬프트</button><div id="p-template-daily-event-objective-optimize" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-daily-event-objective-optimize-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-daily-event-objective-optimize-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-1"><button onclick="var e=document.getElementById('io-s-n4');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n4" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// subjective_thought
-{"plan": [
-  {"time": "06:40", "activity": "달리기"},
-  {"time": "13:30", "activity": "가족 통화"}
- ]}
-// date: "2025-01-01 (New Year, Wed)"</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">[{"time": "06:00~06:40", "name": "기상·준비"},
- {"time": "06:40~08:00",
-  "name": "New Year Morning Run",
-  "location_type": "outdoor_sports"},
- {"time": "08:00~08:30", "name": "귀가·샤워"},
- {"time": "08:30~09:30", "name": "아침식사"},
- {"time": "13:30~14:45",
-  "name": "가족 새해 영상통화"},
- ... (공백 시간대 채워짐)]</pre></div></div></div></div></div>
-<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">Mind.map() + _adjust_event_trajectory()</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/mind.py <span class="text-yellow-400 text-xs">→ template_event_traffic_adjust</span></div><div class="text-xs text-slate-500 italic mb-2">location_type("outdoor_sports") → 실제 POI 검색(고더지도) → 상세 주소+GPS 배정. 이동 시간 계산하여 이벤트 사이에 "버스 이동 15분" 같은 이동 이벤트 자동 삽입.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">objective_events → POI 검색 → 이동경로 조정</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">최종 이벤트 시퀀스 (실제 주소 + 이동시간)</span></div></div><div class="flex gap-1"><div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-event-traffic-adjust', 'template_event_traffic_adjust')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 프롬프트</button><div id="p-template-event-traffic-adjust" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-event-traffic-adjust-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-event-traffic-adjust-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-1"><button onclick="var e=document.getElementById('io-s-n5');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n5" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// objective_events
-[{"time": "06:40~08:00",
-  "name": "New Year Morning Run",
-  "location_type": "outdoor_sports"}, ...]
-
-// POI 검색 결과
-[{"name": "岳麓山风景区",
-  "address": "岳麓区登高路58号",
-  "travel_time": "15min by bus"}]</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">[{"time": "06:00~06:40",
-  "name": "기상 및 이동 준비",
-  "location": "Jinxing Residential, Shuangtang Rd"},
- {"time": "06:40~06:55",
-  "name": "버스 이동 (305번)",
-  "note": "집→유악산 15분"},
- {"time": "06:55~08:10",
-  "name": "New Year Morning Run",
-  "location": "Yuelu Mountain Scenic Area,
-    Yuelu District, Changsha"},
- ...]</pre></div></div></div></div></div>
-<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">Mind._generate_reflection()</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/mind.py <span class="text-yellow-400 text-xs">→ template_daily_reflection</span></div><div class="text-xs text-slate-500 italic mb-2">하루 마무리 회고 생성. 오늘 감정·자아 통찰·후속 약속 기록·생각 반성 포함. 미래 계획에 반드시 날짜 명시 → 장기기억 업데이트 시 활용.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">adjusted_events + plan + date</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">하루 회고 + 미래 계획 JSON</span></div></div><div class="flex gap-1"><div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-daily-reflection', 'template_daily_reflection')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 프롬프트</button><div id="p-template-daily-reflection" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-daily-reflection-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-daily-reflection-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-1"><button onclick="var e=document.getElementById('io-s-n6');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n6" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// 오늘의 최종 이벤트
-[{"time": "06:55~08:10",
-  "name": "New Year Morning Run",
-  "location": "Yuelu Mountain"},
- {"time": "13:30~14:45",
-  "name": "가족 새해 영상통화"}, ...]
-// date: "2025-01-01"</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"date": "2025-01-01",
- "thought": "새해 첫날을 달리기로 시작했다.
-  유악산의 아침 공기가 상쾌했다.
-  가족과의 통화도 따뜻했다.",
- "future_plans": [
-  {"date": "2025-01-02",
-   "plan": "CFA 공부 시작 (하루 2시간)"},
-  {"date": "2025-01-15",
-   "plan": "1차 모의고사 응시"}
- ]}</pre></div></div></div></div></div>
-<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">Mind._update_long_term_memory()</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/mind.py <span class="text-yellow-400 text-xs">→ template_update_long_term_memory</span></div><div class="text-xs text-slate-500 italic mb-2">회고의 미래 계획·핵심 이벤트·고정 선호만 장기기억에 저장. 이미 지난 미래 이벤트·1회성 사건 제거. 이 기억이 다음 날 get_plan4()의 cognition으로 들어감.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">plan + reflection</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">업데이트된 장기기억 JSON</span></div></div><div class="flex gap-1"><div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-update-long-term-memory', 'template_update_long_term_memory')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 프롬프트</button><div id="p-template-update-long-term-memory" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-update-long-term-memory-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-update-long-term-memory-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-1"><button onclick="var e=document.getElementById('io-s-n7');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n7" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// reflection
-{"thought": "새해 달리기로 시작...",
- "future_plans": [
-  {"date": "2025-01-02", "plan": "CFA 공부 시작"}
- ]}
-// 기존 장기기억
-{"key_events": [], "upcoming_plans": []}</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"long_term_memory": {
-  "key_events": [
-   "2025-01-01: 새해 유악산 달리기 (건강 습관 강화)"
-  ],
-  "fixed_preferences": [
-   "매일 아침 달리기", "가족과 명절 영상통화"
-  ],
-  "upcoming_plans": [
-   "2025-01-02: CFA 공부 시작 (하루 2시간)",
-   "2025-01-15: 1차 모의고사"
-  ]
-}}</pre></div></div></div></div></div>
-<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div><span class="text-xs text-slate-500 italic ml-2">월 단위 실행</span></div>
-<div class="bg-blue-900 border border-blue-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-blue-700 text-blue-200 px-2 py-0.5 rounded">LLM 월별</span><span class="font-semibold text-white text-sm">EventRefiner.health_analysis()</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/event_refiner.py <span class="text-yellow-400 text-xs">→ template_impact_events_analysis</span></div><div class="text-xs text-slate-500 italic mb-2">월별 이벤트를 분석해 15일 중간·말일 건강 상태 스냅샷 생성. 입력 데이터에 없어도 논리적으로 추론한 변화 이벤트 3-5개 추가 (날씨·업무·부상 등). QA 추론 문제의 핵심 근거.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">persona + 월별 이벤트 + 이전 달 건강 상태</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">15일/말일 건강 상태 + 변화 노드</span></div></div><div class="flex gap-1"><div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-impact-events-analysis', 'template_impact_events_analysis')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 프롬프트</button><div id="p-template-impact-events-analysis" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-impact-events-analysis-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-impact-events-analysis-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-1"><button onclick="var e=document.getElementById('io-s-n8');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n8" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// persona
-{"age": 27, "body": {"weight": 75, "BMI": 20.9}}
-
-// 이전 달 말 건강 상태
-{"weight_record": "75kg",
- "sleep_time": {"bedtime": "23:00", "wakeup": "06:30"}}
-
-// 1월 이벤트 (일별)
-[{"date":"2025-01-01","events":[...]},
- {"date":"2025-01-20","events":["독감"]}]</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"mid_month_state": {
-  "weight_record": "74.5kg",
-  "sleep_time": {"bedtime": "23:30", "wakeup": "06:40"},
-  "health_status": {"summary": "독감 회복 중"}
- },
- "end_of_month_state": {
-  "weight_record": "74.2kg",
-  "health_status": {"summary": "완전 회복"}
- },
- "change_nodes": [
-  {"date": "2025-01-20",
-   "event": "독감 발병",
-   "impact": "수면 패턴 변화, 체중 0.3kg 감소"}
- ]}</pre></div></div></div></div></div>
-<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">EventFormatter._extract_events()</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/event_formatter.py <span class="text-yellow-400 text-xs">→ template_event_format_sequence</span></div><div class="text-xs text-slate-500 italic mb-2">하루의 비정형 이벤트 텍스트를 최대 20개의 구조화된 JSON으로 변환. 인접 이벤트 병합, type/participant/location/date 표준 필드 채우기.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">adjusted_events + poi_data + date</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">daily_event.json 최종 이벤트 (최대 20개/일)</span></div></div><div class="flex gap-1"><div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-event-format-sequence', 'template_event_format_sequence')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 프롬프트</button><div id="p-template-event-format-sequence" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-event-format-sequence-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-event-format-sequence-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-1"><button onclick="var e=document.getElementById('io-s-n9');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n9" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">"06:00-06:40 기상 및 준비
-  (집, 샤워, 옷 입기...)
-06:40-06:55 버스 이동
-  (버스 305번, Yuelu Mountain행)
-06:55-08:10 새해 달리기
-  (Yuelu Mountain, 5km...)"
-
-// date: "2025-01-01"</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"event_id": "1",
- "name": "Morning Preparations and Departure",
- "date": ["From 06:00:00 to 06:55:00 on Jan 1"],
- "type": "Personal Life",
- "description": "Awakened by biological clock,
-   washed up, changed into running gear...",
- "participant": [
-   {"name": "Feng Haoran", "relation": "Self"}
- ],
- "location": "Jinxing Residential Community,
-   Shuangtang Rd, Yuelu District"}
-// + 하루 최대 19개 더</pre></div></div></div></div></div>
-<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-<div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">출력</span><span class="font-semibold text-white text-sm">daily_event.json</span></div><div class="text-xs text-slate-400 font-mono mb-1">각 사용자 폴더</div><div class="text-xs text-slate-500 italic mb-2">EventFormatter 전체 365일 결과 합산. Simulator의 최종 산출물. QA 생성, Phone Data 생성의 인풋으로 사용.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">EventFormatter 전체 결과</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">4878개 이벤트 (fenghaoran 기준)</span></div></div><div class="flex gap-1"></div></div>
-    </div>
-    <div class="mt-4 p-3 bg-slate-800 rounded text-xs text-slate-400"><p>• <span class="text-purple-400">하루 처리</span>: 2~6주 단위 병렬 스레드 (max_workers=30)</p><p>• <span class="text-blue-400">건강/생활 분석</span>: 월별 1회 (모든 일별 처리 후)</p><p>• <span class="text-yellow-400">총 LLM 호출</span>: 하루당 약 7회 × 365일 + 월별 분석 ≈ 2,600회/인물</p></div>
-</div>
-
         <div id="step-phone" class="mb-16">
             <div class="step-card bg-gradient-to-br from-orange-900 to-orange-800 rounded-lg p-8 border border-orange-600">
                 <div class="flex items-center justify-between mb-6">
@@ -839,10 +516,7 @@ Finance（15개）
                             <p class="text-orange-200 mt-1">7가지 스마트폰 데이터 생성 (병렬 실행)</p>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <div class="text-sm text-orange-300">실행 시간</div>
-                        <div class="text-2xl font-bold">~30-45분</div>
-                    </div>
+                    
                 </div>
 
                 <!-- Tabs -->
@@ -852,7 +526,6 @@ Finance（15개）
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="phone" data-tab="code">코드 경로</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="phone" data-tab="generators">7개 생성기</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="phone" data-tab="output">아웃풋 예시</button>
-                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="phone" data-tab="tuning">수정 가이드</button>
 
 
                 </div>
@@ -1269,53 +942,6 @@ Finance（15개）
                     </div>
                 </div>
 
-                <div class="tab-content hidden" data-step="phone" data-tab="tuning">
-                    <div class="space-y-3">
-                        <p class="text-gray-300 mb-4">Phone Data 생성 수정 가이드</p>
-                        
-                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
-                            <h4 class="text-sm font-bold text-yellow-300 mb-2">✏️ 통화 빈도 조절</h4>
-                            <div class="text-sm text-gray-300">
-                                CommunicationOperationGenerator 프롬프트에서<br>
-                                <code class="bg-slate-800 px-2 py-1 rounded">每天平均 3-5 通电话</code> → 숫자 변경<br>
-                                • 1-2통: 말이 적은 성격<br>
-                                • 8-10통: 사교적인 성격
-                            </div>
-                        </div>
-
-                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
-                            <h4 class="text-sm font-bold text-yellow-300 mb-2">✏️ 푸시 알림 밀도</h4>
-                            <div class="text-sm text-gray-300">
-                                PushOperationGenerator에서<br>
-                                <strong>낮음</strong>: 하루 5-10개 (알림 꺼둠)<br>
-                                <strong>보통</strong>: 하루 20-30개<br>
-                                <strong>높음</strong>: 하루 50-80개 (알림 중독)
-                            </div>
-                        </div>
-
-                        <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
-                            <h4 class="text-sm font-bold text-blue-300 mb-2">💡 채팅 스타일 변경</h4>
-                            <div class="text-sm text-gray-300">
-                                ChatOperationGenerator context에서<br>
-                                • '你是一个正式礼貌的职场人' → 업무적 톤<br>
-                                • '你是一个活泼可爱的年轻人' → 이모티콘 많이
-                            </div>
-                        </div>
-
-                        <div class="bg-red-900/30 border border-red-700 rounded-lg p-4">
-                            <h4 class="text-sm font-bold text-red-300 mb-2">⚠️ 주의사항</h4>
-                            <div class="text-sm text-gray-300">
-                                • 7개 생성기가 병렬 실행되므로 각각 독립적으로 수정 가능<br>
-                                • event_id 연결이 깨지지 않도록 주의<br>
-                                • 사진은 메타데이터만 생성 (실제 이미지 생성 X)
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Step 4: QA Generation -->
         <div id="step-qa" class="mb-16">
             <div class="step-card bg-gradient-to-br from-red-900 to-red-800 rounded-lg p-8 border border-red-600">
                 <div class="flex items-center justify-between mb-6">
@@ -1326,10 +952,7 @@ Finance（15개）
                             <p class="text-red-200 mt-1">3가지 난이도 질의응답 데이터 생성</p>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <div class="text-sm text-red-300">실행 시간</div>
-                        <div class="text-2xl font-bold">~20-30분</div>
-                    </div>
+                    
                 </div>
 
                 <!-- Tabs -->
@@ -1337,7 +960,6 @@ Finance（15개）
                     <button class="tab-button active px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="qa" data-tab="overview">개요</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="qa" data-tab="types">QA 타입</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="qa" data-tab="output">아웃풋 예시</button>
-                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="qa" data-tab="tuning">수정 가이드</button>
                 </div>
 
                 <!-- Tab Content -->
@@ -1541,76 +1163,6 @@ Finance（15개）
                     </div>
                 </div>
 
-                <div class="tab-content hidden" data-step="qa" data-tab="tuning">
-                    <div class="space-y-3">
-                        <p class="text-gray-300 mb-4">QA 생성 수정 가이드</p>
-                        
-                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
-                            <h4 class="text-sm font-bold text-yellow-300 mb-2">✏️ QA 개수 조절</h4>
-                            <div class="text-sm text-gray-300">
-                                qa_generator.py에서<br>
-                                • single_hop: 100개 → 50개 (간단한 벤치마크)<br>
-                                • multi_hop: 50개 → 100개 (추론 중심 벤치마크)<br>
-                                • reasoning: 20개 → 50개 (고난이도 벤치마크)
-                            </div>
-                        </div>
-
-                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
-                            <h4 class="text-sm font-bold text-yellow-300 mb-2">✏️ 질문 스타일 변경</h4>
-                            <div class="text-sm text-gray-300">
-                                프롬프트에서<br>
-                                • "Generate natural questions" → 일상적 질문<br>
-                                • "Generate precise factual questions" → 정확한 사실 확인<br>
-                                • "Generate open-ended questions" → 서술형 답변
-                            </div>
-                        </div>
-
-                        <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
-                            <h4 class="text-sm font-bold text-blue-300 mb-2">💡 난이도 밸런스</h4>
-                            <div class="text-sm text-gray-300">
-                                현재 비율: Single(60%) : Multi(30%) : Reasoning(10%)<br>
-                                고급 벤치마크: 30% : 40% : 30%<br>
-                                초급 벤치마크: 80% : 15% : 5%
-                            </div>
-                        </div>
-
-                        <div class="bg-red-900/30 border border-red-700 rounded-lg p-4">
-                            <h4 class="text-sm font-bold text-red-300 mb-2">⚡ 최종 목적</h4>
-                            <div class="text-sm text-gray-300">
-                                이 QA 데이터는 LLM 평가의 최종 목적물입니다.<br>
-                                RAG 시스템이나 에이전트의 "개인 생활 이해 능력"을 테스트합니다.<br>
-                                전체 파이프라인이 이 QA 생성을 위해 존재합니다.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <footer class="bg-slate-900 border-t border-slate-700 px-6 py-8 mt-16">
-        <div class="max-w-7xl mx-auto text-center text-gray-400">
-            <p class="mb-2">LifeBench Pipeline Visualization - Complete Technical Documentation</p>
-            <p class="text-sm">Based on actual code from <span class="code-path">run/</span> and <span class="code-path">event/</span> directories</p>
-            <p class="text-xs mt-4">All prompts and data samples are from the official LifeBench repository</p>
-        </div>
-    </footer>
-
-    <script>
-        // Tab switching
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('tab-button')) {
-                const step = e.target.dataset.step;
-                const tab = e.target.dataset.tab;
-                
-                // Update active button
-                document.querySelectorAll(`.tab-button[data-step="${step}"]`).forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                e.target.classList.add('active');
-                
-                // Show/hide content
                 document.querySelectorAll(`.tab-content[data-step="${step}"]`).forEach(content => {
                     content.classList.add('hidden');
                 });
