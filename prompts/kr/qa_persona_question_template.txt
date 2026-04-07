@@ -1,0 +1,18 @@
+다음 사용자 프로파일 정보를 기반으로 {num_questions}개의 단일 홉 질문을 생성하세요:
+{persona_info}
+
+{num_questions}개의 사용자 기본 정보에 관한 간단한 사실성 질문을 생성하세요. 절반은 주관식, 절반은 객관식.
+
+질문 설계 원칙:
+1. W원칙(Who/What/When/Where/Why/How) 참조하여 사용자 프로파일 질문 설계
+2. 사용자 프로파일 속성을 직접 기반으로 질문
+3. 질문 표현은 검색을 돕는 정보를 최소화(모호화)하되 충분한 정보량 보장
+4. 등가 대체 가능 (예: "고등교육"을 "대학 이상 학력"으로 대체)
+
+출력 형식 (JSON):
+{
+  "questions": [
+    {"question": "질문 내용", "answer": "답변", "type": "short_answer"},
+    {"question": "객관식 내용", "options": [...], "answer": "A", "type": "multiple_choice"}
+  ]
+}

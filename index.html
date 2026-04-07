@@ -856,11 +856,91 @@ Finance（15개）
                 <!-- Tabs -->
                 <div class="flex gap-2 mb-6 border-b border-red-700">
                     <button class="tab-button active px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="qa" data-tab="overview">개요</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="qa" data-tab="flow">🔀 내부 플로우</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="qa" data-tab="types">QA 타입</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="qa" data-tab="output">아웃풋 예시</button>
                 </div>
 
                 <!-- Tab Content -->
+                <div class="tab-content hidden" data-step="qa" data-tab="flow">
+    <h3 class="text-xl font-bold text-red-300 mb-2">QA Generation 내부 흐름</h3>
+    <p class="text-slate-400 text-sm mb-4">3가지 생성기가 병렬로 실행되어 서로 다른 난이도/유형의 질문을 생성합니다. 📋 프롬프트 · 📊 데이터 예시를 클릭해 확인하세요.</p>
+    <div class="flex flex-col gap-0 max-w-3xl">
+<div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">입력</span><span class="font-semibold text-white text-sm">daily_event.json + phone_data/ + persona.json</span></div><div class="text-xs text-slate-400 font-mono mb-1">run/QA_gen.py → event/qa_generator.py</div><div class="text-xs text-slate-500 italic mb-2">Simulator/Phone Data 결과 전체가 인풋. 3가지 QA 생성기가 병렬 실행.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">daily_event.json + phone_data/ + persona.json</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">QA 생성기 3개 초기화</span></div></div><div class="mt-1"><button onclick="var e=document.getElementById('io-qa-n0');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-qa-n0" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// daily_event.json (샘플)
+{"event_id":"1","name":"New Year Morning Run",
+ "date":["06:00~08:00 Jan 1 2025"],
+ "type":"Personal Life",
+ "description":"5km run at Yuelu Mountain..."}
+
+// persona.json (핵심)
+{"name":"Feng Haoran","age":27,
+ "job":"Financial Investment Advisor",
+ "personality":{"mbti":"ENTJ"}}
+
+// phone_data/sms.json (샘플)
+[{"contactName":"Gao Yunfei",
+  "message_content":"Happy New Year! How was your run?",
+  "datetime":"2025-01-01 08:20"}]</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">3개 생성기 인스턴스 생성 완료</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div><span class="text-xs text-slate-500 italic ml-2">병렬 실행</span></div>
+<div class="bg-red-900 border border-red-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-red-700 text-red-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">QASingleGenerator</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/qa_single_generator.py</div><div class="text-xs text-slate-500 italic mb-2">단일 이벤트에서 직접 답할 수 있는 질문 생성. 페르소나 기반 질문(직업·성격)과 이벤트 기반 질문(언제/어디서/무엇을)으로 구성.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">persona + daily_event</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">single_hop_qa.json</span></div></div><div class="mt-1"><button onclick="toggleAndLoadPrompt('p-qa-persona-question-template', 'qa_persona_question_template')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 페르소나 질문</button><div id="p-qa-persona-question-template" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-qa-persona-question-template-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-qa-persona-question-template-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div>
+<div class="mt-1"><button onclick="toggleAndLoadPrompt('p-qa-event-question-template', 'qa_event_question_template')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 이벤트 질문</button><div id="p-qa-event-question-template" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-qa-event-question-template-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-qa-event-question-template-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-1"><button onclick="var e=document.getElementById('io-qa-n1');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-qa-n1" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// 이벤트 인풋
+{"event_id":"1","name":"New Year Morning Run",
+ "date":["2025-01-01 06:00"],
+ "location":"Yuelu Mountain, Changsha",
+ "description":"5km run..."}</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">[{"question":"2025년 1월 1일 아침에 어디서 운동을 했나요?",
+  "answer":"Yuelu Mountain (岳麓山)",
+  "type":"short_answer",
+  "source_event":"event_id_1",
+  "question_type":"single_hop"},
+ {"question":"새해 아침 달리기 거리는?",
+  "options":["3km","5km","8km","10km"],
+  "answer":"B",
+  "type":"multiple_choice"}]</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-red-900 border border-red-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-red-700 text-red-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">QAMutiGenerator</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/qa_muti_generator.py</div><div class="text-xs text-slate-500 italic mb-2">여러 이벤트를 연결해야 답할 수 있는 복합 추론 질문 생성. 다중 홉/인과/시간/패턴인식 등 4가지 유형.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">daily_event + phone_data</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">muti_hop_qa.json</span></div></div><div class="mt-1"><button onclick="toggleAndLoadPrompt('p-qa-multi-hop-question-template', 'qa_multi_hop_question_template')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 다중 홉 질문</button><div id="p-qa-multi-hop-question-template" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-qa-multi-hop-question-template-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-qa-multi-hop-question-template-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div>
+<div class="mt-1"><button onclick="toggleAndLoadPrompt('p-qa-temporal-reasoning-template', 'qa_temporal_reasoning_template')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 시간 추론 질문</button><div id="p-qa-temporal-reasoning-template" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-qa-temporal-reasoning-template-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-qa-temporal-reasoning-template-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div>
+<div class="mt-1"><button onclick="toggleAndLoadPrompt('p-qa-pattern-recognition-template', 'qa_pattern_recognition_template')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 패턴 인식 질문</button><div id="p-qa-pattern-recognition-template" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-qa-pattern-recognition-template-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-qa-pattern-recognition-template-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-1"><button onclick="var e=document.getElementById('io-qa-n2');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-qa-n2" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// 연결 필요한 이벤트 2개
+[{"event_id":"1","name":"New Year Run",
+  "date":["2025-01-01"],
+  "description":"5km run, felt great"},
+ {"event_id":"15","name":"CFA Study Start",
+  "date":["2025-01-02"],
+  "description":"Started 2h/day CFA prep"}]</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">[{"question":"새해 달리기 다음 날 무슨 새로운 활동을 시작했나요?",
+  "answer":"CFA 공부 (하루 2시간)",
+  "reasoning":"event_1(달리기)의 다음날이 event_15(CFA시작)",
+  "source_events":["1","15"],
+  "type":"multi_hop"},
+ {"question":"1월 한 달간 운동 빈도는?",
+  "answer":"주 3-4회",
+  "type":"pattern_recognition"}]</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-red-900 border border-red-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-red-700 text-red-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">QAReasoningGenerator</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/qa_reasoning_generator.py</div><div class="text-xs text-slate-500 italic mb-2">업데이팅 추론 질문 생성. 이전 상태→변화→이후 상태를 추적하는 질문. 예: "이직 전 직장은?", "이직 후 달라진 점은?"</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">daily_event + persona</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">reasoning_qa.json</span></div></div><div class="mt-1"><button onclick="toggleAndLoadPrompt('p-qa-updating-reasoning-template', 'qa_updating_reasoning_template')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 업데이팅 추론 질문</button><div id="p-qa-updating-reasoning-template" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-qa-updating-reasoning-template-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-qa-updating-reasoning-template-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-1"><button onclick="var e=document.getElementById('io-qa-n3');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-qa-n3" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// 상태 변화 이벤트
+{"event_id":"200","name":"이직: Ping An으로",
+ "date":["2025-06-20"],
+ "description":"Huatai → Ping An Securities 이직,
+  연봉 15% 인상"}</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">[{"question_before":"이직 전 Feng Haoran의 직장은?",
+  "answer_before":"Huatai Securities",
+  "question_after":"이직 후 연봉 변화는?",
+  "answer_after":"15% 인상",
+  "type":"updating",
+  "source_event":"200"}]</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">병합</span><span class="font-semibold text-white text-sm">QAGenerator.generate_all_qa()</span></div><div class="text-xs text-slate-400 font-mono mb-1">event/qa_generator.py</div><div class="text-xs text-slate-500 italic mb-2">3개 생성기 결과를 취합하고 question_type 필드 통일. single_hop_qa.json에는 "single_hop" 태그 추가. 최종 QA/QA.json으로 병합.</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">3개 생성기 결과 합산</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">QA/QA.json (최종)</span></div></div><div class="mt-1"><button onclick="var e=document.getElementById('io-qa-n4');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-qa-n4" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// 3개 파일 합산
+single_hop_qa.json:  ~150개 질문
+muti_hop_qa.json:    ~100개 질문
+reasoning_qa.json:   ~50개 질문</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// QA/QA.json (병합+정렬)
+[{"question":"2025년 1월 1일 아침...",
+  "answer":"Yuelu Mountain",
+  "question_type":"single_hop",
+  "ask_time":"2025-01"},
+ {"question":"새해 달리기 다음 날...",
+  "answer":"CFA 공부",
+  "question_type":"multi_hop",
+  "ask_time":"2025-01"},
+ ... 총 300개 질문]</pre></div></div></div></div>
+    </div>
+</div>
+
                 <div class="tab-content" data-step="qa" data-tab="overview">
                     <div class="space-y-4">
                         <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
