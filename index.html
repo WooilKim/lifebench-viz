@@ -680,6 +680,7 @@
                 <!-- Tabs -->
                 <div class="flex gap-2 mb-6 border-b border-green-700">
                     <button class="tab-button active px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="overview">개요</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="flow">🔀 내부 플로우</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="code">코드 경로</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="prompts">프롬프트</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="input">인풋 예시</button>
@@ -1184,6 +1185,207 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- 내부 플로우 탭 -->
+                <div class="tab-content hidden" data-step="simulator" data-tab="flow">
+                    <h3 class="text-xl font-bold text-green-300 mb-6">Simulator 내부 실행 흐름</h3>
+                    <p class="text-slate-400 text-sm mb-6">하루 처리 순서 (365일 병렬 반복). 보라색 = LLM 호출, 회색 = 일반 함수</p>
+
+                    <div class="flex flex-col gap-0 items-start max-w-3xl">
+
+                        <!-- 노드 1 -->
+                        <div class="flow-node bg-slate-800 border border-slate-600 rounded-lg p-4 w-full">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-xs bg-slate-600 px-2 py-0.5 rounded font-mono">1회 실행</span>
+                                <span class="font-semibold text-white">FuzzyMemoryBuilder.build_all_summaries()</span>
+                            </div>
+                            <div class="text-xs text-slate-400 font-mono mb-2">event/fuzzy_memory_builder.py</div>
+                            <div class="grid grid-cols-2 gap-4 text-xs">
+                                <div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">event_transfer.json (daily_draft 변환본)</span></div>
+                                <div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">monthly_summaries.json, cumulative_summaries.json</span></div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-center w-16 my-1">
+                            <div class="w-0.5 h-6 bg-slate-600"></div>
+                        </div>
+
+                        <!-- 노드 2 -->
+                        <div class="flow-node bg-slate-800 border border-slate-600 rounded-lg p-4 w-full">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-xs bg-green-800 text-green-300 px-2 py-0.5 rounded font-mono">매일 반복</span>
+                                <span class="font-semibold text-white">Mind.get_plan4(date)</span>
+                            </div>
+                            <div class="text-xs text-slate-400 font-mono mb-2">event/mind.py</div>
+                            <div class="grid grid-cols-2 gap-4 text-xs">
+                                <div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">FuzzyMemory 월별 요약 + daily_draft 당일 참조 이벤트</span></div>
+                                <div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">당일 계획 (plan dict)</span></div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-center w-16 my-1">
+                            <div class="w-0.5 h-6 bg-purple-500"></div>
+                        </div>
+
+                        <!-- 노드 3 -->
+                        <div class="flow-node bg-purple-900 border border-purple-500 rounded-lg p-4 w-full">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-xs bg-purple-600 px-2 py-0.5 rounded font-mono">LLM</span>
+                                <span class="font-semibold text-white">Mind._generate_subjective_thought()</span>
+                            </div>
+                            <div class="text-xs text-slate-400 font-mono mb-2">event/mind.py &nbsp;→&nbsp; <span class="text-yellow-400">template_daily_event_subjective_plan</span></div>
+                            <div class="grid grid-cols-2 gap-4 text-xs">
+                                <div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">plan (위 출력), date</span></div>
+                                <div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">{"thought": "...", "plan": [{"time": "06:30", "activity": "..."}]}</span></div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-center w-16 my-1">
+                            <div class="w-0.5 h-6 bg-purple-500"></div>
+                        </div>
+
+                        <!-- 노드 4 -->
+                        <div class="flow-node bg-purple-900 border border-purple-500 rounded-lg p-4 w-full">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-xs bg-purple-600 px-2 py-0.5 rounded font-mono">LLM</span>
+                                <span class="font-semibold text-white">Mind._generate_objective_events()</span>
+                            </div>
+                            <div class="text-xs text-slate-400 font-mono mb-2">event/mind.py &nbsp;→&nbsp; <span class="text-yellow-400">template_daily_event_objective_optimize</span></div>
+                            <div class="grid grid-cols-2 gap-4 text-xs">
+                                <div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">subjective_thought, date, events</span></div>
+                                <div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">[{"name": "Morning Run", "start_time": "06:40", "location_type": "outdoor", ...}]</span></div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-center w-16 my-1">
+                            <div class="w-0.5 h-6 bg-purple-500"></div>
+                        </div>
+
+                        <!-- 노드 5 -->
+                        <div class="flow-node bg-purple-900 border border-purple-500 rounded-lg p-4 w-full">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-xs bg-purple-600 px-2 py-0.5 rounded font-mono">LLM</span>
+                                <span class="font-semibold text-white">Mind.map()</span>
+                            </div>
+                            <div class="text-xs text-slate-400 font-mono mb-2">event/mind.py &nbsp;→&nbsp; <span class="text-yellow-400">template_poi_real_location_assign</span></div>
+                            <div class="grid grid-cols-2 gap-4 text-xs">
+                                <div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">objective_events (위 출력)</span></div>
+                                <div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">{"locations": [{"name": "Yuelu Mountain", "lat": 28.18, "lng": 112.93, "address": "..."}]}</span></div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-center w-16 my-1">
+                            <div class="w-0.5 h-6 bg-purple-500"></div>
+                        </div>
+
+                        <!-- 노드 6 -->
+                        <div class="flow-node bg-purple-900 border border-purple-500 rounded-lg p-4 w-full">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-xs bg-purple-600 px-2 py-0.5 rounded font-mono">LLM</span>
+                                <span class="font-semibold text-white">Mind._adjust_event_trajectory()</span>
+                            </div>
+                            <div class="text-xs text-slate-400 font-mono mb-2">event/mind.py &nbsp;→&nbsp; <span class="text-yellow-400">template_event_traffic_adjust</span></div>
+                            <div class="grid grid-cols-2 gap-4 text-xs">
+                                <div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">poi_data + objective_events + plan + 전날 이벤트 참조</span></div>
+                                <div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">이동경로 포함 최종 이벤트 시퀀스 (이동 시간, 교통수단 추가)</span></div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-center w-16 my-1">
+                            <div class="w-0.5 h-6 bg-purple-500"></div>
+                        </div>
+
+                        <!-- 노드 7 -->
+                        <div class="flow-node bg-purple-900 border border-purple-500 rounded-lg p-4 w-full">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-xs bg-purple-600 px-2 py-0.5 rounded font-mono">LLM</span>
+                                <span class="font-semibold text-white">Mind._generate_reflection()</span>
+                            </div>
+                            <div class="text-xs text-slate-400 font-mono mb-2">event/mind.py &nbsp;→&nbsp; <span class="text-yellow-400">template_daily_reflection</span></div>
+                            <div class="grid grid-cols-2 gap-4 text-xs">
+                                <div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">adjusted_events + plan + date</span></div>
+                                <div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">{"thought": "내일 계획...", "reflection": "오늘 하루 요약..."}</span></div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-center w-16 my-1">
+                            <div class="w-0.5 h-6 bg-purple-500"></div>
+                        </div>
+
+                        <!-- 노드 8 -->
+                        <div class="flow-node bg-purple-900 border border-purple-500 rounded-lg p-4 w-full">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-xs bg-purple-600 px-2 py-0.5 rounded font-mono">LLM</span>
+                                <span class="font-semibold text-white">Mind._update_long_term_memory()</span>
+                            </div>
+                            <div class="text-xs text-slate-400 font-mono mb-2">event/mind.py &nbsp;→&nbsp; <span class="text-yellow-400">template_update_long_term_memory</span></div>
+                            <div class="grid grid-cols-2 gap-4 text-xs">
+                                <div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">plan + reflection</span></div>
+                                <div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">{"long_term_memory": {"key_events": [...], "habits": [...], "preferences": [...]}}</span></div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-center w-16 my-1">
+                            <div class="text-xs text-slate-500 italic">월 단위로 실행</div>
+                        </div>
+
+                        <!-- 노드 9 -->
+                        <div class="flow-node bg-blue-900 border border-blue-500 rounded-lg p-4 w-full">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-xs bg-blue-600 px-2 py-0.5 rounded font-mono">LLM (월별)</span>
+                                <span class="font-semibold text-white">EventRefiner.health_analysis()</span>
+                            </div>
+                            <div class="text-xs text-slate-400 font-mono mb-2">event/event_refiner.py &nbsp;→&nbsp; <span class="text-yellow-400">template_initial_health_state → template_impact_events_analysis → template_health_diversity_analysis</span></div>
+                            <div class="grid grid-cols-2 gap-4 text-xs">
+                                <div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">persona + 월별 이벤트 데이터 + 이전 달 건강 상태</span></div>
+                                <div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">{"mid_month_state": {...}, "end_of_month_state": {...}, "change_nodes": [...]}</span></div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-center w-16 my-1">
+                            <div class="w-0.5 h-6 bg-blue-500"></div>
+                        </div>
+
+                        <!-- 노드 10 -->
+                        <div class="flow-node bg-blue-900 border border-blue-500 rounded-lg p-4 w-full">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-xs bg-blue-600 px-2 py-0.5 rounded font-mono">LLM (월별)</span>
+                                <span class="font-semibold text-white">EventRefiner.life_analysis()</span>
+                            </div>
+                            <div class="text-xs text-slate-400 font-mono mb-2">event/event_refiner.py &nbsp;→&nbsp; <span class="text-yellow-400">template_life_initial_state → template_life_analysis</span></div>
+                            <div class="grid grid-cols-2 gap-4 text-xs">
+                                <div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">persona + 월별 이벤트 + 이전 생활 상태</span></div>
+                                <div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">{"end_state": {...}, "change_nodes": [...]} — 습관/루틴/관계 변화</span></div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-center w-16 my-1">
+                            <div class="w-0.5 h-6 bg-slate-600"></div>
+                        </div>
+
+                        <!-- 노드 11 -->
+                        <div class="flow-node bg-purple-900 border border-purple-500 rounded-lg p-4 w-full">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-xs bg-purple-600 px-2 py-0.5 rounded font-mono">LLM</span>
+                                <span class="font-semibold text-white">EventFormatter._extract_events()</span>
+                            </div>
+                            <div class="text-xs text-slate-400 font-mono mb-2">event/event_formatter.py &nbsp;→&nbsp; <span class="text-yellow-400">template_event_format_sequence</span></div>
+                            <div class="grid grid-cols-2 gap-4 text-xs">
+                                <div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">adjusted_events + poi_data + date</span></div>
+                                <div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">daily_event.json의 최종 이벤트 ({event_id, name, date, description, location, participant})</span></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="mt-6 p-4 bg-slate-800 rounded-lg text-xs text-slate-400">
+                        <p class="font-semibold text-slate-300 mb-2">실행 구조 요약</p>
+                        <p>• <span class="text-green-400">FuzzyMemory 구축</span>: 연초 1회, 월별 요약 생성</p>
+                        <p>• <span class="text-purple-400">하루 처리</span>: 2~6주 단위로 병렬 스레드 (max_workers=30)</p>
+                        <p>• <span class="text-blue-400">건강/생활 분석</span>: 월별 1회, 모든 일별 이벤트 처리 후</p>
+                        <p>• <span class="text-yellow-400">총 LLM 호출</span>: 하루당 약 7회 × 365일 + 월별 분석 = 약 2,600회/인물</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1207,6 +1409,7 @@
                 <!-- Tabs -->
                 <div class="flex gap-2 mb-6 border-b border-orange-700">
                     <button class="tab-button active px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="phone" data-tab="overview">개요</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="phone" data-tab="flow">🔀 내부 플로우</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="phone" data-tab="code">코드 경로</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="phone" data-tab="generators">7개 생성기</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="phone" data-tab="output">아웃풋 예시</button>
@@ -1319,6 +1522,105 @@
                                     <div class="text-gray-400 ml-4">감지 데이터 생성 (위치, 네트워크)</div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phone 내부 플로우 탭 -->
+                <div class="tab-content hidden" data-step="phone" data-tab="flow">
+                    <h3 class="text-xl font-bold text-orange-300 mb-2">Phone Data 생성 내부 흐름</h3>
+                    <p class="text-slate-400 text-sm mb-6">날짜별로 실행. 각 날짜마다 7개 생성기가 <span class="text-orange-300 font-semibold">병렬으로</span> 실행되고 결과가 합친에 파일로 병합됩니다</p>
+
+                    <!-- 인풋 노드 -->
+                    <div class="bg-slate-800 border border-slate-600 rounded-lg p-4 mb-4 text-sm">
+                        <div class="font-semibold text-white mb-1">하루치 인풋</div>
+                        <div class="grid grid-cols-2 gap-4 text-xs">
+                            <div><span class="text-blue-400">persona.json</span> — 인물 프로파일</div>
+                            <div><span class="text-blue-400">daily_event.json (해당 날짜분)</span> — 일별 이벤트 리스트</div>
+                            <div><span class="text-blue-400">contact.json</span> — 연락처 목록</div>
+                            <div><span class="text-blue-400">health_state</span> — 월별 건강 상태</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="w-0.5 h-6 bg-slate-600"></div>
+                    </div>
+
+                    <!-- 병렬 실행 영역 -->
+                    <div class="border-2 border-dashed border-orange-500 rounded-xl p-4 mb-4">
+                        <div class="text-center text-orange-400 text-xs font-semibold mb-4">⚡ ThreadPoolExecutor(max_workers=7) — 이 7개의 작업이 동시에 실행됩니다</div>
+                        <div class="grid grid-cols-2 gap-3">
+
+                            <div class="bg-orange-900 border border-orange-600 rounded-lg p-3">
+                                <div class="text-xs font-semibold text-orange-300 mb-1">CommunicationOpGenerator</div>
+                                <div class="text-xs text-slate-400 font-mono mb-2">phone_data_gen.py</div>
+                                <div class="text-xs"><span class="text-blue-400">IN:</span> 이벤트 참여자 목록, 취침/닙화 매핑</div>
+                                <div class="text-xs mt-1"><span class="text-orange-400">OUT:</span> <span class="text-green-300">call.json</span> + <span class="text-green-300">sms.json</span></div>
+                                <div class="text-xs mt-1 text-purple-400">LLM: context (전화데이터전문가)</div>
+                            </div>
+
+                            <div class="bg-orange-900 border border-orange-600 rounded-lg p-3">
+                                <div class="text-xs font-semibold text-orange-300 mb-1">PushOperationGenerator</div>
+                                <div class="text-xs text-slate-400 font-mono mb-2">phone_data_gen.py</div>
+                                <div class="text-xs"><span class="text-blue-400">IN:</span> 이벤트 어패, 시간대, 앱 사용 패턴</div>
+                                <div class="text-xs mt-1"><span class="text-orange-400">OUT:</span> <span class="text-green-300">push.json</span></div>
+                                <div class="text-xs mt-1 text-purple-400">LLM: context (핵심 알림 생성)</div>
+                            </div>
+
+                            <div class="bg-orange-900 border border-orange-600 rounded-lg p-3">
+                                <div class="text-xs font-semibold text-orange-300 mb-1">NoteCalendarOpGenerator</div>
+                                <div class="text-xs text-slate-400 font-mono mb-2">phone_data_gen.py</div>
+                                <div class="text-xs"><span class="text-blue-400">IN:</span> 일상 이벤트, 일정 패턴</div>
+                                <div class="text-xs mt-1"><span class="text-orange-400">OUT:</span> <span class="text-green-300">note.json</span> + <span class="text-green-300">calendar.json</span></div>
+                                <div class="text-xs mt-1 text-purple-400">LLM: context (메모/일정 생성)</div>
+                            </div>
+
+                            <div class="bg-orange-900 border border-orange-600 rounded-lg p-3">
+                                <div class="text-xs font-semibold text-orange-300 mb-1">GalleryOperationGenerator</div>
+                                <div class="text-xs text-slate-400 font-mono mb-2">phone_data_gen.py</div>
+                                <div class="text-xs"><span class="text-blue-400">IN:</span> 이벤트 위치, 활동 유형</div>
+                                <div class="text-xs mt-1"><span class="text-orange-400">OUT:</span> <span class="text-green-300">photo.json</span></div>
+                                <div class="text-xs mt-1 text-slate-500">확률 기반 생성 (LLM 없음)</div>
+                            </div>
+
+                            <div class="bg-orange-900 border border-orange-600 rounded-lg p-3">
+                                <div class="text-xs font-semibold text-orange-300 mb-1">FitnessHealthOpGenerator</div>
+                                <div class="text-xs text-slate-400 font-mono mb-2">phone_data_gen.py</div>
+                                <div class="text-xs"><span class="text-blue-400">IN:</span> 운동 이벤트, health_state</div>
+                                <div class="text-xs mt-1"><span class="text-orange-400">OUT:</span> <span class="text-green-300">fitness_health.json</span></div>
+                                <div class="text-xs mt-1 text-purple-400">LLM: 건강 데이터 생성</div>
+                            </div>
+
+                            <div class="bg-orange-900 border border-orange-600 rounded-lg p-3">
+                                <div class="text-xs font-semibold text-orange-300 mb-1">ChatOperationGenerator</div>
+                                <div class="text-xs text-slate-400 font-mono mb-2">phone_data_gen.py</div>
+                                <div class="text-xs"><span class="text-blue-400">IN:</span> 대화 컨텍스트, 에이전트 시나리오</div>
+                                <div class="text-xs mt-1"><span class="text-orange-400">OUT:</span> <span class="text-green-300">agent_chat.json</span></div>
+                                <div class="text-xs mt-1 text-purple-400">LLM: 대화 시뮬레이션</div>
+                            </div>
+
+                            <div class="bg-slate-700 border border-slate-500 rounded-lg p-3 col-span-2">
+                                <div class="text-xs font-semibold text-slate-300 mb-1">PerceptionDataGenerator</div>
+                                <div class="text-xs text-slate-400 font-mono mb-2">phone_data_gen.py</div>
+                                <div class="text-xs"><span class="text-blue-400">IN:</span> 위치 데이터, 시간대, 활동 패턴</div>
+                                <div class="text-xs mt-1"><span class="text-orange-400">OUT:</span> <span class="text-green-300">perception.json</span> (감지 데이터)</div>
+                                <div class="text-xs mt-1 text-slate-500">GPS + 가속도계 + 기타 센서 데이터, LLM 없음</div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="w-0.5 h-6 bg-slate-600"></div>
+                    </div>
+
+                    <!-- 합병 노드 -->
+                    <div class="bg-slate-800 border border-orange-500 rounded-lg p-4 text-sm">
+                        <div class="font-semibold text-orange-300 mb-2">PhoneEventMatcher.match() — 이벤트와 phone data 연결</div>
+                        <div class="text-xs text-slate-400">7개 생성기의 결과를 받아 daily_event의 이벤트와 매칭. 어떤 이벤트가 어떤 통화/알림을 유발했는지 연결됨</div>
+                        <div class="grid grid-cols-2 gap-4 text-xs mt-2">
+                            <div><span class="text-blue-400">IN:</span> 7개 생성기 결과 + daily_event</div>
+                            <div><span class="text-orange-400">OUT:</span> phone_data/ 폴더 (최종 9개 json 파일)</div>
                         </div>
                     </div>
                 </div>
