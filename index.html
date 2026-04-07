@@ -130,7 +130,8 @@
     <!-- Mini Map -->
     <div class="mini-map">
         <div class="text-xs font-bold text-gray-400 mb-2">📍 PIPELINE</div>
-        <div class="mini-map-item active" data-step="draft">Draft Gen</div>
+        <div class="mini-map-item active" data-step="persona">Persona Gen</div>
+        <div class="mini-map-item" data-step="draft">Draft Gen</div>
         <div class="mini-map-item" data-step="simulator">Simulator</div>
         <div class="mini-map-item" data-step="phone">Phone Data</div>
         <div class="mini-map-item" data-step="qa">QA Gen</div>
@@ -139,6 +140,280 @@
     <!-- Pipeline Steps -->
     <div class="max-w-7xl mx-auto px-6 py-8">
         
+        <!-- Step 0: Persona Generation -->
+        <div id="step-persona" class="mb-16">
+            <div class="step-card bg-gradient-to-br from-teal-900 to-teal-800 rounded-lg p-8 border border-teal-600">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-4">
+                        <div class="text-5xl">👤</div>
+                        <div>
+                            <h2 class="text-3xl font-bold">Step 0: Persona Generation</h2>
+                            <p class="text-teal-300 mt-1">run/persona_gen.py &rarr; persona/persona_gen.py</p>
+                        </div>
+                    </div>
+                    <div class="text-right text-sm text-teal-400">
+                        <div>실행 시간: ~5-10분/인물</div>
+                        <div class="text-xs text-slate-500 mt-1">LLM 호출: ~3-4회/인물</div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="flex gap-1 mb-0 border-b border-teal-700">
+                    <button class="tab-button active px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="persona" data-tab="overview">개요</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="persona" data-tab="flow">🔀 내부 플로우</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="persona" data-tab="prompts">프롬프트</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="persona" data-tab="input">인풋 예시</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="persona" data-tab="output">아웃풋 예시</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="persona" data-tab="tuning">수정 가이드</button>
+                </div>
+
+                <!-- 개요 -->
+                <div class="tab-content" data-step="persona" data-tab="overview">
+                    <div class="grid grid-cols-3 gap-6 mb-6">
+                        <div class="bg-slate-800 rounded-lg p-4">
+                            <div class="text-teal-400 font-semibold mb-2">파이프라인 역할</div>
+                            <p class="text-sm text-slate-300">실제 시뮬레이션에 사용될 실제적인 인물 프로파일 생성. 모든 이후 단계의 기반이 됨</p>
+                        </div>
+                        <div class="bg-slate-800 rounded-lg p-4">
+                            <div class="text-teal-400 font-semibold mb-2">핵심 입력</div>
+                            <p class="text-sm text-slate-300">person.json (실제 수집 데이터 10명) + refer.json (속성 풀 럨덤 선택)</p>
+                        </div>
+                        <div class="bg-slate-800 rounded-lg p-4">
+                            <div class="text-teal-400 font-semibold mb-2">핵심 산출</div>
+                            <p class="text-sm text-slate-300">persona.json — 상세 인물 프로파일 (30+ 필드, 인간관계망 포함)</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800 rounded-lg p-4 text-sm text-slate-300">
+                        <p class="font-semibold text-teal-300 mb-2">⚠️ 주의</p>
+                        <p>프롬프트는 전부 <span class="text-yellow-400 font-semibold">중국어</span>로 작성되어 있어요. 데이터는 중국어로 생성된 후 영어 버전으로 종간 번역됩니다. 이후 모든 파이프라인 단계의 프롬프트도 중국어입니다.</p>
+                    </div>
+                </div>
+
+                <!-- 내부 플로우 -->
+                <div class="tab-content hidden" data-step="persona" data-tab="flow">
+                    <h3 class="text-xl font-bold text-teal-300 mb-6">Persona 생성 내부 흐름</h3>
+                    <div class="flex flex-col gap-0 items-start max-w-3xl">
+
+                        <div class="bg-slate-800 border border-slate-600 rounded-lg p-4 w-full">
+                            <div class="font-semibold text-white mb-1">실제 수집 데이터</div>
+                            <div class="text-xs text-slate-400 font-mono mb-2">data/person.json — 10명의 기본 데이터 (이름, 생년, 직업, 주소)</div>
+                            <div class="text-xs text-slate-300">예: 冒浩然, 1994-10-29, 금융투자고문, 화타이증권</div>
+                        </div>
+
+                        <div class="flex items-center w-16 my-1"><div class="w-0.5 h-6 bg-slate-600 mx-auto"></div></div>
+
+                        <div class="bg-teal-900 border border-teal-600 rounded-lg p-4 w-full">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-xs bg-teal-600 px-2 py-0.5 rounded">LLM</span>
+                                <span class="font-semibold text-white">PersonaGenerator.gen_profile()</span>
+                            </div>
+                            <div class="text-xs text-slate-400 font-mono mb-2">persona/persona_gen.py → <span class="text-yellow-400">template</span> + <span class="text-yellow-400">template_refine</span></div>
+                            <div class="grid grid-cols-2 gap-4 text-xs">
+                                <div><span class="text-blue-400">IN:</span> person.json 1명 + refer.json 랜덤 속성 (취미/가치관/목표)</div>
+                                <div><span class="text-orange-400">OUT:</span> 상세 페르소나 JSON (30+ 필드)</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center w-16 my-1"><div class="w-0.5 h-6 bg-teal-500 mx-auto"></div></div>
+
+                        <div class="bg-teal-900 border border-teal-600 rounded-lg p-4 w-full">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-xs bg-teal-600 px-2 py-0.5 rounded">LLM</span>
+                                <span class="font-semibold text-white">PersonaGenerator.refine() — 검증/정제</span>
+                            </div>
+                            <div class="text-xs text-slate-400 font-mono mb-2">persona/persona_gen.py → <span class="text-yellow-400">template_refine</span></div>
+                            <div class="grid grid-cols-2 gap-4 text-xs">
+                                <div><span class="text-blue-400">IN:</span> 생성된 페르소나 (1단계 결과)</div>
+                                <div><span class="text-orange-400">OUT:</span> 논리 일관성 검증 완료된 페르소나 (연령/직업/수입/주소 관계 조정)</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center w-16 my-1"><div class="w-0.5 h-6 bg-teal-500 mx-auto"></div></div>
+
+                        <div class="bg-teal-900 border border-teal-600 rounded-lg p-4 w-full">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-xs bg-teal-600 px-2 py-0.5 rounded">LLM</span>
+                                <span class="font-semibold text-white">PersonaGenerator — 인간관계망 생성</span>
+                            </div>
+                            <div class="text-xs text-slate-400 font-mono mb-2">persona/persona_gen.py → <span class="text-yellow-400">template_relation_1</span> + <span class="text-yellow-400">template_person</span></div>
+                            <div class="grid grid-cols-2 gap-4 text-xs">
+                                <div><span class="text-blue-400">IN:</span> 완성된 페르소나 + 관계 유형 (가족/동료/친구)</div>
+                                <div><span class="text-orange-400">OUT:</span> relation[] — 각 인물의 이름/연령/직업/주소/MBTI/연락처</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center w-16 my-1"><div class="w-0.5 h-6 bg-slate-600 mx-auto"></div></div>
+
+                        <div class="bg-slate-800 border border-slate-600 rounded-lg p-4 w-full">
+                            <div class="font-semibold text-white mb-1">persona.json 저장</div>
+                            <div class="text-xs text-slate-400">각 사용자 폴더에 저장. 리파이너 단계에서 영어로 번역된 버전으로 교체</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- 프롬프트 -->
+                <div class="tab-content hidden" data-step="persona" data-tab="prompts">
+                    <div class="mb-4 p-3 bg-yellow-900/30 border border-yellow-600 rounded text-sm text-yellow-300">
+                        ⚠️ 모든 프롬프트는 <strong>중국어</strong>로 작성되어 있어요. LifeBench가 중국어 기반 프로젝트이기 때문입니다.
+                    </div>
+
+                    <div class="accordion-item mb-4">
+                        <div class="accordion-header bg-slate-800 p-4 rounded-t cursor-pointer" onclick="toggleAccordion(this)">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="font-semibold text-white">template</span>
+                                    <span class="text-xs text-slate-400 ml-3">persona_gen.py — 1단계 페르소나 생성</span>
+                                </div>
+                                <span>▼</span>
+                            </div>
+                        </div>
+                        <div class="accordion-content bg-slate-900 rounded-b p-4">
+                            <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap overflow-auto max-h-64">당신은 인물 프로파일 생성 전문가입니다.
+다음 기반 정보를 바탕으로 상세한 인물 프로파일을 생성하세요:
+
+{person_data}
+
+## 랜덤 속성 풀
+{ref_data}
+
+## 요구사항
+- 연령/직업/수입/주소 일관성 유지
+- 취미는 4-8개 선택
+- 성격(MBTI) 및 가치관 지정
+- 경력, 건강상태, 경제상황 상세 기술
+- 인간관계망 (relation[]) 유형 목록 제시
+
+## 출력 형식
+{문서 구조 JSON}</pre>
+                            <p class="text-xs text-slate-500 mt-2">실제 프롬프트는 한국어 요약 버전입니다. 원문은 persona/gen_utils/template.py에 있어요.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item mb-4">
+                        <div class="accordion-header bg-slate-800 p-4 rounded-t cursor-pointer" onclick="toggleAccordion(this)">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="font-semibold text-white">template_refine</span>
+                                    <span class="text-xs text-slate-400 ml-3">논리 검증 및 정제</span>
+                                </div>
+                                <span>▼</span>
+                            </div>
+                        </div>
+                        <div class="accordion-content bg-slate-900 rounded-b p-4">
+                            <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap overflow-auto max-h-64">당신은 인물 프로파일 검증 전문가입니다.
+생성된 페르소나를 검토하여 다음을 확인하세요:
+
+{JSON}
+
+## 검증 요소
+1. 연령/직업/직위/수입 합리성
+2. 가족 상황 일관성 (결혼 여부, 자녀 수)
+3. 거주 도시와 직업 연관성
+4. 취미와 성격의 일관성
+5. 논리 모순 점 확인 및 수정
+
+## 제약
+- 필드 추가/삭제 금지
+- key는 영어, value는 중국어
+- JSON만 출력
+- note 필드에 수정 내역 기록
+
+(persona/gen_utils/template.py 에서 template_refine 확인)</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 인풋 예시 -->
+                <div class="tab-content hidden" data-step="persona" data-tab="input">
+                    <div class="mb-4">
+                        <h4 class="font-semibold text-teal-300 mb-2">data/person.json — 실제 수집된 기반 데이터</h4>
+                        <pre class="text-xs font-mono bg-slate-900 p-4 rounded overflow-auto max-h-64"><code class="language-json">{
+  "name": "冯浩然",
+  "birth": "1994-10-29",
+  "age": 27,
+  "gender": "男",
+  "education": "大学本科",
+  "job": "金融投资顧问",
+  "occupation": "华泰证券股份有限公司",
+  "salary": 200000.0,
+  "home_address": {
+    "province": "湖南省",
+    "city": "长沙市",
+    "district": "岳麓区"
+  }
+}</code></pre>
+                        <p class="text-xs text-slate-500 mt-2">주: 실제 데이터는 중국어로 저장되어 있어요</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-teal-300 mb-2">persona/persona_file/refer.json — 랜덤 속성 풀</h4>
+                        <pre class="text-xs font-mono bg-slate-900 p-4 rounded overflow-auto max-h-48"><code class="language-json">{
+  "年龄": ["20-25岁", "26-30岁", ...],
+  "职业": ["软件工程师", "医生", "教师", ...],
+  "兴趣": ["跨步", "网球", "苹乐", "登山", ...],
+  "价値观": ["家庭", "事业", "健康", ...],
+  "目标规划": ["财务自由", "升职", "结婚", ...],
+  "社交关系": ["家庭圈", "工作圈", "朋友圈", ...]
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- 아웃풋 예시 -->
+                <div class="tab-content hidden" data-step="persona" data-tab="output">
+                    <h4 class="font-semibold text-teal-300 mb-2">persona.json — 생성된 상세 페르소나 (영어 버전)</h4>
+                    <pre class="text-xs font-mono bg-slate-900 p-4 rounded overflow-auto max-h-96"><code class="language-json">{
+  "name": "Feng Haoran",
+  "birth": "1994-10-29",
+  "age": 27,
+  "job": "Financial Investment Advisor",
+  "occupation": "Huatai Securities Co., Ltd.",
+  "salary": 200000.0,
+  "personality": {
+    "mbti": "ENTJ",
+    "traits": ["Achievements", "Power", "Independence"]
+  },
+  "hobbies": ["running", "basketball", "reading", "finance research"],
+  "healthy_desc": "Good physical condition, regular runner...",
+  "lifestyle_desc": "Early riser, disciplined routine...",
+  "relation": [
+    {"name": "Feng Guohua", "relation": "Father", "age": 56, "job": "Engineer"},
+    {"name": "Li Mei", "relation": "Mother", "age": 54, "job": "Teacher"},
+    {"name": "Gao Yunfei", "relation": "Close friend", "age": 27, "job": "Doctor"}
+  ]
+}</code></pre>
+                </div>
+
+                <!-- 수정 가이드 -->
+                <div class="tab-content hidden" data-step="persona" data-tab="tuning">
+                    <div class="space-y-4">
+                        <div class="bg-slate-800 rounded-lg p-4">
+                            <div class="font-semibold text-teal-300 mb-2">person.json 수정 → 전혀 다른 인물</div>
+                            <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+                                <li>age를 45로 올리면 → 직업/수입/가족 구성이 달라짘</li>
+                                <li>job을 "의사"로 매핑하면 → 병원 관련 이벤트 비율 증가</li>
+                                <li>salary를 올리면 → 고급 레스토랑/건강클럽 이벤트 늘어남</li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-800 rounded-lg p-4">
+                            <div class="font-semibold text-teal-300 mb-2">refer.json 수정 → 속성 풀 확장</div>
+                            <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+                                <li>취미 목록에 특이한 항목 추가 → 해당 취미 만나는 이벤트 생성 증가</li>
+                                <li>맥락 유형 다양화 → 더 다양한 생활 패턴</li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-800 rounded-lg p-4">
+                            <div class="font-semibold text-teal-300 mb-2">template_refine 수정 → 검증 기준 변경</div>
+                            <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+                                <li>검증 엄격도 높이면 → 더 현실적인 페르소나 (but LLM 호출 늘어남)</li>
+                                <li>속성간 일관성 체크 항목 수정 → 가중치 변경 가능</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
         <!-- Step 1: Draft Generation -->
         <div id="step-draft" class="mb-16">
             <div class="step-card bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-8 border border-purple-600">
