@@ -42,3 +42,33 @@
     }
   ]
 }
+
+출력 형식 (JSON만 출력, 다른 내용 포함 금지):
+{
+  "questions": [
+    {
+      "question": "다중 홉 주관식 질문 (글자 수 및 모호화 요건 준수)",
+      "question_type": "mutihop",
+      "answer": "구체적이고 명확한 답변",
+      "score_points": [
+        {"description": "채점 기준 설명 (답변 내 사실 정보에 대응)", "score": 5},
+        {"description": "채점 기준 설명", "score": 5}
+      ],
+      "required_events": ["이벤트1 설명", "이벤트2 설명"],
+      "required_event_dates": ["이벤트1 날짜", "이벤트2 날짜"]
+    },
+    {
+      "question": "인과 추론 객관식 질문",
+      "question_type": "reasoning",
+      "options": [
+        {"option": "A", "content": "선택지 내용 (크로스 이벤트 논리 오류 오답/정답)"},
+        {"option": "B", "content": "선택지 내용 (오답)"},
+        {"option": "C", "content": "선택지 내용 (오답)"},
+        {"option": "D", "content": "선택지 내용 (오답)"}
+      ],
+      "answer": "정답 선택지(A/B/C/D)",
+      "required_events": ["이벤트1 설명", "이벤트2 설명", "이벤트3 설명"],
+      "required_event_dates": ["이벤트1 날짜", "이벤트2 날짜", "이벤트3 날짜"]
+    }
+  ]
+}

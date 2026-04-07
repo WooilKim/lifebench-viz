@@ -27,4 +27,34 @@
    - 주관적 판단이나 감정 상태 질문 금지 (단, 이벤트에 명시된 경우 제외)
    - 미래 예측이나 추측 질문 금지
 
-출력: JSON 배열 형식 (question/answer/type/source_event_id 포함)
+ (question/answer/type/source_event_id 포함)
+
+출력 형식 (JSON만 출력, 다른 내용 포함 금지):
+{
+  "questions": [
+    {
+      "question": "질문 내용",
+      "answer": "질문 답변",
+      "score_points": [
+        {"description": "채점 기준 설명", "score": 점수}
+      ],
+      "required_events": [
+        {"event_id": "이벤트ID1", "event_name": "이벤트명1"},
+        {"event_id": "이벤트ID2", "event_name": "이벤트명2"}
+      ]
+    },
+    {
+      "question": "객관식 질문 내용",
+      "options": [
+        {"option": "A", "content": "선택지A"},
+        {"option": "B", "content": "선택지B"},
+        {"option": "C", "content": "선택지C"},
+        {"option": "D", "content": "선택지D"}
+      ],
+      "answer": "정답 선택지(A/B/C/D)",
+      "required_events": [
+        {"event_id": "이벤트ID1", "event_name": "이벤트명1"}
+      ]
+    }
+  ]
+}

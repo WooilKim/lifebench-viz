@@ -22,4 +22,31 @@
    - 등가 대체: 더 간결한 표현으로 대체, 예: 호칭을 이름으로 대체
 5. 질문은 일정 수준의 추론 깊이 필요. 단순 시간 정보 추출이 아닌 여러 이벤트의 시간 관계 분석 필요
 
-출력: JSON 배열 형식
+출력 형식 (JSON만 출력, 다른 내용 포함 금지):
+{
+  "questions": [
+    {
+      "question": "시간 추론 질문1",
+      "answer": "구체적이고 명확한 답변1",
+      "score_points": [
+        {"description": "채점 기준 설명1", "score": 5},
+        {"description": "채점 기준 설명2", "score": 5}
+      ],
+      "required_events": ["이벤트명1", "이벤트명2"],
+      "type": "short_answer"
+    },
+    {
+      "question": "객관식 질문 내용",
+      "options": [
+        {"option": "A", "content": "선택지A"},
+        {"option": "B", "content": "선택지B"},
+        {"option": "C", "content": "선택지C"},
+        {"option": "D", "content": "선택지D"}
+      ],
+      "answer": "정답 선택지(A/B/C/D)",
+      "score_points": [{"description": "채점 기준", "score": 3}],
+      "required_events": ["이벤트명3", "이벤트명4", "이벤트명5"],
+      "type": "short_answer"
+    }
+  ]
+}

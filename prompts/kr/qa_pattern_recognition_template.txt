@@ -25,4 +25,35 @@
    예: "내가 듣는 음악 유형을 보면, 어떤 가수를 좋아할 가능성이 높나요?"
 4. 질문 표현은 검색을 돕는 정보를 최소화하되 관련 이벤트를 특정할 수 있는 충분한 정보량 보장
 
-출력: JSON 배열 형식
+출력 형식 (JSON만 출력, 다른 내용 포함 금지):
+{
+  "questions": [
+    {
+      "question": "사용자 모델링 질문 (패턴 인식)",
+      "answer": "구체적이고 명확한 답변1",
+      "score_points": [
+        {"description": "채점 기준 설명1", "score": 5},
+        {"description": "채점 기준 설명2", "score": 5}
+      ],
+      "required_events": ["이벤트명1", "이벤트명2"],
+      "required_event_dates": ["이벤트날짜1", "이벤트날짜2"],
+      "type": "question_answer",
+      "question_type": "user_modeling"
+    },
+    {
+      "question": "개방형 지식 추론 객관식 질문",
+      "options": [
+        {"option": "A", "content": "선택지A"},
+        {"option": "B", "content": "선택지B"},
+        {"option": "C", "content": "선택지C"},
+        {"option": "D", "content": "선택지D"}
+      ],
+      "answer": "정답 선택지(A/B/C/D)",
+      "score_points": [{"description": "채점 기준", "score": 3}],
+      "required_events": ["이벤트명3", "이벤트명4"],
+      "required_event_dates": ["이벤트날짜3", "이벤트날짜4"],
+      "type": "multiple_choice",
+      "question_type": "open_domain"
+    }
+  ]
+}
