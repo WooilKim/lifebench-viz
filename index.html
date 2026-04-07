@@ -189,66 +189,83 @@
 
                 <!-- 내부 플로우 -->
                                 <div class="tab-content hidden" data-step="persona" data-tab="flow">
-                    <h3 class="text-xl font-bold text-teal-300 mb-2">Persona 생성 내부 흐름</h3>
-                    <p class="text-slate-400 text-sm mb-4">📋 버튼을 클릭하면 해당 노드의 실제 프롬프트(원문+번역)가 펼쳐집니다.</p>
-                    <div class="flex flex-col gap-0 max-w-3xl">
-                        <div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">입력</span><span class="font-semibold text-white text-sm">실제 수집 데이터 (10명)</span></div><div class="text-xs text-slate-400 font-mono mb-2">data/person.json</div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">name/birth/job 등 기본 정보</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">persona JSON 기초</span></div></div></div>
-                        <div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-                        <div class="bg-teal-900 border border-teal-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-teal-700 text-teal-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">PersonaGenerator.gen_profile()</span></div><div class="text-xs text-slate-400 font-mono mb-2">persona/persona_gen.py <span class="text-yellow-400 text-xs">→ template_refine</span></div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">person.json 1명 + refer.json 속성 풀</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">30+ 필드 상세 페르소나 JSON</span></div></div>
-                            <div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-refine', 'template_refine')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_refine</button><div id="p-template-refine" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-refine-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-refine-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div></div></div></div>
-                        <div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-                        <div class="bg-teal-900 border border-teal-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-teal-700 text-teal-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">PersonaGenerator.gen_relations()</span></div><div class="text-xs text-slate-400 font-mono mb-2">persona/persona_gen.py <span class="text-yellow-400 text-xs">→ template_relation_1</span></div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">완성된 페르소나</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">20~26개 연락처 관계 목록</span></div></div>
-                            <div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-relation-1', 'template_relation_1')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_relation_1</button><div id="p-template-relation-1" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-relation-1-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-relation-1-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div></div></div></div>
-                        <div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-                        <div class="bg-teal-900 border border-teal-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-teal-700 text-teal-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">PersonaGenerator.gen_persons()</span></div><div class="text-xs text-slate-400 font-mono mb-2">persona/persona_gen.py <span class="text-yellow-400 text-xs">→ template_person</span></div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">페르소나 + 관계 목록</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">각 연락처 상세 정보</span></div></div>
-                            <div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-person', 'template_person')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_person</button><div id="p-template-person" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-person-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-person-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div></div></div></div>
-                        <div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-                        <div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">출력</span><span class="font-semibold text-white text-sm">persona.json 저장</span></div><div class="text-xs text-slate-400 font-mono mb-2">각 사용자 폴더</div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">완성된 페르소나 + 인간관계망</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">persona.json</span></div></div></div>
-
-                    <!-- 인풋/아웃풋 예시 -->
-                    <div class="mt-6 grid grid-cols-2 gap-4">
-                        <div class="bg-slate-800 rounded-lg p-4">
-                            <h4 class="font-semibold text-teal-300 text-sm mb-3">📥 인풋 예시</h4>
-                            <div class="space-y-3">
-                                <div>
-                                    <p class="text-slate-400 text-xs font-semibold mb-1">data/person.json (실제 수집 데이터)</p>
-                                    <pre class="text-xs text-slate-300 font-mono bg-slate-900 p-3 rounded overflow-auto max-h-36">{"name": "冯浩然", "birth": "1994-10-29",
- "age": 27, "gender": "男",
+    <h3 class="text-xl font-bold text-teal-300 mb-2">Persona 생성 내부 흐름</h3>
+    <p class="text-slate-400 text-sm mb-4">📋 프롬프트 보기 · 📊 데이터 예시 버튼을 클릭하세요.</p>
+    <div class="flex flex-col gap-0 max-w-3xl">
+<div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">입력</span><span class="font-semibold text-white text-sm">실제 수집 데이터 (10명)</span></div><div class="text-xs text-slate-400 font-mono mb-2">data/person.json</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">name/birth/job 등 기본 정보</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">person.json 1개 항목</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-p0-n1');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-p0-n1" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">(없음 — 원본 수집 데이터)</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"name": "冯浩然",
+ "birth": "1994-10-29",
+ "age": 27,
+ "gender": "男",
  "education": "大学本科",
  "job": "金融投资顾问",
  "occupation": "华泰证券股份有限公司",
- "salary": 200000.0}</pre>
-                                </div>
-                                <div>
-                                    <p class="text-slate-400 text-xs font-semibold mb-1">refer.json (속성 풀)</p>
-                                    <pre class="text-xs text-slate-300 font-mono bg-slate-900 p-3 rounded overflow-auto max-h-28">{"兴趣": ["跑步","网球","登山"...],
- "价值观": ["家庭","事业","健康"...],
- "职业": ["软件工程师","医生","教师"...]}</pre>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-slate-800 rounded-lg p-4">
-                            <h4 class="font-semibold text-teal-300 text-sm mb-3">📤 아웃풋 예시</h4>
-                            <pre class="text-xs text-slate-300 font-mono bg-slate-900 p-3 rounded overflow-auto max-h-56">{"name": "Feng Haoran", "age": 27,
+ "salary": 200000.0}</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-teal-900 border border-teal-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-teal-700 text-teal-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">PersonaGenerator.gen_profile()</span></div><div class="text-xs text-slate-400 font-mono mb-2">persona/persona_gen.py <span class="text-yellow-400 text-xs">→ template_refine</span></div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">person.json 1명 + refer.json 랜덤 속성 풀</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">30+ 필드 상세 페르소나 JSON</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('p-template-refine');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_refine</button><div id="p-template-refine" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-refine-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-refine-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-p0-n2');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-p0-n2" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"name": "冯浩然", "age": 27, "job": "金融投资顾问"}
++
+{"兴趣": ["跑步","网球",...],
+ "价值观": ["家庭","事业",...]}</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"name": "Feng Haoran",
+ "age": 27,
  "job": "Financial Investment Advisor",
- "salary": 200000.0,
- "personality": {
-   "mbti": "ENTJ",
-   "traits": ["Achievements", "Power"]
- },
- "hobbies": ["running", "basketball", "reading"],
- "relation": [
-   {"name": "Gao Yunfei",
-    "relation": "Close friend",
-    "social_circle": "대학 동창 서클"},
-   {"name": "Feng Guohua",
-    "relation": "Father", "age": 56}
- ]}</pre>
-                        </div>
-                    </div>
+ "personality": {"mbti": "ENTJ",
+   "traits": ["Achievements","Power"]},
+ "hobbies": ["running","basketball","reading"],
+ "healthy_desc": "Good physical condition...",
+ "lifestyle_desc": "Early riser...",
+ "relation": []  // 아직 빈 배열}</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-teal-900 border border-teal-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-teal-700 text-teal-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">PersonaGenerator.gen_relations()</span></div><div class="text-xs text-slate-400 font-mono mb-2">persona/persona_gen.py <span class="text-yellow-400 text-xs">→ template_relation_1</span></div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">gen_profile() 결과 (완성된 페르소나)</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">관계 목록 [{name, relation, social_circle, ...}]</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('p-template-relation-1');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_relation_1</button><div id="p-template-relation-1" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-relation-1-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-relation-1-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-p0-n3');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-p0-n3" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"name": "Feng Haoran",
+ "age": 27,
+ "job": "Financial Investment Advisor",
+ "hobbies": ["running","basketball"],
+ "lifestyle_desc": "Early riser..."}</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">[{"name": "Gao Yunfei",
+  "relation": "Close friend",
+  "social_circle": "대학 동창 서클"},
+ {"name": "Feng Guohua",
+  "relation": "Father",
+  "social_circle": "가족 서클"},
+ {"name": "Zhang Wei",
+  "relation": "Colleague",
+  "social_circle": "직장 서클"},
+ ... 총 20~26명]</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-teal-900 border border-teal-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-teal-700 text-teal-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">PersonaGenerator.gen_persons()</span></div><div class="text-xs text-slate-400 font-mono mb-2">persona/persona_gen.py <span class="text-yellow-400 text-xs">→ template_person</span></div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">페르소나 + 관계 목록 (gen_relations 결과)</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">각 연락처 상세 정보 (주소/직업/MBTI/설명)</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('p-template-person');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_person</button><div id="p-template-person" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-person-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-person-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-p0-n4');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-p0-n4" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// 페르소나
+{"name": "Feng Haoran", ...}
 
-                    </div>
-                </div>
+// 관계 목록 (gen_relations 결과)
+[{"name": "Gao Yunfei",
+  "relation": "Close friend",
+  "social_circle": "대학 동창 서클"},
+ ...]</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">[{"name": "Gao Yunfei",
+  "relation": "Close friend",
+  "age": 27,
+  "birth_date": "1994-08-15",
+  "gender": "Male",
+  "job": "Doctor",
+  "occupation": "Xiangya Hospital",
+  "personality": "INFJ",
+  "home_address": {"city": "Changsha"},
+  "social_circle": "대학 동창 서클",
+  "description": "Met at Central South University...
+    Meets monthly for dinner..."},
+ ...]</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">출력</span><span class="font-semibold text-white text-sm">persona.json 저장</span></div><div class="text-xs text-slate-400 font-mono mb-2">각 사용자 폴더</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">완성된 페르소나 + 인간관계망 (gen_persons 결과)</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">persona.json (영어 번역 버전)</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-p0-n5');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-p0-n5" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// gen_persons() 결과 포함된 최종 페르소나
+{"name": "Feng Haoran",
+ "personality": {"mbti": "ENTJ"},
+ "relation": [{"name": "Gao Yunfei",
+   "relation": "Close friend",
+   "job": "Doctor",
+   "description": "..."},...]}</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// persona.json (영어 버전, 30+ 필드)
+{"name": "Feng Haoran",
+ "birth": "1994-10-29",
+ "age": 27,
+ "job": "Financial Investment Advisor",
+ "personality": {"mbti": "ENTJ"},
+ "hobbies": ["running","basketball"],
+ "relation": [...20~26명...]}</pre></div></div></div></div>
+    </div>
+</div>
 <div class="tab-content hidden" data-step="persona" data-tab="tuning">
                     <div class="space-y-4">
                         <div class="bg-slate-800 rounded-lg p-4">
@@ -363,64 +380,140 @@
                 </div>
 
                                 <div class="tab-content hidden" data-step="draft" data-tab="flow">
-                    <h3 class="text-xl font-bold text-purple-300 mb-2">Draft Generation 내부 흐름</h3>
-                    <p class="text-slate-400 text-sm mb-4">📋 버튼을 클릭하면 해당 노드의 실제 프롬프트(원문+번역)가 펼쳐집니다.</p>
-                    <div class="flex flex-col gap-0 max-w-3xl">
-                        <div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">입력</span><span class="font-semibold text-white text-sm">persona.json</span></div><div class="text-xs text-slate-400 font-mono mb-2">run/draft_gen.py</div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">상세 페르소나</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">Scheduler 초기화</span></div></div></div>
-                        <div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-                        <div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">genevent_yearterm() 1라운드</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/scheduler.py <span class="text-yellow-400 text-xs">→ template_yearterm_eventgen</span></div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">persona</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">연간 이벤트 100개</span></div></div>
-                            <div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-yearterm-eventgen', 'template_yearterm_eventgen')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_yearterm_eventgen</button><div id="p-template-yearterm-eventgen" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-yearterm-eventgen-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-yearterm-eventgen-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div></div></div></div>
-                        <div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-                        <div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">genevent_yearterm() 2라운드</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/scheduler.py <span class="text-yellow-400 text-xs">→ template_yearterm_complete</span></div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">1라운드 이벤트 + persona</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">보완 이벤트 90개</span></div></div>
-                            <div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-yearterm-complete', 'template_yearterm_complete')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_yearterm_complete</button><div id="p-template-yearterm-complete" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-yearterm-complete-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-yearterm-complete-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div></div></div></div>
-                        <div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-                        <div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">_extract_impact_events()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/scheduler.py <span class="text-yellow-400 text-xs">→ template_extract_impact_events</span></div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">전체 이벤트 + persona</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">영향 이벤트 목록</span></div></div>
-                            <div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-extract-impact-events', 'template_extract_impact_events')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_extract_impact_events</button><div id="p-template-extract-impact-events" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-extract-impact-events-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-extract-impact-events-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div></div></div></div>
-                        <div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-                        <div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">_analyze_monthly_events()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/scheduler.py <span class="text-yellow-400 text-xs">→ template_monthly_events_analysis</span></div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">월별 이벤트 + 영향</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">월별 최적화 이벤트</span></div></div>
-                            <div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-monthly-events-analysis', 'template_monthly_events_analysis')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_monthly_events_analysis</button><div id="p-template-monthly-events-analysis" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-monthly-events-analysis-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-monthly-events-analysis-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div></div></div></div>
-                        <div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-                        <div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">optimize_merged_timelines()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/scheduler.py <span class="text-yellow-400 text-xs">→ template_timeline_conflict_resolution</span></div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">전체 타임라인</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">충돌 해결된 타임라인</span></div></div>
-                            <div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-timeline-conflict-resolution', 'template_timeline_conflict_resolution')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_timeline_conflict_resolution</button><div id="p-template-timeline-conflict-resolution" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-timeline-conflict-resolution-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-timeline-conflict-resolution-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div></div></div></div>
-                        <div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-                        <div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">출력</span><span class="font-semibold text-white text-sm">daily_draft.json</span></div><div class="text-xs text-slate-400 font-mono mb-2">각 사용자 폴더</div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">충돌 해결된 타임라인</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">daily_draft.json</span></div></div></div>
-
-                    <!-- 인풋/아웃풋 예시 -->
-                    <div class="mt-6 grid grid-cols-2 gap-4">
-                        <div class="bg-slate-800 rounded-lg p-4">
-                            <h4 class="font-semibold text-purple-300 text-sm mb-3">📥 인풋 예시</h4>
-                            <pre class="text-xs text-slate-300 font-mono bg-slate-900 p-3 rounded overflow-auto max-h-52">// persona.json 핵심 필드
-{"name": "Feng Haoran", "age": 27,
+    <h3 class="text-xl font-bold text-purple-300 mb-2">Draft Generation 내부 흐름</h3>
+    <p class="text-slate-400 text-sm mb-4">📋 프롬프트 보기 · 📊 데이터 예시 버튼을 클릭하세요.</p>
+    <div class="flex flex-col gap-0 max-w-3xl">
+<div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">입력</span><span class="font-semibold text-white text-sm">persona.json</span></div><div class="text-xs text-slate-400 font-mono mb-2">run/draft_gen.py</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">상세 페르소나 (30+ 필드)</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">Scheduler 초기화</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-d-n1');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-d-n1" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">(없음 — persona.json 파일 읽기)</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"name": "Feng Haoran",
+ "age": 27,
  "job": "Financial Investment Advisor",
  "personality": {"mbti": "ENTJ"},
- "hobbies": ["running", "basketball"],
+ "hobbies": ["running","basketball"],
+ "salary": 200000}</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">Scheduler.genevent_yearterm() 1라운드</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/scheduler.py <span class="text-yellow-400 text-xs">→ template_yearterm_eventgen</span></div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">persona 전체</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">연간 이벤트 100개 (카테고리별 분류)</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('p-template-yearterm-eventgen');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_yearterm_eventgen</button><div id="p-template-yearterm-eventgen" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-yearterm-eventgen-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-yearterm-eventgen-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-d-n2');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-d-n2" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"name": "Feng Haoran",
+ "job": "Financial Investment Advisor",
+ "personality": {"mbti": "ENTJ"},
+ "hobbies": ["running","basketball"],
  "salary": 200000,
- "family": "Unmarried",
- "workplace": {"city": "Changsha"}}</pre>
-                        </div>
-                        <div class="bg-slate-800 rounded-lg p-4">
-                            <h4 class="font-semibold text-purple-300 text-sm mb-3">📤 아웃풋 예시</h4>
-                            <pre class="text-xs text-slate-300 font-mono bg-slate-900 p-3 rounded overflow-auto max-h-52">{"2025-01": [
+ "family": "Unmarried"}</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">Career（25개）
+  업계 포럼 참가 (2025-03-18至2025-03-19):
+    가족 기업 대표로 업계 트렌드 학습...
+  신제품 출시 기획 (2025-04-01至2025-04-15):
+    여름 신제품 홍보 방안 수립...
+
+Personal Life（20개）
+  New Year Morning Run (2025-01-01):
+    5km 달리기, Yuelu Mountain...
+
+Health（15개）
+  ... 총 100개 이벤트</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">Scheduler.genevent_yearterm() 2라운드</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/scheduler.py <span class="text-yellow-400 text-xs">→ template_yearterm_complete</span></div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">1라운드 이벤트 목록 + persona</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">1라운드와 완전 차별화된 보완 이벤트 90개</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('p-template-yearterm-complete');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_yearterm_complete</button><div id="p-template-yearterm-complete" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-yearterm-complete-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-yearterm-complete-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-d-n3');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-d-n3" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// 1라운드 결과 (요약)
+[{"date":"2025-01-01", "name":"New Year Run"},
+ {"date":"2025-03-18", "name":"업계 포럼"},
+ ... 100개]
+
+// persona
+{"name": "Feng Haoran", ...}</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// 2라운드 보완 (1라운드와 다른 장면)
+Relationships（20개）
+  부모님 생일 파티 준비 (2025-05-20):
+    전통 요리와 기념 앨범...
+  동창회 조직 (2025-09-15):
+    대학 동창 10명 모임...
+
+Finance（15개）
+  금융 상품 구매 (2025-02-10):
+    ...
+
+... 총 90개 보완 이벤트</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">Scheduler._extract_impact_events()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/scheduler.py <span class="text-yellow-400 text-xs">→ template_extract_impact_events</span></div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">전체 190개 이벤트 + persona</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">영향 이벤트만 추출 (프로파일 변경 / 생활 습관 변화)</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('p-template-extract-impact-events');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_extract_impact_events</button><div id="p-template-extract-impact-events" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-extract-impact-events-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-extract-impact-events-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-d-n4');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-d-n4" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// 전체 이벤트 목록 (1+2라운드, 190개)
+[{"date":"2025-01-01","name":"New Year Run"},
+ {"date":"2025-06-20","name":"이직 결정"},
+ {"date":"2025-08-15","name":"새 집 구매"},
+ ...]
+
+// persona
+{"job": "Financial Investment Advisor", ...}</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// 영향 이벤트만 추출
+[
+ {"date":"2025-06-20",
+  "event": "이직: Ping An Securities로",
+  "type": "프로파일 변경",
+  "impact": "직장/동료/통근 변화"},
+
+ {"date":"2025-08-15",
+  "event": "새 집 구매",
+  "type": "프로파일 변경",
+  "impact": "주소 변경, 이사 일정"},
+
+ {"date":"2025-07-01",
+  "event": "2주 출장 (베이징)",
+  "type": "근접 영향",
+  "period": "2025-07-01~2025-07-14",
+  "impact": "집에 없음, 운동루틴 중단"}
+]</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">Scheduler._analyze_monthly_events()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/scheduler.py <span class="text-yellow-400 text-xs">→ template_monthly_events_analysis</span></div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">월별 이벤트 + 영향 이벤트 + persona</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">월별 최적화된 이벤트 목록 + 고정변화/근접영향 분류</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('p-template-monthly-events-analysis');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_monthly_events_analysis</button><div id="p-template-monthly-events-analysis" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-monthly-events-analysis-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-monthly-events-analysis-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-d-n5');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-d-n5" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// 2025-01 이벤트들
+[{"date":"2025-01-01","name":"New Year Run"},
+ {"date":"2025-01-15","name":"CFA 스터디 시작"},
+ ...]
+
+// 영향 이벤트
+[{"date":"2025-01-20","event":"독감 걸림","type":"근접 영향"}]</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"month": "2025-01",
+ "month_overview": "...",
+ "key_events": [
+   {"time_point": "2025-01-20",
+    "event": "독감으로 1주 자가격리",
+    "fixed_changes": [],
+    "short_term_impacts": [
+      {"start_date": "2025-01-20",
+       "end_date": "2025-01-27",
+       "impact_description": "외출 불가, 운동 중단,
+         재택근무"}
+    ]}
+ ]}</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">Scheduler.optimize_merged_timelines()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/scheduler.py <span class="text-yellow-400 text-xs">→ template_timeline_conflict_resolution</span></div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">전체 타임라인 목록 (여러 주제별)</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">충돌 해결된 최종 타임라인 + 연간 월별 요약</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('p-template-timeline-conflict-resolution');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_timeline_conflict_resolution</button><div id="p-template-timeline-conflict-resolution" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-timeline-conflict-resolution-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-timeline-conflict-resolution-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-d-n6');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-d-n6" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// 여러 주제 타임라인
+[
+ {"topic": "직업 발전",
+  "events": ["2025-06 이직","2025-09 승진"...]},
+ {"topic": "가족 관계",
+  "events": ["2025-05 부모님 방문","2025-10 귀향"...]},
+ {"topic": "건강/운동",
+  "events": ["2025-01 마라톤 훈련","2025-03 대회"...]}
+]</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"conflict_resolution_result": [
+  {"topic": "직업 발전",
+   "modification_content": "06월 이직과 07월 출장 시간 충돌 조정",
+   "modification_reason": "이직 준비 기간 확보"},
+  ...
+ ],
+ "annual_overview": {
+  "1월": {"core_events": ["New Year Run","CFA시작"],
+         "core_impacts": ["건강 습관 강화"]},
+  "2월": {...},
+  ...
+ }}</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">출력</span><span class="font-semibold text-white text-sm">daily_draft.json</span></div><div class="text-xs text-slate-400 font-mono mb-2">각 사용자 폴더</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">충돌 해결된 최종 타임라인</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">daily_draft.json — 월별/일별 이벤트 구조</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-d-n7');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-d-n7" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// Scheduler 최종 결과
+{"annual_overview": {...},
+ "timelines": [...]}</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"2025-01": [
   {"date": "2025-01-01",
    "date_attribute": {
-     "weather": "Clear", "holiday": "New Year"
+     "weather": "Clear",
+     "holiday": "New Year"
    },
    "daily_overview": "Feng Haoran ushered in...",
    "events": [
      {"name": "New Year Morning Run",
       "time": "06:40至08:00",
-      "type": "Personal Life",
-      "description": "5km run at Yuelu Mountain"}
+      "type": "Personal Life"}
    ]}
  ],
- "2025-02": [...] ... 총 12개월}</pre>
-                        </div>
-                    </div>
-
-                    </div>
-                </div>
-
-                <div class="tab-content hidden" data-step="draft" data-tab="code">
+ "2025-02": [...],
+ ... 12개월}</pre></div></div></div></div>
+    </div>
+</div>
+<div class="tab-content hidden" data-step="draft" data-tab="code">
                     <div class="space-y-4">
                         <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
                             <h3 class="text-xl font-bold mb-4 text-green-400">📂 실행 파일 경로</h3>
@@ -794,80 +887,220 @@
 
                 <!-- 내부 플로우 탭 -->
                                 <div class="tab-content hidden" data-step="simulator" data-tab="flow">
-                    <h3 class="text-xl font-bold text-green-300 mb-2">Simulator 내부 실행 흐름</h3>
-                    <p class="text-slate-400 text-sm mb-4">📋 버튼을 클릭하면 해당 노드의 실제 프롬프트(원문+번역)가 펼쳐집니다.</p>
-                    <div class="flex flex-col gap-0 max-w-3xl">
-                        <div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">1회</span><span class="font-semibold text-white text-sm">FuzzyMemoryBuilder.build_all_summaries()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/fuzzy_memory_builder.py</div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">event_transfer.json</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">monthly_summaries.json</span></div></div></div>
-                        <div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div><span class="text-xs text-slate-500 italic ml-2">매일 반복</span></div>
-                        <div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">매일</span><span class="font-semibold text-white text-sm">Mind.get_plan4(date)</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/mind.py</div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">FuzzyMemory + daily_draft 당일 참조</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">당일 계획</span></div></div></div>
-                        <div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-                        <div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">_generate_subjective_thought()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/mind.py <span class="text-yellow-400 text-xs">→ template_daily_event_subjective_plan</span></div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">plan + cognition</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">{"thought":"...","plan":[...]}</span></div></div>
-                            <div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-daily-event-subjective-plan', 'template_daily_event_subjective_plan')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_daily_event_subjective_plan</button><div id="p-template-daily-event-subjective-plan" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-daily-event-subjective-plan-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-daily-event-subjective-plan-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div></div></div></div>
-                        <div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-                        <div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">_generate_objective_events()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/mind.py <span class="text-yellow-400 text-xs">→ template_daily_event_objective_optimize</span></div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">subjective_thought + date</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">시간순 이벤트 배열</span></div></div>
-                            <div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-daily-event-objective-optimize', 'template_daily_event_objective_optimize')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_daily_event_objective_optimize</button><div id="p-template-daily-event-objective-optimize" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-daily-event-objective-optimize-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-daily-event-objective-optimize-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div></div></div></div>
-                        <div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-                        <div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">map() + _adjust_event_trajectory()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/mind.py <span class="text-yellow-400 text-xs">→ template_event_traffic_adjust</span></div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">objective_events</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">POI + 이동경로 최종 이벤트</span></div></div>
-                            <div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-event-traffic-adjust', 'template_event_traffic_adjust')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_event_traffic_adjust</button><div id="p-template-event-traffic-adjust" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-event-traffic-adjust-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-event-traffic-adjust-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div></div></div></div>
-                        <div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-                        <div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">_generate_reflection()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/mind.py <span class="text-yellow-400 text-xs">→ template_daily_reflection</span></div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">adjusted_events + date</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">{"thought":"...","future_plans":[...]}</span></div></div>
-                            <div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-daily-reflection', 'template_daily_reflection')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_daily_reflection</button><div id="p-template-daily-reflection" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-daily-reflection-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-daily-reflection-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div></div></div></div>
-                        <div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-                        <div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">_update_long_term_memory()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/mind.py <span class="text-yellow-400 text-xs">→ template_update_long_term_memory</span></div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">plan + reflection</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">{"long_term_memory":{...}}</span></div></div>
-                            <div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-update-long-term-memory', 'template_update_long_term_memory')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_update_long_term_memory</button><div id="p-template-update-long-term-memory" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-update-long-term-memory-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-update-long-term-memory-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div></div></div></div>
-                        <div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div><span class="text-xs text-slate-500 italic ml-2">월 단위</span></div>
-                        <div class="bg-blue-900 border border-blue-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-blue-700 text-blue-200 px-2 py-0.5 rounded">LLM 월별</span><span class="font-semibold text-white text-sm">EventRefiner.health_analysis()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/event_refiner.py <span class="text-yellow-400 text-xs">→ template_impact_events_analysis</span></div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">persona + 월별 이벤트 + 이전 달 건강</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">mid/end_month_state + change_nodes</span></div></div>
-                            <div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-impact-events-analysis', 'template_impact_events_analysis')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_impact_events_analysis</button><div id="p-template-impact-events-analysis" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-impact-events-analysis-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-impact-events-analysis-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div></div></div></div>
-                        <div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-                        <div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">EventFormatter._extract_events()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/event_formatter.py <span class="text-yellow-400 text-xs">→ template_event_format_sequence</span></div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">adjusted_events + poi_data + date</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">daily_event.json (최대 20개/일)</span></div></div>
-                            <div class="mt-2"><button onclick="toggleAndLoadPrompt('p-template-event-format-sequence', 'template_event_format_sequence')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_event_format_sequence</button><div id="p-template-event-format-sequence" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-event-format-sequence-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-event-format-sequence-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto leading-relaxed"></pre></div></div></div></div>
-                        <div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
-                        <div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">출력</span><span class="font-semibold text-white text-sm">daily_event.json</span></div><div class="text-xs text-slate-400 font-mono mb-2">각 사용자 폴더</div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">전체 365일 결과</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">4878개 이벤트</span></div></div></div>
-                    </div>
-                    <div class="mt-4 p-3 bg-slate-800 rounded text-xs text-slate-400"><p>• <span class="text-purple-400">하루 처리</span>: 2~6주 단위 병렬 스레드 (max_workers=30)</p><p>• <span class="text-blue-400">건강/생활 분석</span>: 월별 1회</p><p>• <span class="text-yellow-400">총 LLM 호출</span>: 약 2,600회/인물</p></div>
-                    <!-- 인풋/아웃풋 예시 -->
-                    <div class="mt-6 grid grid-cols-2 gap-4">
-                        <div class="bg-slate-800 rounded-lg p-4">
-                            <h4 class="font-semibold text-green-300 text-sm mb-3">📥 인풋 예시</h4>
-                            <div class="space-y-3">
-                                <div>
-                                    <p class="text-slate-400 text-xs font-semibold mb-1">daily_draft.json (당일 참조)</p>
-                                    <pre class="text-xs text-slate-300 font-mono bg-slate-900 p-3 rounded overflow-auto max-h-28">{"date": "2025-01-01",
+    <h3 class="text-xl font-bold text-green-300 mb-2">Simulator 내부 실행 흐름</h3>
+    <p class="text-slate-400 text-sm mb-4">📋 프롬프트 보기 · 📊 데이터 예시 버튼을 클릭하세요.</p>
+    <div class="flex flex-col gap-0 max-w-3xl">
+<div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">1회</span><span class="font-semibold text-white text-sm">FuzzyMemoryBuilder.build_all_summaries()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/fuzzy_memory_builder.py</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">event_transfer.json (daily_draft 플랫 변환)</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">monthly_summaries.json + cumulative_summaries.json</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-s-n1');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n1" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// event_transfer.json (daily_draft 평탄화)
+[{"date": ["2025-01-01"],
+  "name": "New Year Morning Run",
+  "description": "5km run..."},
+ {"date": ["2025-01-15"],
+  "name": "CFA Study Start",
+  "description": "Began CFA preparation..."},
+ ...]</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// monthly_summaries.json
+{"2025-01": "January: Feng Haoran started the year
+  with disciplined morning runs. CFA studies
+  began mid-month...",
+ "2025-02": "February: ...",
+ ...}
+
+// cumulative_summaries.json
+{"2025-01": "Cumulative life pattern:
+  early riser, 3x/week runner...",
+ "2025-02": "..."}</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div><span class="text-xs text-slate-500 italic ml-2">매일 반복 (병렬 스레드)</span></div>
+<div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">매일</span><span class="font-semibold text-white text-sm">Mind.get_plan4(date)</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/mind.py</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">FuzzyMemory 월별 요약 + daily_draft 당일 이벤트</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">당일 계획 컨텍스트 (plan dict)</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-s-n2');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n2" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// FuzzyMemory (해당 월 요약)
+"January: disciplined morning runs,
+ CFA studies, year-end reflection..."
+
+// daily_draft 당일 이벤트
+{"date": "2025-01-01",
  "events": [
+   {"name": "New Year Morning Run"}
+ ]}</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"date": "2025-01-01",
+ "reference_events": [
    {"name": "New Year Morning Run",
-    "time": "06:40~08:00",
-    "type": "Personal Life"}
- ]}</pre>
-                                </div>
-                                <div>
-                                    <p class="text-slate-400 text-xs font-semibold mb-1">FuzzyMemory (누적 기억)</p>
-                                    <pre class="text-xs text-slate-300 font-mono bg-slate-900 p-3 rounded overflow-auto max-h-24">{"2025-01": "Jan: Disciplined start...",
- "cumulative": "Early riser, runs 3x/week,
-   works at Huatai Securities..."}</pre>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-slate-800 rounded-lg p-4">
-                            <h4 class="font-semibold text-green-300 text-sm mb-3">📤 아웃풋 예시</h4>
-                            <pre class="text-xs text-slate-300 font-mono bg-slate-900 p-3 rounded overflow-auto max-h-52">{"event_id": "1",
- "name": "Morning Preparations and
-          Departure for Yuelu Mountain",
- "date": ["06:40~08:00, Jan 1, 2025"],
+    "time": "06:40~08:00"}
+ ],
+ "memory_context": "Early riser, runner...",
+ "monthly_summary": "Jan: disciplined..."}</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">Mind._generate_subjective_thought()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/mind.py <span class="text-yellow-400 text-xs">→ template_daily_event_subjective_plan</span></div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">plan (당일 계획) + cognition (자아인식+기억)</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">1인칭 주관적 계획 JSON</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('p-template-daily-event-subjective-plan');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_daily_event_subjective_plan</button><div id="p-template-daily-event-subjective-plan" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-daily-event-subjective-plan-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-daily-event-subjective-plan-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-s-n3');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n3" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// plan (get_plan4 결과)
+{"reference_events": [
+  {"name": "New Year Morning Run"}
+ ],
+ "memory_context": "Early riser..."}
+
+// cognition (자아인식 + 장기기억)
+{"self_awareness": "ENTJ, disciplined...",
+ "long_term_memory": [
+  "2025-01-01: CFA study start planned"
+ ]}</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"thought": "오늘 새해 첫 날이다. 아침 일찍
+  일어나 유악산에서 달리기를 해야겠다.
+  오후엔 가족에게 전화하고...",
+ "plan": [
+  {"time": "06:30", "activity": "기상 + 준비"},
+  {"time": "06:40", "activity": "유악산 달리기 (5km)"},
+  {"time": "09:00", "activity": "가족 새해 통화"},
+  {"time": "14:00", "activity": "2025 목표 정리"}
+ ]}</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">Mind._generate_objective_events()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/mind.py <span class="text-yellow-400 text-xs">→ template_daily_event_objective_optimize</span></div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">subjective_thought (주관 계획) + date</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">시간순 이벤트 배열 (현실 제약 반영)</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('p-template-daily-event-objective-optimize');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_daily_event_objective_optimize</button><div id="p-template-daily-event-objective-optimize" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-daily-event-objective-optimize-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-daily-event-objective-optimize-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-s-n4');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n4" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// subjective_thought (이전 단계 결과)
+{"thought": "오늘 새해 첫 날...",
+ "plan": [
+  {"time": "06:40", "activity": "달리기"},
+  {"time": "09:00", "activity": "가족 통화"}
+ ]}
+
+// date
+"2025-01-01 (New Year, Wednesday)"</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">[{"time": "06:00~06:40",
+  "name": "기상 및 준비",
+  "location_type": "home"},
+ {"time": "06:40~08:00",
+  "name": "New Year Morning Run",
+  "location_type": "outdoor_sports"},
+ {"time": "08:00~08:30",
+  "name": "귀가 및 샤워"},
+ {"time": "08:30~09:30",
+  "name": "아침식사"},
+ {"time": "13:30~14:45",
+  "name": "가족 새해 영상통화"},
+ ... (공백 시간대 채워짐)]</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">Mind.map() + _adjust_event_trajectory()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/mind.py <span class="text-yellow-400 text-xs">→ template_event_traffic_adjust</span></div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">objective_events → POI 검색 → 이동경로 조정</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">최종 이벤트 시퀀스 (실제 주소 + 이동시간)</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('p-template-event-traffic-adjust');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_event_traffic_adjust</button><div id="p-template-event-traffic-adjust" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-event-traffic-adjust-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-event-traffic-adjust-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-s-n5');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n5" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// objective_events (이전 단계 결과)
+[{"time": "06:40~08:00",
+  "name": "New Year Morning Run",
+  "location_type": "outdoor_sports"},
+ ...]
+
+// POI 검색 결과
+{"outdoor_sports": [
+  {"name": "岳麓山风景区",
+   "address": "岳麓区登高路58号",
+   "travel_time": "15min by bus"}
+]}</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">[{"time": "06:00~06:40",
+  "name": "기상 및 이동 준비",
+  "location": "Jinxing Residential, Shuangtang Rd"},
+ {"time": "06:40~06:55",
+  "name": "버스 이동",
+  "location": "Bus 305 → Yuelu Mountain"},
+ {"time": "06:55~08:10",
+  "name": "New Year Morning Run",
+  "location": "Yuelu Mountain Scenic Area,
+    Yuelu District, Changsha"},
+ {"time": "08:10~08:30",
+  "name": "귀가 이동"},
+ ...]</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">Mind._generate_reflection()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/mind.py <span class="text-yellow-400 text-xs">→ template_daily_reflection</span></div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">adjusted_events (최종 이벤트) + plan + date</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">하루 회고 + 미래 계획 JSON</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('p-template-daily-reflection');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_daily_reflection</button><div id="p-template-daily-reflection" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-daily-reflection-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-daily-reflection-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-s-n6');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n6" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// 오늘의 최종 이벤트 (map 결과)
+[{"time": "06:55~08:10",
+  "name": "New Year Morning Run",
+  "location": "Yuelu Mountain"},
+ {"time": "13:30~14:45",
+  "name": "가족 새해 영상통화"},
+ ...]
+
+// date: "2025-01-01"</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"date": "2025-01-01",
+ "thought": "오늘 새해 첫날을 달리기로 시작했다.
+  유악산의 아침 공기가 상쾌했다. 가족과의
+  통화도 따뜻했다. CFA 공부를 내일부터
+  시작해야겠다는 다짐을 새로 했다.",
+ "future_plans": [
+  {"date": "2025-01-02",
+   "plan": "CFA 공부 시작 (하루 2시간)"},
+  {"date": "2025-01-15",
+   "plan": "1차 모의고사 응시"}
+ ]}</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">Mind._update_long_term_memory()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/mind.py <span class="text-yellow-400 text-xs">→ template_update_long_term_memory</span></div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">plan + reflection (회고 결과)</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">업데이트된 장기기억 JSON</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('p-template-update-long-term-memory');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_update_long_term_memory</button><div id="p-template-update-long-term-memory" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-update-long-term-memory-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-update-long-term-memory-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-s-n7');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n7" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// reflection (이전 단계 결과)
+{"thought": "새해 달리기로 시작...",
+ "future_plans": [
+  {"date": "2025-01-02", "plan": "CFA 공부 시작"}
+ ]}
+
+// 기존 장기기억
+{"key_events": [],
+ "fixed_preferences": ["매일 아침 달리기"],
+ "upcoming_plans": []}</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"long_term_memory": {
+  "key_events": [
+   "2025-01-01: 새해 유악산 달리기
+     (5km, 건강 습관 강화)"
+  ],
+  "fixed_preferences": [
+   "매일 아침 달리기",
+   "가족과 명절 영상통화"
+  ],
+  "upcoming_plans": [
+   "2025-01-02: CFA 공부 시작",
+   "2025-01-15: 1차 모의고사"
+  ]
+}}</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div><span class="text-xs text-slate-500 italic ml-2">월 단위</span></div>
+<div class="bg-blue-900 border border-blue-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-blue-700 text-blue-200 px-2 py-0.5 rounded">LLM 월별</span><span class="font-semibold text-white text-sm">EventRefiner.health_analysis()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/event_refiner.py <span class="text-yellow-400 text-xs">→ template_impact_events_analysis</span></div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">persona + 월별 이벤트 + 이전 달 건강 상태</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">15일/말일 건강 상태 + 변화 노드</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('p-template-impact-events-analysis');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_impact_events_analysis</button><div id="p-template-impact-events-analysis" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-impact-events-analysis-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-impact-events-analysis-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-s-n8');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n8" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// persona
+{"age": 27, "body": {"weight": 75, "BMI": 20.9}}
+
+// 초기 건강 상태 (이전 달 말)
+{"weight_record": "75kg",
+ "sleep_time": {"bedtime": "23:00", "wakeup": "06:30"},
+ "exercise_events": [{"name": "Running"}]}
+
+// 1월 이벤트 (일별)
+[{"date": "2025-01-01", "events": [...]},
+ {"date": "2025-01-20", "events": ["독감"]}]</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"mid_month_state": {
+  "weight_record": "74.5kg",
+  "sleep_time": {"bedtime": "23:30", "wakeup": "06:40"},
+  "health_status": {"summary": "독감 회복 중..."}
+ },
+ "end_of_month_state": {
+  "weight_record": "74.2kg",
+  "sleep_time": {"bedtime": "23:00", "wakeup": "06:30"},
+  "health_status": {"summary": "완전 회복..."}
+ },
+ "change_nodes": [
+  {"date": "2025-01-20",
+   "event": "독감 발병",
+   "impact": "수면 패턴 변화, 체중 0.3kg 감소"}
+ ]}</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">EventFormatter._extract_events()</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/event_formatter.py <span class="text-yellow-400 text-xs">→ template_event_format_sequence</span></div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">adjusted_events + poi_data + date</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">daily_event.json 최종 이벤트 (최대 20개/일)</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('p-template-event-format-sequence');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_event_format_sequence</button><div id="p-template-event-format-sequence" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre id="p-template-event-format-sequence-zh" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre id="p-template-event-format-sequence-kr" class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto"></pre></div></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-s-n9');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n9" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// 하루의 전체 이벤트 텍스트
+"06:00-06:40 기상 및 준비
+  (집, 샤워, 옷 입기...)
+06:40-06:55 버스 이동
+  (버스 305번, Yuelu Mountain행)
+06:55-08:10 새해 달리기
+  (Yuelu Mountain, 5km...)"
+
+// date: "2025-01-01"</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">{"event_id": "1",
+ "name": "Morning Preparations and Departure",
+ "date": [
+   "From 06:00:00 to 06:55:00 on Jan 1, 2025"
+ ],
  "type": "Personal Life",
  "description": "Awakened by biological clock,
-   changed into running gear, took phone,
-   earphones, sports watch...",
+   washed up, changed into running gear...",
  "participant": [
    {"name": "Feng Haoran", "relation": "Self"}
  ],
- "location": "Yuelu Mountain, Changsha"}
-// 총 4878개 이벤트 (fenghaoran 기준)</pre>
-                        </div>
-                    </div>
-                </div>
+ "location": "Jinxing Residential Community,
+   Shuangtang Rd, Yuelu District"}
 
+// + 19개 이벤트 더 (최대 20개/일)</pre></div></div></div></div>
+<div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
+<div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">출력</span><span class="font-semibold text-white text-sm">daily_event.json</span></div><div class="text-xs text-slate-400 font-mono mb-2">각 사용자 폴더</div><div class="grid grid-cols-2 gap-3 text-xs mb-1"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">EventFormatter 전체 결과</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">4878개 이벤트 (fenghaoran 기준)</span></div></div><div class="mt-2"><button onclick="var e=document.getElementById('io-s-n10');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600">📊 데이터 예시</button><div id="io-s-n10" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-blue-400 font-semibold mb-1">📥 인풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">// EventFormatter 모든 날짜 결과 합산</pre></div><div class="p-3 bg-slate-800"><div class="text-orange-400 font-semibold mb-1">📤 아웃풋</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-64 overflow-auto">[{"event_id": "1", "name": "Morning Preparations...",
+  "date": ["06:00~06:55, Jan 1"],
+  "type": "Personal Life"},
+ {"event_id": "2", "name": "New Year Morning Run",
+  "date": ["06:55~08:10, Jan 1"],
+  "type": "Personal Life"},
+ ...
+ {"event_id": "4878", ...}]
 
-        <!-- Step 3: Phone Data Generation -->
+// 총 4878개 이벤트 (fenghaoran 기준)
+// 10명 × 평균 488개/인</pre></div></div></div></div>
+    </div>
+    <div class="mt-4 p-3 bg-slate-800 rounded text-xs text-slate-400"><p>• <span class="text-purple-400">하루 처리</span>: 2~6주 단위 병렬 스레드 (max_workers=30)</p><p>• <span class="text-blue-400">건강/생활 분석</span>: 월별 1회 (모든 일별 처리 후)</p><p>• <span class="text-yellow-400">총 LLM 호출</span>: 하루당 약 7회 × 365일 + 월별 분석 ≈ 2,600회/인물</p></div>
+</div>
+
         <div id="step-phone" class="mb-16">
             <div class="step-card bg-gradient-to-br from-orange-900 to-orange-800 rounded-lg p-8 border border-orange-600">
                 <div class="flex items-center justify-between mb-6">
