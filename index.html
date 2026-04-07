@@ -3,34 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LifeBench Data Pipeline Visualization</title>
+    <title>LifeBench Pipeline - Complete Technical Documentation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
-        .pipeline-arrow {
-            width: 50px;
-            height: 2px;
-            background: linear-gradient(to right, #64748b 0%, #64748b 100%);
-            position: relative;
-        }
-        .pipeline-arrow::after {
-            content: '';
-            position: absolute;
-            right: -8px;
-            top: -4px;
-            width: 0;
-            height: 0;
-            border-left: 8px solid #64748b;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-        }
         .variable-highlight {
-            background-color: rgb(251 191 36 / 0.3);
-            color: #fbbf24;
-            padding: 2px 4px;
-            border-radius: 3px;
+            background-color: rgb(251 191 36 / 0.2);
+            color: #fcd34d;
+            padding: 1px 4px;
+            border-radius: 2px;
             font-weight: 600;
+            border: 1px solid rgb(251 191 36 / 0.3);
         }
         .step-card {
             transition: all 0.3s ease;
@@ -38,10 +22,11 @@
         }
         .step-card:hover {
             transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         .step-card.active {
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
-            transform: scale(1.02);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.6);
+            transform: scale(1.03);
         }
         .tab-button {
             transition: all 0.2s ease;
@@ -50,663 +35,1861 @@
             background: linear-gradient(to bottom, #3b82f6, #2563eb);
             color: white;
         }
-        .modified-badge {
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
         pre code {
-            max-height: 400px;
+            max-height: 500px;
             overflow-y: auto;
+            font-size: 13px;
+            line-height: 1.5;
         }
-        .tooltip {
-            visibility: hidden;
-            opacity: 0;
-            transition: opacity 0.3s;
+        .code-path {
+            font-family: 'Courier New', monospace;
+            background: rgba(34, 197, 94, 0.1);
+            color: #4ade80;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
         }
-        .step-card:hover .tooltip {
-            visibility: visible;
-            opacity: 1;
+        .function-name {
+            font-family: 'Courier New', monospace;
+            background: rgba(59, 130, 246, 0.1);
+            color: #60a5fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .prompt-section {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 12px 0;
+        }
+        .accordion-item {
+            border: 1px solid #374151;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+        .accordion-header {
+            background: #1f2937;
+            padding: 12px 16px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .accordion-header:hover {
+            background: #374151;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .accordion-content.open {
+            max-height: 3000px;
+        }
+        .mini-map {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 12px;
+            width: 200px;
+            z-index: 50;
+        }
+        .mini-map-item {
+            padding: 6px 10px;
+            margin: 4px 0;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .mini-map-item:hover {
+            background: #334155;
+        }
+        .mini-map-item.active {
+            background: #3b82f6;
+            color: white;
         }
     </style>
 </head>
-<body class="bg-slate-900 text-gray-100 min-h-screen">
+<body class="bg-slate-950 text-gray-100 min-h-screen">
     <!-- Header -->
-    <header class="bg-slate-800 border-b border-slate-700 px-6 py-4">
+    <header class="bg-slate-900 border-b border-slate-700 px-6 py-4 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto">
-            <h1 class="text-3xl font-bold text-blue-400">LifeBench Data Pipeline</h1>
-            <p class="text-gray-400 mt-1">생성형 AI 기반 개인 생활 데이터 시뮬레이션 파이프라인</p>
-            <div class="mt-2 text-sm text-gray-500">
-                <span class="inline-block px-3 py-1 bg-slate-700 rounded-full">
-                    ⏱️ 전체 실행 시간: ~2-4시간 (1년치 데이터)
-                </span>
-            </div>
+            <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                LifeBench Pipeline - Deep Dive
+            </h1>
+            <p class="text-gray-400 mt-1">실제 코드, 프롬프트, 데이터로 보는 생성형 AI 생활 시뮬레이션 파이프라인</p>
         </div>
     </header>
 
-    <!-- Pipeline Flow -->
-    <div class="max-w-7xl mx-auto px-6 py-8">
-        <div class="flex items-center justify-center gap-4 mb-12 overflow-x-auto pb-4">
-            <!-- Step 1: Persona -->
-            <div class="step-card bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-6 min-w-[200px] relative" data-step="persona">
-                <div class="text-center">
-                    <div class="text-4xl mb-2">👤</div>
-                    <h3 class="font-bold text-lg">Step 1</h3>
-                    <p class="text-sm">Persona</p>
-                    <p class="text-xs text-blue-200 mt-1">인물 프로필 생성</p>
-                </div>
-                <div class="tooltip absolute -bottom-16 left-1/2 transform -translate-x-1/2 bg-slate-800 text-xs p-2 rounded shadow-lg w-48 text-center border border-slate-700">
-                    나이, 직업, 성격(MBTI), 연봉 등 기본 인물 정보 생성
-                </div>
-            </div>
-
-            <div class="pipeline-arrow"></div>
-
-            <!-- Step 2: Draft -->
-            <div class="step-card bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg p-6 min-w-[200px] relative" data-step="draft">
-                <div class="text-center">
-                    <div class="text-4xl mb-2">📝</div>
-                    <h3 class="font-bold text-lg">Step 2</h3>
-                    <p class="text-sm">Draft Generator</p>
-                    <p class="text-xs text-purple-200 mt-1">연간 타임라인 초안</p>
-                </div>
-                <div class="tooltip absolute -bottom-16 left-1/2 transform -translate-x-1/2 bg-slate-800 text-xs p-2 rounded shadow-lg w-48 text-center border border-slate-700">
-                    1년간 주요 생활 이벤트 타임라인 생성 (일별 이벤트 목록)
-                </div>
-            </div>
-
-            <div class="pipeline-arrow"></div>
-
-            <!-- Step 3: Simulator -->
-            <div class="step-card bg-gradient-to-br from-green-600 to-green-700 rounded-lg p-6 min-w-[200px] relative" data-step="simulator">
-                <div class="text-center">
-                    <div class="text-4xl mb-2">🎮</div>
-                    <h3 class="font-bold text-lg">Step 3</h3>
-                    <p class="text-sm">Simulator</p>
-                    <p class="text-xs text-green-200 mt-1">상세 이벤트 시뮬레이션</p>
-                </div>
-                <div class="tooltip absolute -bottom-16 left-1/2 transform -translate-x-1/2 bg-slate-800 text-xs p-2 rounded shadow-lg w-48 text-center border border-slate-700">
-                    일별 상세 이벤트 + 건강 상태 추적 (신체/정신/수면/에너지)
-                </div>
-            </div>
-
-            <div class="pipeline-arrow"></div>
-
-            <!-- Step 4: Phone Data -->
-            <div class="step-card bg-gradient-to-br from-orange-600 to-orange-700 rounded-lg p-6 min-w-[200px] relative" data-step="phone">
-                <div class="text-center">
-                    <div class="text-4xl mb-2">📱</div>
-                    <h3 class="font-bold text-lg">Step 4</h3>
-                    <p class="text-sm">Phone Data</p>
-                    <p class="text-xs text-orange-200 mt-1">스마트폰 데이터 생성</p>
-                </div>
-                <div class="tooltip absolute -bottom-16 left-1/2 transform -translate-x-1/2 bg-slate-800 text-xs p-2 rounded shadow-lg w-48 text-center border border-slate-700">
-                    전화, SMS, 푸시알림, 캘린더, 메모, 사진, 피트니스 데이터 생성
-                </div>
-            </div>
-
-            <div class="pipeline-arrow"></div>
-
-            <!-- Step 5: QA -->
-            <div class="step-card bg-gradient-to-br from-red-600 to-red-700 rounded-lg p-6 min-w-[200px] relative" data-step="qa">
-                <div class="text-center">
-                    <div class="text-4xl mb-2">❓</div>
-                    <h3 class="font-bold text-lg">Step 5</h3>
-                    <p class="text-sm">QA Generator</p>
-                    <p class="text-xs text-red-200 mt-1">질의응답 데이터 생성</p>
-                </div>
-                <div class="tooltip absolute -bottom-16 left-1/2 transform -translate-x-1/2 bg-slate-800 text-xs p-2 rounded shadow-lg w-48 text-center border border-slate-700">
-                    단일/다중 홉 QA, 추론 문제 생성 (생성된 데이터 기반)
-                </div>
-            </div>
-        </div>
-
-        <!-- Detail Panel -->
-        <div id="detailPanel" class="bg-slate-800 rounded-lg border border-slate-700 p-6 hidden">
-            <div class="flex items-center justify-between mb-6">
-                <h2 id="panelTitle" class="text-2xl font-bold"></h2>
-                <span id="modifiedBadge" class="modified-badge hidden px-3 py-1 bg-yellow-500 text-slate-900 text-sm font-bold rounded-full">
-                    수정됨
-                </span>
-            </div>
-
-            <!-- Tabs -->
-            <div class="flex gap-2 mb-6 border-b border-slate-700">
-                <button class="tab-button active px-4 py-2 rounded-t-lg" data-tab="input">① 인풋</button>
-                <button class="tab-button px-4 py-2 rounded-t-lg" data-tab="prompt">② 프롬프트</button>
-                <button class="tab-button px-4 py-2 rounded-t-lg" data-tab="output">③ 아웃풋</button>
-                <button class="tab-button px-4 py-2 rounded-t-lg" data-tab="insights">④ 수정 포인트</button>
-            </div>
-
-            <!-- Tab Content -->
-            <div id="tabContent">
-                <!-- Content will be injected here -->
-            </div>
-        </div>
+    <!-- Mini Map -->
+    <div class="mini-map">
+        <div class="text-xs font-bold text-gray-400 mb-2">📍 PIPELINE</div>
+        <div class="mini-map-item active" data-step="draft">Draft Gen</div>
+        <div class="mini-map-item" data-step="simulator">Simulator</div>
+        <div class="mini-map-item" data-step="phone">Phone Data</div>
+        <div class="mini-map-item" data-step="qa">QA Gen</div>
     </div>
 
-    <script>
-        // Pipeline data structure
-        const pipelineData = {
-            persona: {
-                title: "Step 1: Persona Generation",
-                input: {
-                    description: "기본 설정값 (나이 범위, 직업 목록, MBTI 타입 등)",
-                    example: {
-                        "age_range": [25, 35],
-                        "job_categories": ["Finance", "Tech", "Healthcare", "Education"],
-                        "mbti_types": ["ENTJ", "INTJ", "ENFP", "INFP"]
-                    }
-                },
-                output: {
-                    description: "persona.json - 생성된 인물 프로필",
-                    example: {
-                        "name": "Feng Haoran",
-                        "age": 27,
-                        "gender": "Male",
-                        "job": "Financial Investment Advisor",
-                        "personality": {
-                            "mbti": "ENTJ",
-                            "traits": ["Ambitious", "Strategic thinker", "Confident", "Results-oriented"]
-                        },
-                        "salary": 200000.0,
-                        "education": "Master's degree in Finance",
-                        "location": "Shanghai, China",
-                        "marital_status": "Single",
-                        "hobbies": ["Reading financial news", "Gym workout", "Playing tennis", "Wine tasting"],
-                        "health_state": {
-                            "physical_health": {"score": 85, "description": "Good physical condition"},
-                            "mental_health": {"score": 80, "description": "Generally positive, occasional work stress"},
-                            "sleep_quality": {"score": 75, "description": "Average sleep"},
-                            "energy_level": {"score": 85, "description": "High energy, driven and motivated"}
-                        }
-                    }
-                },
-                prompt: `Based on the configuration parameters, generate a realistic persona profile.
+    <!-- Pipeline Steps -->
+    <div class="max-w-7xl mx-auto px-6 py-8">
+        
+        <!-- Step 1: Draft Generation -->
+        <div id="step-draft" class="mb-16">
+            <div class="step-card bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-8 border border-purple-600">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-4">
+                        <div class="text-5xl">📝</div>
+                        <div>
+                            <h2 class="text-3xl font-bold">Step 1: Draft Generation</h2>
+                            <p class="text-purple-200 mt-1">연간 생활 이벤트 타임라인 초안 생성</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm text-purple-300">실행 시간</div>
+                        <div class="text-2xl font-bold">~30-60분</div>
+                    </div>
+                </div>
 
-## Configuration
-{age_range}, {job_categories}, {mbti_types}
+                <!-- Tabs -->
+                <div class="flex gap-2 mb-6 border-b border-purple-700">
+                    <button class="tab-button active px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="draft" data-tab="overview">개요</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="draft" data-tab="code">코드 경로</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="draft" data-tab="prompts">프롬프트</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="draft" data-tab="input">인풋 예시</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="draft" data-tab="output">아웃풋 예시</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="draft" data-tab="tuning">수정 가이드</button>
+                </div>
 
-## Requirements
-1. Create a coherent personality profile
-2. Match job with appropriate education and salary
-3. Generate realistic hobbies based on personality and job
-4. Set initial health state scores (1-100 scale)
-5. Consider cultural context for location
+                <!-- Tab Content -->
+                <div class="tab-content" data-step="draft" data-tab="overview">
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-purple-300">🎯 목적</h3>
+                            <p class="text-gray-300 leading-relaxed">
+                                persona.json을 기반으로 2025년 1월 1일부터 12월 31일까지 365일간의 주요 생활 이벤트 타임라인을 생성합니다.
+                                이 단계에서는 "큰 그림"만 그립니다 - 각 날짜의 개략적인 이벤트 목록과 간단한 설명만 포함됩니다.
+                            </p>
+                        </div>
 
-## Output Format
-Return a JSON object with all persona attributes including health_state.`,
-                insights: [
-                    "✏️ MBTI 타입을 바꾸면 → 전체 이벤트의 성향이 달라집니다 (ENTJ는 업무 중심, ENFP는 사교 중심)",
-                    "✏️ 직업을 바꾸면 → 일정, 연락처, 이벤트 종류가 완전히 달라집니다",
-                    "✏️ 초기 건강 점수를 낮추면 → 시뮬레이션 중 건강 관련 이벤트가 더 자주 발생합니다",
-                    "💡 연봉은 소비 패턴과 생활 수준에 영향을 미칩니다"
-                ]
-            },
-            draft: {
-                title: "Step 2: Draft Generation",
-                input: {
-                    description: "persona.json (Step 1의 출력)",
-                    example: {
-                        "name": "Feng Haoran",
-                        "job": "Financial Investment Advisor",
-                        "personality": {"mbti": "ENTJ"}
-                    }
-                },
-                output: {
-                    description: "daily_draft.json - 연간 주요 이벤트 타임라인",
-                    example: {
-                        "2024-01-01": [
-                            {"time": "09:00", "event_type": "work", "description": "New Year market analysis meeting", "importance": "high"}
-                        ],
-                        "2024-01-15": [
-                            {"time": "19:00", "event_type": "social", "description": "Dinner with college friends", "importance": "medium"}
-                        ],
-                        "2024-02-10": [
-                            {"time": "08:00", "event_type": "personal", "description": "Annual health checkup", "importance": "high"}
-                        ]
-                    }
-                },
-                prompt: `Based on the following persona, create a realistic annual timeline of major life events.
-
-## Persona
-{persona}
-
-## Requirements
-1. Generate events that match the person's job, personality, age, and lifestyle
-2. Include work events, personal milestones, social activities, and daily routines
-3. Events should be realistic and culturally appropriate
-4. Consider seasonal factors and holidays (Chinese New Year, Golden Week, etc.)
-5. Balance work-life events appropriately for MBTI type
-6. ENTJ types: More work meetings, networking, achievement-oriented events
-7. Other types: Adjust event distribution accordingly
-
-## Output Format
-Provide a JSON object with dates as keys and arrays of events as values for the entire year.`,
-                insights: [
-                    "✏️ 이벤트 분포를 조정하면 → 일-생활 균형이 달라집니다 (업무 이벤트 비율 조정)",
-                    "✏️ 주요 이벤트 추가/삭제 → 연간 스토리라인을 수정할 수 있습니다",
-                    "💡 이 단계는 '큰 그림'만 그립니다. 상세 내용은 Step 3에서 생성됩니다",
-                    "💡 계절 이벤트(명절, 휴가)는 자동으로 문화권에 맞게 생성됩니다"
-                ]
-            },
-            simulator: {
-                title: "Step 3: Simulator (Detailed Event Generation)",
-                input: {
-                    description: "persona.json + daily_draft.json",
-                    example: {
-                        "persona": {"name": "Feng Haoran", "job": "Financial Investment Advisor"},
-                        "draft_events": [
-                            {"date": "2024-01-01", "event": "New Year market analysis meeting"}
-                        ]
-                    }
-                },
-                output: {
-                    description: "daily_event.json - 일별 상세 이벤트 + 건강 상태 추적",
-                    example: {
-                        "2024-01-01": {
-                            "events": [
-                                {
-                                    "timestamp": "2024-01-01 09:00:00",
-                                    "event_type": "work_meeting",
-                                    "title": "Q1 Investment Strategy Meeting",
-                                    "description": "Discussed portfolio adjustments for new year",
-                                    "participants": ["Team lead", "Senior analysts"],
-                                    "location": "Office conference room",
-                                    "emotional_impact": "neutral",
-                                    "energy_cost": 2
-                                }
-                            ],
-                            "health_state": {
-                                "physical_health": 85,
-                                "mental_health": 80,
-                                "sleep_quality": 75,
-                                "energy_level": 83
-                            }
-                        }
-                    }
-                },
-                prompt: `请基于以下人物画像、初始健康状态和指定时间段内的事件列表，分析并生成该月15号中间状态、结束时的健康状态记录和完整变化节点：
-
-## 人物画像
-{persona}
-
-## 初始健康状态
-{initial_health_state}
-
-## 输入数据
-分析以下指定时间段内的事件列表，生成该月15号的中间状态、月末健康状态，并记录所有变化节点：
-{daily_data}
-
-## 要求
-1. 仔细分析每个事件对健康状态的潜在影响
-2. 生成15号的中间健康状态
-3. 生成月末的最终健康状态
-4. 记录所有导致健康状态变化的节点（包括日期和具体事件）
-
-## 输出格式
-请严格按照以下JSON格式输出：
-{
-    "middle_health_state": {
-        "date": "2024-XX-15",
-        "physical_health": {"score": <int>, "description": "<string>"},
-        "mental_health": {"score": <int>, "description": "<string>"},
-        "sleep_quality": {"score": <int>, "description": "<string>"},
-        "energy_level": {"score": <int>, "description": "<string>"}
-    },
-    "final_health_state": {
-        "date": "2024-XX-XX",
-        "physical_health": {"score": <int>, "description": "<string>"},
-        "mental_health": {"score": <int>, "description": "<string>"},
-        "sleep_quality": {"score": <int>, "description": "<string>"},
-        "energy_level": {"score": <int>, "description": "<string>"}
-    },
-    "change_nodes": [
-        {
-            "date": "2024-XX-XX",
-            "event": "<触发变化的事件>",
-            "impact": "<对健康状态的具体影响>"
-        }
-    ]
-}`,
-                insights: [
-                    "✏️ 이벤트의 emotional_impact를 수정하면 → 정신 건강 점수 변화가 달라집니다",
-                    "✏️ energy_cost를 조정하면 → 에너지 레벨 감소 속도를 제어할 수 있습니다",
-                    "💡 건강 상태는 월 중간(15일)과 월말에 체크포인트가 생성됩니다",
-                    "💡 건강 변화 노드는 QA 생성 시 인과관계 질문의 소스가 됩니다",
-                    "⚠️ 이 단계가 가장 시간이 오래 걸립니다 (LLM 호출 횟수가 많음)"
-                ]
-            },
-            phone: {
-                title: "Step 4: Phone Data Generation",
-                input: {
-                    description: "persona.json + daily_event.json",
-                    example: {
-                        "persona": {"name": "Feng Haoran"},
-                        "events": [
-                            {"timestamp": "2024-01-01 10:00:00", "title": "Client meeting"}
-                        ]
-                    }
-                },
-                output: {
-                    description: "7가지 스마트폰 데이터 파일",
-                    example: {
-                        "call.json": {
-                            "calls": [
-                                {"timestamp": "2024-01-01 10:30:00", "direction": "outgoing", "contact": "Client - Li Wei", "duration": 420}
-                            ]
-                        },
-                        "sms.json": {
-                            "messages": [
-                                {"timestamp": "2024-01-01 09:30:00", "direction": "sent", "contact": "Client - Wang Jing", "content": "Meeting confirmed for 2pm"}
-                            ]
-                        },
-                        "push.json": {
-                            "notifications": [
-                                {"timestamp": "2024-01-01 07:00:00", "app": "Financial Times", "title": "Market Update"}
-                            ]
-                        }
-                    }
-                },
-                prompt: `Based on the persona and daily events, generate realistic phone data records.
-
-## Persona
-{persona}
-
-## Daily Events
-{daily_events}
-
-## Requirements
-1. Generate calls and SMS that relate to the events
-2. Include work contacts, family, friends based on persona's social circle
-3. Message content should be natural and contextual
-4. Call duration should be realistic (work calls: 3-10min, personal: 2-5min)
-5. Consider time of day appropriateness
-6. Push notifications from apps relevant to persona (work apps, social media, news, finance)
-7. Calendar entries should sync with events
-8. Notes should capture thoughts, todos, meeting notes
-
-## Generators (parallel execution)
-- CommunicationOperationGenerator → call.json, sms.json
-- PushOperationGenerator → push.json
-- NoteCalendarOperationGenerator → note.json, calendar.json
-- GalleryOperationGenerator → photo.json (metadata only)
-- FitnessHealthOperationGenerator → fitness_health.json
-- ChatOperationGenerator → agent_chat.json
-
-## Output Format
-Generate 7 separate JSON files with realistic phone data.`,
-                insights: [
-                    "✏️ 연락처 목록을 수정하면 → 전화/문자의 상대방이 달라집니다",
-                    "✏️ 푸시알림 빈도를 조정하면 → 스마트폰 사용 패턴이 변경됩니다",
-                    "💡 7개의 생성기가 병렬로 실행되어 시간을 절약합니다",
-                    "💡 사진은 메타데이터만 생성됩니다 (실제 이미지는 생성하지 않음)",
-                    "💡 fitness_health 데이터는 daily_event의 건강 상태와 연동됩니다"
-                ]
-            },
-            qa: {
-                title: "Step 5: QA Generation",
-                input: {
-                    description: "daily_event.json + 모든 phone data",
-                    example: {
-                        "daily_events": {"2024-01-01": {"events": [...]}},
-                        "call_data": {"calls": [...]},
-                        "sms_data": {"messages": [...]}
-                    }
-                },
-                output: {
-                    description: "3가지 유형의 QA 데이터",
-                    example: {
-                        "single_hop_qa.json": [
-                            {
-                                "question": "What time was Feng Haoran's Q1 meeting on Jan 1st?",
-                                "answer": "9:00 AM",
-                                "source": "daily_event.json"
-                            }
-                        ],
-                        "multi_hop_qa.json": [
-                            {
-                                "question": "Why did Feng's energy level decrease on Jan 1st?",
-                                "answer": "Meeting cost 2 energy points + long work call",
-                                "reasoning_steps": ["Check energy_cost", "Check call duration"]
-                            }
-                        ]
-                    }
-                },
-                prompt: `Generate question-answer pairs from the combined life data.
-
-## Data Sources
-- Daily Events: {daily_events}
-- Phone Data: {call_data}, {sms_data}, {push_data}, {calendar_data}, {note_data}
-
-## Single-hop QA Requirements
-1. Questions should be directly answerable from a single data source
-2. Focus on factual information (who, what, when, where)
-3. Questions should be natural and realistic
-4. Categories: factual_time, factual_person, factual_location, factual_activity
-
-## Multi-hop QA Requirements
-1. Questions require connecting 2-3 pieces of information
-2. Test temporal reasoning, causal reasoning, or inference
-3. Cannot be answered from a single data point
-4. Should feel natural and purposeful
-5. Must include reasoning steps and source citations
-
-## Reasoning QA Requirements
-1. Complex inference requiring deep understanding
-2. May involve counterfactual reasoning or prediction
-3. Test understanding of person's habits, personality, relationships
-4. Require synthesizing patterns across multiple days
-
-## Output Format
-Generate 3 separate JSON files:
-- single_hop_qa.json (100+ questions)
-- multi_hop_qa.json (50+ questions)
-- reasoning_qa.json (20+ questions)`,
-                insights: [
-                    "✏️ 질문 카테고리 비율을 조정하면 → 벤치마크 난이도가 변경됩니다",
-                    "✏️ reasoning_steps 상세도를 높이면 → 모델 평가 시 더 정밀한 분석이 가능합니다",
-                    "💡 Single-hop: 사실 확인 능력 테스트 (기본 검색)",
-                    "💡 Multi-hop: 추론 능력 테스트 (정보 결합)",
-                    "💡 Reasoning: 고급 이해 능력 테스트 (패턴 인식, 예측)",
-                    "⚡ QA는 LLM 벤치마크 평가의 최종 목적물입니다"
-                ]
-            }
-        };
-
-        let currentStep = null;
-        let modifiedPrompts = {};
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            // Step card click handlers
-            document.querySelectorAll('.step-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const step = card.dataset.step;
-                    selectStep(step);
-                });
-            });
-
-            // Tab click handlers
-            document.addEventListener('click', (e) => {
-                if (e.target.classList.contains('tab-button')) {
-                    const tab = e.target.dataset.tab;
-                    switchTab(tab);
-                }
-            });
-
-            // Select first step by default
-            selectStep('persona');
-        });
-
-        function selectStep(step) {
-            currentStep = step;
-            
-            // Update active state
-            document.querySelectorAll('.step-card').forEach(card => {
-                card.classList.remove('active');
-            });
-            document.querySelector(`[data-step="${step}"]`).classList.add('active');
-
-            // Show detail panel
-            const panel = document.getElementById('detailPanel');
-            panel.classList.remove('hidden');
-
-            // Update panel title
-            document.getElementById('panelTitle').textContent = pipelineData[step].title;
-
-            // Show modified badge if applicable
-            const badge = document.getElementById('modifiedBadge');
-            if (modifiedPrompts[step]) {
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
-
-            // Reset to first tab
-            document.querySelectorAll('.tab-button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector('[data-tab="input"]').classList.add('active');
-            
-            renderTabContent('input');
-        }
-
-        function switchTab(tab) {
-            // Update active state
-            document.querySelectorAll('.tab-button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
-
-            renderTabContent(tab);
-        }
-
-        function renderTabContent(tab) {
-            const content = document.getElementById('tabContent');
-            const data = pipelineData[currentStep];
-
-            switch(tab) {
-                case 'input':
-                    content.innerHTML = `
-                        <div class="space-y-4">
-                            <p class="text-gray-300">${data.input.description}</p>
-                            <div class="bg-slate-900 rounded-lg p-4 border border-slate-700">
-                                <h4 class="text-sm font-semibold text-gray-400 mb-2">📄 데이터 예시</h4>
-                                <pre><code class="language-json">${JSON.stringify(data.input.example, null, 2)}</code></pre>
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-purple-300">⚙️ 실행 흐름</h3>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex items-start gap-3">
+                                    <span class="bg-purple-600 text-white px-2 py-1 rounded text-xs font-bold">1</span>
+                                    <div>
+                                        <div class="font-semibold">연간 주요 이벤트 생성 (100개)</div>
+                                        <div class="text-gray-400">genevent_yearterm() → 4개 프롬프트 순차 실행</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="bg-purple-600 text-white px-2 py-1 rounded text-xs font-bold">2</span>
+                                    <div>
+                                        <div class="font-semibold">중요 사건 추출</div>
+                                        <div class="text-gray-400">_extract_impact_events() → 인생 변화 이벤트만 필터링</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="bg-purple-600 text-white px-2 py-1 rounded text-xs font-bold">3</span>
+                                    <div>
+                                        <div class="font-semibold">월별 세부 이벤트 생성</div>
+                                        <div class="text-gray-400">_analyze_monthly_events() → 각 월마다 일별 이벤트 생성</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="bg-purple-600 text-white px-2 py-1 rounded text-xs font-bold">4</span>
+                                    <div>
+                                        <div class="font-semibold">타임라인 충돌 해소</div>
+                                        <div class="text-gray-400">optimize_merged_timelines() → 시간/공간적 모순 제거</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    `;
-                    break;
 
-                case 'prompt':
-                    const promptText = modifiedPrompts[currentStep] || data.prompt;
-                    const highlightedPrompt = highlightVariables(promptText);
-                    content.innerHTML = `
-                        <div class="space-y-4">
-                            <p class="text-gray-300">이 단계에서 LLM에 전송되는 프롬프트 템플릿</p>
-                            <div class="bg-slate-900 rounded-lg p-4 border border-slate-700">
-                                <div class="flex justify-between items-center mb-2">
-                                    <h4 class="text-sm font-semibold text-gray-400">🤖 LLM 프롬프트</h4>
-                                    <span class="text-xs text-gray-500">수정 가능 (편집 후 자동 저장)</span>
-                                </div>
-                                <textarea 
-                                    id="promptEditor" 
-                                    class="w-full h-96 bg-slate-800 text-gray-100 font-mono text-sm p-4 rounded border border-slate-600 focus:border-blue-500 focus:outline-none"
-                                    spellcheck="false"
-                                >${promptText}</textarea>
-                                <div class="mt-2 text-xs text-gray-500">
-                                    💡 Tip: <span class="variable-highlight">{변수명}</span> 형태로 표시된 부분은 실행 시 실제 데이터로 치환됩니다
-                                </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-green-900/30 border border-green-700 rounded-lg p-4">
+                                <h4 class="font-semibold text-green-300 mb-2">📥 Input</h4>
+                                <div class="text-sm text-gray-300">persona.json (Step 0에서 생성)</div>
                             </div>
                             <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
-                                <h4 class="text-sm font-semibold text-blue-300 mb-2">🔧 주요 변수</h4>
-                                <div class="grid grid-cols-2 gap-2 text-sm">
-                                    ${extractVariables(promptText).map(v => `
-                                        <div class="flex items-center gap-2">
-                                            <span class="variable-highlight">${v}</span>
-                                        </div>
-                                    `).join('')}
+                                <h4 class="font-semibold text-blue-300 mb-2">📤 Output</h4>
+                                <div class="text-sm text-gray-300">daily_draft.json (365일 이벤트 목록)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="draft" data-tab="code">
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-4 text-green-400">📂 실행 파일 경로</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="text-gray-400 text-sm mb-1">메인 실행 파일</div>
+                                    <div class="code-path">run/draft_gen.py</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-400 text-sm mb-1">핵심 로직</div>
+                                    <div class="code-path">event/scheduler.py</div>
                                 </div>
                             </div>
                         </div>
-                    `;
 
-                    // Add change listener
-                    document.getElementById('promptEditor').addEventListener('input', (e) => {
-                        modifiedPrompts[currentStep] = e.target.value;
-                        document.getElementById('modifiedBadge').classList.remove('hidden');
-                    });
-                    break;
-
-                case 'output':
-                    content.innerHTML = `
-                        <div class="space-y-4">
-                            <p class="text-gray-300">${data.output.description}</p>
-                            <div class="bg-slate-900 rounded-lg p-4 border border-slate-700">
-                                <h4 class="text-sm font-semibold text-gray-400 mb-2">📦 출력 데이터 예시</h4>
-                                <pre><code class="language-json">${JSON.stringify(data.output.example, null, 2)}</code></pre>
-                            </div>
-                            ${currentStep === 'phone' ? `
-                                <div class="bg-orange-900/30 border border-orange-700 rounded-lg p-4">
-                                    <h4 class="text-sm font-semibold text-orange-300 mb-2">📱 생성되는 파일 목록</h4>
-                                    <ul class="grid grid-cols-2 gap-2 text-sm">
-                                        <li>✓ call.json - 통화 기록</li>
-                                        <li>✓ sms.json - 문자 메시지</li>
-                                        <li>✓ push.json - 푸시 알림</li>
-                                        <li>✓ calendar.json - 캘린더 일정</li>
-                                        <li>✓ note.json - 메모</li>
-                                        <li>✓ photo.json - 사진 메타데이터</li>
-                                        <li>✓ fitness_health.json - 피트니스/건강</li>
-                                        <li>✓ agent_chat.json - 채팅 대화</li>
-                                    </ul>
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
-                    break;
-
-                case 'insights':
-                    content.innerHTML = `
-                        <div class="space-y-3">
-                            <p class="text-gray-300 mb-4">이 단계에서 수정 가능한 부분과 그 영향</p>
-                            ${data.insights.map(insight => {
-                                const type = insight.startsWith('✏️') ? 'yellow' : 
-                                           insight.startsWith('💡') ? 'blue' : 'red';
-                                const bgColor = type === 'yellow' ? 'bg-yellow-900/30 border-yellow-700' :
-                                              type === 'blue' ? 'bg-blue-900/30 border-blue-700' :
-                                              'bg-red-900/30 border-red-700';
-                                return `
-                                    <div class="${bgColor} border rounded-lg p-4">
-                                        <p class="text-sm">${insight}</p>
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-4 text-blue-400">🔧 주요 함수 목록</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="function-name mb-2">genevent_yearterm(persona)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: 연간 약 270개의 이벤트 생성 (4단계 프롬프트)<br>
+                                        • 프롬프트: template_yearterm_eventgen, template_yearterm_complete, template_yearterm_complete_2, template_yearterm_complete_3
                                     </div>
-                                `;
-                            }).join('')}
+                                </div>
+                                <div>
+                                    <div class="function-name mb-2">_decompose_single_node(persona, event)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: 큰 이벤트를 여러 날짜로 분해<br>
+                                        • 프롬프트: template_level1, template_level2
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-2">_extract_impact_events(persona, events)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: 인생에 큰 영향을 주는 이벤트만 추출<br>
+                                        • 프롬프트: template_extract_impact_events
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-2">_analyze_monthly_events(persona, month_data)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: 월별 세부 이벤트 생성 (월 12회 실행)<br>
+                                        • 프롬프트: template_monthly_events_analysis
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-2">generate_event_timeline(persona, events)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: 중요 이벤트 타임라인 생성<br>
+                                        • 프롬프트: template_important_events_generation
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-2">optimize_merged_timelines(timelines)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: 시간/공간 충돌 해소<br>
+                                        • 프롬프트: template_timeline_conflict_resolution
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    `;
-                    break;
-            }
+                    </div>
+                </div>
 
-            // Syntax highlighting for code blocks
+                <div class="tab-content hidden" data-step="draft" data-tab="prompts">
+                    <div class="space-y-4">
+                        <p class="text-gray-300 mb-4">Draft Generation 단계에서 사용되는 6개 핵심 프롬프트</p>
+                        
+                        <!-- Prompt 1 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">1. template_yearterm_eventgen (1단계: 100개 이벤트 생성)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900">
+                                    <div class="text-xs text-gray-500 mb-2">사용 함수: genevent_yearterm()</div>
+                                    <pre><code class="language-text">请基于下方的【人物分析】，为该人物推理生成 2025 年内可能发生的 100 件符合其画像的生活事件...
+
+## 一、核心创作原则
+
+### 1. 真实性与贴合性
+- 深度贴合人物画像：所有事件必须与人物的职业背景、家庭关系、生活习惯、性格特质、经济状况、社交圈强关联
+- 符合现实逻辑：事件需遵循时间规律（如"冬季滑雪""春节返乡"）
+- 自然的因果关联：部分事件之间应存在合理的因果关系
+
+### 2. 多样性与平衡性
+- 全面覆盖生活维度：事件需涵盖职业、家庭、社交、健康、财务、个人成长等多个领域
+- 事件类型多样化：包含短期事件（1-3天）、中期事件（1-4周）、长期事件（1-3个月）
+
+## 人物画像
+<span class="variable-highlight">{persona}</span>
+
+## 输出格式要求
+严格按「类别 + 事件数量」分组输出，每个类别独立成段。
+
+<type>Career（20 件）</type>
+参加上海零售业高峰论坛（2025-03-18 至 2025-03-19）：作为家族企业代表，学习行业趋势并拓展供应商资源。
+...</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prompt 2 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">2. template_yearterm_complete (2단계: 90개 보완 이벤트)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900">
+                                    <div class="text-xs text-gray-500 mb-2">사용 함수: genevent_yearterm()</div>
+                                    <pre><code class="language-text">请基于人物画像及你第一轮生成的 100 件事件，补充创作 90 个左右符合要求的新事件...
+
+## 一、核心创作原则
+
+### 1. 绝对去重与精准互补
+- 内容彻底差异化：新事件必须与第一轮事件完全不同
+- 填补第一轮空白：优先覆盖第一轮未涉及的人物画像信息
+
+### 2. 补充方向指南
+- 未充分利用的画像信息
+- 节日与季节特色：春节、清明、五一、端午、中秋、国庆
+- 类别多样性深化
+
+人物画像：<span class="variable-highlight">{persona}</span>
+第一轮事件：<span class="variable-highlight">{first_round_events}</span></code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prompt 3 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">3. template_yearterm_complete_2 (3단계: 80개 전문화 이벤트)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900">
+                                    <div class="text-xs text-gray-500 mb-2">사용 함수: genevent_yearterm()</div>
+                                    <pre><code class="language-text">请基于人物画像及前两轮已生成的事件，补充创作 80 个左右全新事件...
+
+## 核心创作原则
+
+### 填补空白维度策略
+
+#### （1）人群共性事件
+- 基于人物的性别、年龄、地域、人生阶段等核心标签
+- 例如：30岁职场人可能经历的"职业晋升考察期"
+
+#### （2）个人专属事件
+- 深度挖掘人物的独特性，生成体现其内心需求的事件
+- 例如："整理童年旧物（2025-08-01）：翻出小时候的照片和日记"
+
+#### （3）他人关联事件
+- 生成"因他人需求而参与"的非日常事件
+- 例如："帮邻居照顾宠物（2025-09-05 至 2025-09-10）"
+
+人物画像：<span class="variable-highlight">{persona}</span></code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prompt 4 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">4. template_yearterm_complete_3 (4단계: 10개 부정적 이벤트)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900">
+                                    <div class="text-xs text-gray-500 mb-2">사용 함수: genevent_yearterm()</div>
+                                    <pre><code class="language-text">请基于人物画像及前三轮已生成的事件，聚焦"有困难、负面性、具挑战性"的场景...
+
+## 核心创作原则
+
+### 1. 负面事件的真实性与适配性
+- 明确的负面属性：困难性、负面性、挑战性
+- 严格贴合人物画像：负面事件必须与人物的职业、生活状态紧密关联
+- 可控的负面影响：能被解决的短期波折，不会导致长期画像变动
+
+### 2. 负面事件的多样性
+- 覆盖不同生活领域（工作、家庭、健康、社交等）
+
+例如：
+"门店遭遇恶意投诉（2025-02-18 至 2025-02-22）"
+"家中水管爆裂（2025-01-15）"
+
+人物画像：<span class="variable-highlight">{persona}</span>
+事件总数：不超过10个</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prompt 5 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">5. template_extract_impact_events (중요 사건 추출)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900">
+                                    <div class="text-xs text-gray-500 mb-2">사용 함수: _extract_impact_events()</div>
+                                    <pre><code class="language-text">请基于以下人物画像和事件列表，仅提取两类重要事件：
+
+## 核心任务
+
+### 第一类：画像信息产生显著改变的事件
+判断标准：事件发生后必须需要更新人物画像的具体字段信息
+具体类型：工作生活上大的变动、职业、教育里程碑、财务、健康变化、人际关系变化
+
+### 第二类：影响近期生活习惯的事件
+判断标准：事件会导致个人在特定时间段内改变作息安排、生活习惯
+具体类型：短期出差、旅行、生病、连续加班、短期培训
+
+严格排除的事件类型：
+- 仅增进感情但未改变关系状态的社交活动
+- 未导致生活习惯改变的短期情绪波动
+- 24小时内可恢复的短暂不便
+
+## 输出格式
+<think>对这段时间事件的总结分析</think>
+<json>[
+    {{
+        "time_point": "YYYY-MM-DD",
+        "event_content": "事件描述",
+        "original_event_id": "ID",
+        "impact_category": "Career/Health/...",
+        "impact_description": "具体影响",
+        "duration": "持续时间"
+    }}
+]</json>
+
+人物画像：<span class="variable-highlight">{persona}</span>
+事件列表：<span class="variable-highlight">{events}</span></code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prompt 6 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">6. template_monthly_events_analysis (월별 이벤트 생성)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900">
+                                    <div class="text-xs text-gray-500 mb-2">사용 함수: _analyze_monthly_events() (월 12회 실행)</div>
+                                    <pre><code class="language-text">请基于人物画像和月度主题事件，生成该月的详细日常安排...
+
+## 生成要求
+
+1. 每天至少包含 3-5 个具体事件
+2. 事件需符合人物的职业、作息、习惯
+3. 考虑工作日/周末的差异
+4. 包含日常活动（通勤、三餐、运动、睡眠）
+5. 体现月度主题事件的影响
+
+## 输出格式
+按日期顺序输出该月所有事件
+
+人物画像：<span class="variable-highlight">{persona}</span>
+月度数据：<span class="variable-highlight">{month_data}</span>
+影响事件：<span class="variable-highlight">{impact_events}</span></code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="draft" data-tab="input">
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-green-400">📥 Input: persona.json</h3>
+                            <p class="text-gray-400 text-sm mb-4">실제 샘플: Feng Haoran (27세, 금융투자 어드바이저, ENTJ)</p>
+                            <pre><code class="language-json">{
+  "name": "Feng Haoran",
+  "birth": "1994-10-29",
+  "age": 27,
+  "gender": "Male",
+  "job": "Financial Investment Advisor",
+  "occupation": "Huatai Securities Co., Ltd.",
+  "salary": 200000.0,
+  "personality": {
+    "mbti": "ENTJ",
+    "traits": ["Achievements", "Power", "Social Responsibility Orientation"]
+  },
+  "hobbies": [
+    "Photography (Street Photography)",
+    "Running (Morning Run)",
+    "Camping (Wilderness)",
+    "Collecting Stamps"
+  ],
+  "aim": [
+    "Promoted to Investment Director within 3 years",
+    "Complete an in-depth self-driving tour annually.",
+    "Build a personal investment portfolio to reach a scale of 1 million."
+  ],
+  "relation": [
+    {
+      "name": "Feng Jianguo",
+      "relation": "Father",
+      "age": 58,
+      "occupation": "Senior Engineer"
+    },
+    {
+      "name": "Li Xiuying",
+      "relation": "Mother",
+      "age": 56
+    }
+  ]
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="draft" data-tab="output">
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-blue-400">📤 Output: daily_draft.json</h3>
+                            <p class="text-gray-400 text-sm mb-4">실제 샘플: 2025년 1월 1일 (New Year's Day)</p>
+                            <pre><code class="language-json">{
+  "2025-01": [
+    {
+      "date": "2025-01-01",
+      "date_attribute": {
+        "weather": "Clear, with a light breeze",
+        "holiday": "New Year's Day",
+        "week": "Wednesday"
+      },
+      "daily_overview": "During the New Year's Day holiday, Feng Haoran ushered in the new year with a disciplined and fulfilling approach. From starting the day with a morning run to deeply reflecting on the past, connecting emotionally with family and friends, and making detailed plans for the new year...",
+      "events": [
+        {
+          "name": "New Year's Day Morning Run and Nutritious Breakfast",
+          "description": "At 7 a.m., Feng Haoran completed a 5-kilometer morning run on South Yuelu Road, breathing in the crisp winter air..."
+        },
+        {
+          "name": "Annual Personal Review and Analysis",
+          "description": "In the morning, at the desk in his study, Feng Haoran turned on his computer and opened his dedicated annual review notebook..."
+        },
+        {
+          "name": "New Year's Video Call with Family",
+          "description": "In the evening, Feng Haoran contacted his parents in Wuhan and his sister in Shanghai separately via video call..."
+        }
+      ],
+      "state": {
+        "体重": 75.0,
+        "起床时间": "06:40",
+        "睡觉时间": "23:10",
+        "今日运动": "Morning run of 5 kilometers"
+      }
+    }
+  ]
+}</code></pre>
+                        </div>
+
+                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
+                            <h4 class="font-semibold text-yellow-300 mb-2">💡 주요 특징</h4>
+                            <ul class="text-sm text-gray-300 space-y-1 list-disc list-inside">
+                                <li>각 날짜마다 3-6개의 이벤트 포함</li>
+                                <li>날씨, 공휴일, 요일 정보 자동 추가</li>
+                                <li>일일 개요(daily_overview)로 하루 전체 흐름 요약</li>
+                                <li>기본 상태 정보 (체중, 기상/취침 시간, 운동)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="draft" data-tab="tuning">
+                    <div class="space-y-3">
+                        <p class="text-gray-300 mb-4">프롬프트 수정을 통한 결과 제어 방법</p>
+                        
+                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-yellow-300 mb-2">✏️ MBTI 타입 변경의 영향</h4>
+                            <div class="text-sm text-gray-300">
+                                <strong>ENTJ</strong> → 업무 중심 이벤트 많음 (회의, 네트워킹, 성과)<br>
+                                <strong>ENFP</strong> → 사교 중심 이벤트 많음 (모임, 여행, 창의적 활동)<br>
+                                <strong>INTJ</strong> → 혼자 하는 활동 많음 (독서, 연구, 개인 프로젝트)
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-yellow-300 mb-2">✏️ 직업 변경의 영향</h4>
+                            <div class="text-sm text-gray-300">
+                                <strong>금융 어드바이저</strong> → 고객 미팅, 시장 분석, 보고서 작성<br>
+                                <strong>소프트웨어 엔지니어</strong> → 코딩, 코드 리뷰, 기술 학습<br>
+                                <strong>의사</strong> → 진료, 회진, 학회 참석
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-blue-300 mb-2">💡 이벤트 밀도 조절</h4>
+                            <div class="text-sm text-gray-300">
+                                template_yearterm_eventgen에서<br>
+                                <code class="bg-slate-800 px-2 py-1 rounded">生成 2025 年内可能发生的 100 件</code> → 숫자 변경<br>
+                                • 50개: 느슨한 일정 (여유로운 생활)<br>
+                                • 150개: 빡빡한 일정 (바쁜 생활)
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-blue-300 mb-2">💡 부정적 이벤트 비율</h4>
+                            <div class="text-sm text-gray-300">
+                                template_yearterm_complete_3에서<br>
+                                <code class="bg-slate-800 px-2 py-1 rounded">补充创作不超过 10 个</code> → 숫자 변경<br>
+                                • 5개: 평온한 1년<br>
+                                • 20개: 파란만장한 1년
+                            </div>
+                        </div>
+
+                        <div class="bg-red-900/30 border border-red-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-red-300 mb-2">⚠️ 주의사항</h4>
+                            <div class="text-sm text-gray-300">
+                                • 이 단계는 "큰 그림"만 그립니다 - 세부 사항은 Simulator에서 생성<br>
+                                • 프롬프트 수정 후 전체 파이프라인 재실행 필요 (~2시간)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Simulator -->
+        <div id="step-simulator" class="mb-16">
+            <div class="step-card bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-8 border border-green-600">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-4">
+                        <div class="text-5xl">🎮</div>
+                        <div>
+                            <h2 class="text-3xl font-bold">Step 2: Simulator</h2>
+                            <p class="text-green-200 mt-1">상세 이벤트 + 건강 상태 시뮬레이션</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm text-green-300">실행 시간</div>
+                        <div class="text-2xl font-bold">~1-2시간</div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="flex gap-2 mb-6 border-b border-green-700">
+                    <button class="tab-button active px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="overview">개요</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="code">코드 경로</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="prompts">프롬프트</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="input">인풋 예시</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="output">아웃풋 예시</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="tuning">수정 가이드</button>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="tab-content" data-step="simulator" data-tab="overview">
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-green-300">🎯 목적</h3>
+                            <p class="text-gray-300 leading-relaxed">
+                                daily_draft.json의 간단한 이벤트 목록을 상세한 시간별 이벤트로 확장하고,
+                                건강 상태 (신체/정신/수면/에너지) 추적 시스템을 추가합니다.
+                                이 단계에서 "Mind" 시스템이 작동하여 인물의 주관적 계획과 객관적 제약을 반영합니다.
+                            </p>
+                        </div>
+
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-green-300">⚙️ 실행 흐름</h3>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex items-start gap-3">
+                                    <span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">1</span>
+                                    <div>
+                                        <div class="font-semibold">주관적 계획 생성</div>
+                                        <div class="text-gray-400">_generate_subjective_thought() → 인물이 하루를 어떻게 보내고 싶은지</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">2</span>
+                                    <div>
+                                        <div class="font-semibold">객관적 최적화</div>
+                                        <div class="text-gray-400">_generate_objective_events() → 현실적 제약 반영 (날씨, 교통, 시간)</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">3</span>
+                                    <div>
+                                        <div class="font-semibold">이벤트 궤적 조정</div>
+                                        <div class="text-gray-400">_adjust_event_trajectory() → 교통 시간, 동선 최적화</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">4</span>
+                                    <div>
+                                        <div class="font-semibold">POI 매핑</div>
+                                        <div class="text-gray-400">map() → 실제 지도 좌표로 장소 변환</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">5</span>
+                                    <div>
+                                        <div class="font-semibold">일일 회고 생성</div>
+                                        <div class="text-gray-400">_generate_reflection() → 하루를 돌아보는 생각</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">6</span>
+                                    <div>
+                                        <div class="font-semibold">건강 상태 분석</div>
+                                        <div class="text-gray-400">health_analysis() + life_analysis() → 건강/생활 상태 추적</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-green-900/30 border border-green-700 rounded-lg p-4">
+                                <h4 class="font-semibold text-green-300 mb-2">📥 Input</h4>
+                                <div class="text-sm text-gray-300">persona.json + daily_draft.json</div>
+                            </div>
+                            <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
+                                <h4 class="font-semibold text-blue-300 mb-2">📤 Output</h4>
+                                <div class="text-sm text-gray-300">daily_event.json (상세 이벤트 + 건강 상태)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="simulator" data-tab="code">
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-4 text-green-400">📂 실행 파일 경로</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="text-gray-400 text-sm mb-1">메인 실행 파일</div>
+                                    <div class="code-path">run/simulator.py</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-400 text-sm mb-1">핵심 로직 (Mind 시스템)</div>
+                                    <div class="code-path">event/mind.py</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-400 text-sm mb-1">건강 분석</div>
+                                    <div class="code-path">event/event_refiner.py</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-4 text-blue-400">🔧 주요 함수 목록 (mind.py)</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="function-name mb-2">_generate_subjective_thought(date, persona, context)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: 인물의 주관적 하루 계획 생성<br>
+                                        • 프롬프트: template_daily_event_subjective_plan<br>
+                                        • 예시: "오늘은 아침 운동 후 고객 미팅, 저녁에는 CFA 공부"
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-2">_generate_objective_events(subjective_plan, constraints)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: 현실적 제약 반영하여 실제 이벤트 시퀀스 생성<br>
+                                        • 프롬프트: template_daily_event_objective_optimize<br>
+                                        • 제약: 날씨(비 → 야외 운동 취소), 교통 시간, 피로도
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-2">_adjust_event_trajectory(events)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: 교통 시간 계산, 동선 최적화<br>
+                                        • 프롬프트: template_event_traffic_adjust<br>
+                                        • 예시: "집→회사 45분" 자동 추가
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-2">_extract_events(raw_output)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: LLM 출력을 구조화된 JSON으로 변환<br>
+                                        • 프롬프트: template_event_format_sequence
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-2">_generate_reflection(events)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: 하루 종료 시 회고 생성<br>
+                                        • 프롬프트: template_daily_reflection<br>
+                                        • 예시: "오늘은 피곤했지만 CFA 공부를 완료해서 뿌듯하다"
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-2">_update_long_term_memory(events, reflection)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: 장기 기억 업데이트 (중요 사건만 저장)<br>
+                                        • 프롬프트: template_update_long_term_memory
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-2">map(location_name)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: "Yuelu Mountain"을 실제 GPS 좌표로 변환<br>
+                                        • 프롬프트: template_poi_real_location_assign
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-4 text-blue-400">🔧 주요 함수 목록 (event_refiner.py)</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="function-name mb-2">health_analysis(persona, events)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: 월별 건강 상태 분석 (15일/말일 체크포인트)<br>
+                                        • 프롬프트: template_impact_events_analysis, template_initial_health_state
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-2">life_analysis(persona, events)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: 생활 패턴 분석 (가족, 직장, 재정 상태)<br>
+                                        • 프롬프트: template_life_initial_state, template_life_analysis
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="simulator" data-tab="prompts">
+                    <div class="space-y-4">
+                        <p class="text-gray-300 mb-4">Simulator 단계에서 사용되는 7개 핵심 프롬프트</p>
+                        
+                        <!-- Prompt 1 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">1. template_daily_event_subjective_plan (주관적 계획)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900">
+                                    <div class="text-xs text-gray-500 mb-2">사용 함수: _generate_subjective_thought()</div>
+                                    <pre><code class="language-text">请基于以下信息，生成 <span class="variable-highlight">{date}</span> 的主观行动计划：
+
+## 人物画像
+<span class="variable-highlight">{persona}</span>
+
+## 人物认知状态
+<span class="variable-highlight">{cognition}</span>
+
+## 今日参考事件
+<span class="variable-highlight">{daily_reference}</span>
+
+## 生成要求
+1. 基于人物的性格、习惯、目标生成主观计划
+2. 计划应体现人物的愿望和优先级
+3. 不考虑客观限制（如天气、交通）
+4. 用第一人称表达："我打算..."
+
+## 输出格式
+生成一段自然语言描述的主观计划</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prompt 2 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">2. template_daily_event_objective_optimize (객관적 최적화)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900">
+                                    <div class="text-xs text-gray-500 mb-2">사용 함수: _generate_objective_events()</div>
+                                    <pre><code class="language-text">请基于以下主观计划和客观约束，生成优化后的当日事件序列：
+
+## 主观计划
+<span class="variable-highlight">{subjective_plan}</span>
+
+## 客观约束
+<span class="variable-highlight">{constraints}</span>
+
+## 约束类型
+1. 天气：下雨 → 取消户外运动，改为室内活动
+2. 交通：考虑通勤时间、堵车
+3. 时间冲突：会议延长 → 推迟晚餐时间
+4. 能量限制：工作疲惫 → 取消晚间运动
+5. 突发事件：客户临时来电 → 调整计划
+
+## 输出格式
+生成时间顺序的事件列表，每个事件包含：
+- 时间：HH:MM-HH:MM
+- 事件名称
+- 地点
+- 参与者
+- 描述</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prompt 3 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">3. template_impact_events_analysis (건강 상태 분석)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900">
+                                    <div class="text-xs text-gray-500 mb-2">사용 함수: health_analysis() in event_refiner.py</div>
+                                    <pre><code class="language-text">请基于以下人物画像、初始健康状态和指定时间段内的事件列表，分析并生成该月15号中间状态、结束时的健康状态记录和完整变化节点：
+
+## 人物画像
+<span class="variable-highlight">{persona}</span>
+
+## 初始健康状态
+<span class="variable-highlight">{initial_health_state}</span>
+
+## 输入数据
+<span class="variable-highlight">{daily_data}</span>
+
+## 分析要求
+1. 深度分析输入数据的变化：运动、睡眠、饮食、健康状态
+2. 合理新增变化事件：
+   - 临时工作压力导致的作息变化
+   - 天气变化对运动方式的影响
+   - 社交活动导致的饮食或睡眠波动
+3. 生成15号中间状态：
+   - 运动类型开始出现变化但尚未完全成型
+   - 睡眠时间已经开始调整但尚未稳定
+4. 生成多样性的最终状态：确保月末健康状态与初始状态有明显差异
+5. 记录完整变化过程：在change_nodes中详细记录所有变化
+
+## 输出格式
+{
+  "mid_month_state": {
+    "date": "2025-XX-15",
+    "exercise_events": [...],
+    "sleep_time": {...},
+    "weight_record": "70.2kg",
+    "health_status": {...}
+  },
+  "end_of_month_state": {...},
+  "change_nodes": [
+    {
+      "date": "2025-XX-XX",
+      "event": "加班导致睡眠不足",
+      "impact": "睡眠质量下降，体重增加0.3kg"
+    }
+  ]
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prompt 4 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">4. template_daily_reflection (일일 회고)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900">
+                                    <div class="text-xs text-gray-500 mb-2">사용 함수: _generate_reflection()</div>
+                                    <pre><code class="language-text">请基于今日事件列表，生成个人的夜间回顾：
+
+## 今日事件
+<span class="variable-highlight">{events}</span>
+
+## 回顾要求
+1. 用第一人称表达："今天..."
+2. 总结今日成就和遗憾
+3. 体现情绪变化
+4. 对明天的期待或担忧
+5. 1-3句话即可，自然真实
+
+## 输出示例
+"今天完成了客户报告，虽然加班到很晚，但看到客户满意的反馈，觉得很值得。不过CFA的学习又落下了，明天一定要补上。"</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prompt 5 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">5. template_poi_real_location_assign (위치 매핑)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900">
+                                    <div class="text-xs text-gray-500 mb-2">사용 함수: map()</div>
+                                    <pre><code class="language-text">请将以下地点名称转换为实际的地图坐标和详细地址：
+
+## 地点名称
+<span class="variable-highlight">{location_name}</span>
+
+## 人物所在城市
+<span class="variable-highlight">{city}</span>
+
+## 要求
+1. 寻找真实存在的地点
+2. 如果是通用名称（如"咖啡厅"），选择符合人物画像的具体店铺
+3. 输出完整地址 + GPS坐标
+
+## 输出格式
+{
+  "name": "岳麓山风景区",
+  "address": "湖南省长沙市岳麓区登高路58号",
+  "gps": {
+    "latitude": 28.2043,
+    "longitude": 112.9384
+  }
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="simulator" data-tab="input">
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-green-400">📥 Input 1: persona.json</h3>
+                            <p class="text-gray-400 text-sm mb-2">(Step 1과 동일)</p>
+                        </div>
+
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-green-400">📥 Input 2: daily_draft.json</h3>
+                            <p class="text-gray-400 text-sm mb-4">2025-01-01 샘플 (간단 버전)</p>
+                            <pre><code class="language-json">{
+  "date": "2025-01-01",
+  "events": [
+    {
+      "name": "New Year's Day Morning Run",
+      "description": "5km run at Yuelu Mountain"
+    },
+    {
+      "name": "Annual Personal Review",
+      "description": "Reflect on 2024 achievements"
+    }
+  ]
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="simulator" data-tab="output">
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-blue-400">📤 Output: daily_event.json</h3>
+                            <p class="text-gray-400 text-sm mb-4">2025-01-01 샘플 (상세 버전)</p>
+                            <pre><code class="language-json">[
+  {
+    "event_id": "1",
+    "name": "Morning Preparations and Departure for Yuelu Mountain",
+    "date": ["From 06:40:00 to 08:00:00 on January 1, 2025"],
+    "type": "Personal Life",
+    "description": "Awakened by the biological clock on time, I washed up and changed into running gear. After checking my phone, earphones, and sports watch, I took my keys and access card. Before leaving home, I used a mobile app to browse overnight global major stock indices and financial headlines. I then walked for 15 minutes to the bus stop and took a short bus ride of about 10 minutes to the foot of Yuelu Mountain...",
+    "participant": [
+      { "name": "Feng Haoran", "relation": "Self" }
+    ],
+    "location": "From Jinsing Residential Community, Yuelu District, Changsha City to Yuelu Mountain Scenic Area"
+  },
+  {
+    "event_id": "2",
+    "name": "New Year's Day Morning Run",
+    "date": ["From 08:00:00 to 09:00:00 on January 1, 2025"],
+    "type": "Health",
+    "description": "A 5-kilometer jog along the Yuelu Mountain trail, where sunlight disperses the morning mist and the air is rich in negative oxygen ions. While running, focus on the rhythm of your breath and pace, with New Year-themed music playing through your headphones...",
+    "participant": [
+      { "name": "Feng Haoran", "relation": "Self" },
+      { "name": "Other morning exercisers", "relation": "Passerby" }
+    ],
+    "location": "58 Denghao Road, Yuelu District, Changsha City, Hunan Province, Circular Trail of Yuelu Mountain Scenic Area"
+  }
+]</code></pre>
+                        </div>
+
+                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
+                            <h4 class="font-semibold text-yellow-300 mb-2">💡 주요 변화</h4>
+                            <ul class="text-sm text-gray-300 space-y-1 list-disc list-inside">
+                                <li>간단한 "Morning Run" → 준비(1시간 20분) + 실제 운동(1시간)으로 분해</li>
+                                <li>정확한 시간 (06:40-08:00, 08:00-09:00)</li>
+                                <li>상세한 설명 (무엇을 챙겼는지, 어떻게 이동했는지)</li>
+                                <li>실제 장소 주소 + GPS 좌표 (자동 매핑)</li>
+                                <li>참여자 목록 (본인 + 기타 운동하는 사람들)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="simulator" data-tab="tuning">
+                    <div class="space-y-3">
+                        <p class="text-gray-300 mb-4">Simulator 프롬프트 수정 가이드</p>
+                        
+                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-yellow-300 mb-2">✏️ 이벤트 상세도 조절</h4>
+                            <div class="text-sm text-gray-300">
+                                template_daily_event_objective_optimize에서<br>
+                                <strong>높은 상세도</strong>: "每个事件包含详细的准备、执行、结束过程"<br>
+                                <strong>낮은 상세도</strong>: "只记录主要事件，省略过渡细节"
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-yellow-300 mb-2">✏️ 건강 변화 속도</h4>
+                            <div class="text-sm text-gray-300">
+                                template_impact_events_analysis에서<br>
+                                <code class="bg-slate-800 px-2 py-1 rounded">体重有合理的波动和最终变化</code><br>
+                                • "轻微波动(0.1-0.3kg)" → 안정적인 건강<br>
+                                • "明显波动(0.5-1kg)" → 불안정한 생활
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-blue-300 mb-2">💡 날씨 영향 강도</h4>
+                            <div class="text-sm text-gray-300">
+                                template_daily_event_objective_optimize의 "客观约束"에서<br>
+                                <strong>강한 영향</strong>: "下雨必须取消所有户外活动"<br>
+                                <strong>약한 영향</strong>: "下雨可以考虑穿雨衣继续户外活动"
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-blue-300 mb-2">💡 교통 시간 리얼리즘</h4>
+                            <div class="text-sm text-gray-300">
+                                template_event_traffic_adjust에서<br>
+                                "计算实际交通时间" 파라미터 조정:<br>
+                                • 평균 속도: 도심 30km/h, 고속도로 80km/h<br>
+                                • 추가 시간: 주차 10분, 엘리베이터 대기 5분
+                            </div>
+                        </div>
+
+                        <div class="bg-red-900/30 border border-red-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-red-300 mb-2">⚠️ 주의사항</h4>
+                            <div class="text-sm text-gray-300">
+                                • 이 단계가 가장 시간이 오래 걸립니다 (365일 × 10분 = 60시간 → 병렬화로 1-2시간)<br>
+                                • 건강 상태는 15일/말일에만 체크포인트 생성 (매일 추적하면 너무 느림)<br>
+                                • POI 매핑은 실제 Google Maps API 호출 (비용 발생 가능)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Phone Data Generation -->
+        <div id="step-phone" class="mb-16">
+            <div class="step-card bg-gradient-to-br from-orange-900 to-orange-800 rounded-lg p-8 border border-orange-600">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-4">
+                        <div class="text-5xl">📱</div>
+                        <div>
+                            <h2 class="text-3xl font-bold">Step 3: Phone Data Generation</h2>
+                            <p class="text-orange-200 mt-1">7가지 스마트폰 데이터 생성 (병렬 실행)</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm text-orange-300">실행 시간</div>
+                        <div class="text-2xl font-bold">~30-45분</div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="flex gap-2 mb-6 border-b border-orange-700">
+                    <button class="tab-button active px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="phone" data-tab="overview">개요</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="phone" data-tab="code">코드 경로</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="phone" data-tab="generators">7개 생성기</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="phone" data-tab="output">아웃풋 예시</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="phone" data-tab="tuning">수정 가이드</button>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="tab-content" data-step="phone" data-tab="overview">
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-orange-300">🎯 목적</h3>
+                            <p class="text-gray-300 leading-relaxed">
+                                daily_event.json의 이벤트를 기반으로 스마트폰에서 발생하는 데이터를 생성합니다.
+                                전화, 문자, 알림, 캘린더, 메모, 사진, 피트니스 데이터 등 7가지 카테고리가 병렬로 생성됩니다.
+                            </p>
+                        </div>
+
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-orange-300">⚙️ 7개 생성기 (병렬 실행)</h3>
+                            <div class="grid grid-cols-2 gap-3 text-sm">
+                                <div class="bg-blue-900/20 border border-blue-700 rounded p-3">
+                                    <div class="font-bold text-blue-300">1. Communication</div>
+                                    <div class="text-gray-400">call.json + sms.json</div>
+                                </div>
+                                <div class="bg-blue-900/20 border border-blue-700 rounded p-3">
+                                    <div class="font-bold text-blue-300">2. Push</div>
+                                    <div class="text-gray-400">push.json</div>
+                                </div>
+                                <div class="bg-blue-900/20 border border-blue-700 rounded p-3">
+                                    <div class="font-bold text-blue-300">3. Note & Calendar</div>
+                                    <div class="text-gray-400">note.json + calendar.json</div>
+                                </div>
+                                <div class="bg-blue-900/20 border border-blue-700 rounded p-3">
+                                    <div class="font-bold text-blue-300">4. Gallery</div>
+                                    <div class="text-gray-400">photo.json (메타데이터만)</div>
+                                </div>
+                                <div class="bg-blue-900/20 border border-blue-700 rounded p-3">
+                                    <div class="font-bold text-blue-300">5. Fitness & Health</div>
+                                    <div class="text-gray-400">fitness_health.json</div>
+                                </div>
+                                <div class="bg-blue-900/20 border border-blue-700 rounded p-3">
+                                    <div class="font-bold text-blue-300">6. Chat</div>
+                                    <div class="text-gray-400">agent_chat.json</div>
+                                </div>
+                                <div class="bg-blue-900/20 border border-blue-700 rounded p-3 col-span-2">
+                                    <div class="font-bold text-blue-300">7. Contact</div>
+                                    <div class="text-gray-400">contact.json (연락처 목록)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-green-900/30 border border-green-700 rounded-lg p-4">
+                                <h4 class="font-semibold text-green-300 mb-2">📥 Input</h4>
+                                <div class="text-sm text-gray-300">persona.json + daily_event.json</div>
+                            </div>
+                            <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
+                                <h4 class="font-semibold text-blue-300 mb-2">📤 Output</h4>
+                                <div class="text-sm text-gray-300">phone_data/ (7개 JSON 파일)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="phone" data-tab="code">
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-4 text-green-400">📂 실행 파일 경로</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="text-gray-400 text-sm mb-1">메인 실행 파일</div>
+                                    <div class="code-path">run/phone_gen.py</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-400 text-sm mb-1">핵심 로직</div>
+                                    <div class="code-path">event/phone_data_gen.py</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-4 text-blue-400">🔧 생성기 클래스</h3>
+                            <div class="space-y-3 text-sm">
+                                <div>
+                                    <div class="function-name mb-1">CommunicationOperationGenerator</div>
+                                    <div class="text-gray-400 ml-4">전화 + 문자 생성 (context: '手机数据专家和深度用户')</div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-1">PushOperationGenerator</div>
+                                    <div class="text-gray-400 ml-4">푸시 알림 생성 (뉴스, 앱 알림)</div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-1">NoteCalendarOperationGenerator</div>
+                                    <div class="text-gray-400 ml-4">메모 + 캘린더 일정 생성</div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-1">GalleryOperationGenerator</div>
+                                    <div class="text-gray-400 ml-4">사진 메타데이터 생성 (실제 이미지 생성 X)</div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-1">FitnessHealthOperationGenerator</div>
+                                    <div class="text-gray-400 ml-4">피트니스 데이터 생성 (걸음수, 심박수, 수면)</div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-1">ChatOperationGenerator</div>
+                                    <div class="text-gray-400 ml-4">채팅 대화 생성 (WeChat 스타일)</div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-1">PerceptionDataGenerator</div>
+                                    <div class="text-gray-400 ml-4">감지 데이터 생성 (위치, 네트워크)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="phone" data-tab="generators">
+                    <div class="space-y-4">
+                        <p class="text-gray-300 mb-4">각 생성기의 역할과 생성 규칙</p>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">1. CommunicationOperationGenerator (전화 + 문자)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900 space-y-3">
+                                    <div>
+                                        <div class="text-sm font-semibold text-orange-300 mb-1">생성 규칙</div>
+                                        <ul class="text-sm text-gray-300 list-disc list-inside space-y-1">
+                                            <li>각 이벤트의 참여자와 전화/문자 매핑</li>
+                                            <li>직장: 업무 관련 통화 (평균 5-10분)</li>
+                                            <li>가족: 개인 통화 (평균 15-30분)</li>
+                                            <li>친구: 짧은 통화 + 많은 문자</li>
+                                            <li>문자 내용은 이벤트 컨텍스트 반영</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-semibold text-orange-300 mb-1">Context 프롬프트</div>
+                                        <div class="text-xs text-gray-400 bg-slate-800 p-2 rounded">
+                                            '你是一位手机数据专家和深度用户，深谙用户使用手机的习惯和行为模式'
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">2. FitnessHealthOperationGenerator (피트니스)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900 space-y-3">
+                                    <div>
+                                        <div class="text-sm font-semibold text-orange-300 mb-1">생성 규칙</div>
+                                        <ul class="text-sm text-gray-300 list-disc list-inside space-y-1">
+                                            <li>daily_event의 운동 이벤트 → 상세 피트니스 데이터 변환</li>
+                                            <li>걸음수: 하루 평균 6000-12000보</li>
+                                            <li>심박수: 휴식 시 60-80bpm, 운동 시 120-160bpm</li>
+                                            <li>수면 데이터: 취침/기상 시간 + 수면 단계</li>
+                                            <li>건강 상태(health_analysis)와 일관성 유지</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">3. ChatOperationGenerator (채팅)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900 space-y-3">
+                                    <div>
+                                        <div class="text-sm font-semibold text-orange-300 mb-1">생성 규칙</div>
+                                        <ul class="text-sm text-gray-300 list-disc list-inside space-y-1">
+                                            <li>각 이벤트마다 자연스러운 대화 생성</li>
+                                            <li>친구와 저녁 약속 → "오늘 7시에 어디서 만날까?" 스타일 대화</li>
+                                            <li>가족 통화 예고 → "엄마, 오늘 저녁 통화할게요" 메시지</li>
+                                            <li>이모티콘, 스티커 포함 (중국 WeChat 스타일)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">4. PushOperationGenerator (푸시 알림)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900 space-y-3">
+                                    <div>
+                                        <div class="text-sm font-semibold text-orange-300 mb-1">생성 규칙</div>
+                                        <ul class="text-sm text-gray-300 list-disc list-inside space-y-1">
+                                            <li>인물의 직업/관심사에 맞는 앱 알림</li>
+                                            <li>금융 어드바이저 → 금융 뉴스, 주식 알림</li>
+                                            <li>운동 좋아함 → 피트니스 앱 알림</li>
+                                            <li>일반: 날씨, 택배, 소셜미디어 알림</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="phone" data-tab="output">
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-blue-400">📤 Output 1: call.json</h3>
+                            <pre><code class="language-json">[
+  {
+    "type": "call",
+    "event_id": "5",
+    "phoneNumber": "+8613917128765",
+    "contactName": "Li Xiuying",
+    "datetime": "2025-01-01 13:30:00",
+    "datetime_end": "2025-01-01 13:45:20",
+    "direction": 0,
+    "call_result": "Connected",
+    "phone_id": 0
+  }
+]</code></pre>
+                        </div>
+
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-blue-400">📤 Output 2: sms.json</h3>
+                            <pre><code class="language-json">[
+  {
+    "type": "sms",
+    "event_id": "2",
+    "message_content": "Happy New Year! How was your New Year's Day morning run? The air here is exceptionally fresh, and I felt invigorated after the run. How is the weather over there?",
+    "contactName": "Gao Yunfei",
+    "phoneNumber": "+8613787054321",
+    "datetime": "2025-01-01 08:20:15",
+    "message_type": "Send",
+    "phone_id": 0
+  }
+]</code></pre>
+                        </div>
+
+                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
+                            <h4 class="font-semibold text-yellow-300 mb-2">💡 주요 특징</h4>
+                            <ul class="text-sm text-gray-300 space-y-1 list-disc list-inside">
+                                <li>event_id 연결: 각 데이터가 어떤 이벤트에서 발생했는지 추적 가능</li>
+                                <li>실제 중국 전화번호 형식 (+86으로 시작)</li>
+                                <li>문자 내용이 이벤트 맥락 반영 (운동 → 운동 관련 대화)</li>
+                                <li>direction: 0=발신, 1=수신</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="phone" data-tab="tuning">
+                    <div class="space-y-3">
+                        <p class="text-gray-300 mb-4">Phone Data 생성 수정 가이드</p>
+                        
+                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-yellow-300 mb-2">✏️ 통화 빈도 조절</h4>
+                            <div class="text-sm text-gray-300">
+                                CommunicationOperationGenerator 프롬프트에서<br>
+                                <code class="bg-slate-800 px-2 py-1 rounded">每天平均 3-5 通电话</code> → 숫자 변경<br>
+                                • 1-2통: 말이 적은 성격<br>
+                                • 8-10통: 사교적인 성격
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-yellow-300 mb-2">✏️ 푸시 알림 밀도</h4>
+                            <div class="text-sm text-gray-300">
+                                PushOperationGenerator에서<br>
+                                <strong>낮음</strong>: 하루 5-10개 (알림 꺼둠)<br>
+                                <strong>보통</strong>: 하루 20-30개<br>
+                                <strong>높음</strong>: 하루 50-80개 (알림 중독)
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-blue-300 mb-2">💡 채팅 스타일 변경</h4>
+                            <div class="text-sm text-gray-300">
+                                ChatOperationGenerator context에서<br>
+                                • '你是一个正式礼貌的职场人' → 업무적 톤<br>
+                                • '你是一个活泼可爱的年轻人' → 이모티콘 많이
+                            </div>
+                        </div>
+
+                        <div class="bg-red-900/30 border border-red-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-red-300 mb-2">⚠️ 주의사항</h4>
+                            <div class="text-sm text-gray-300">
+                                • 7개 생성기가 병렬 실행되므로 각각 독립적으로 수정 가능<br>
+                                • event_id 연결이 깨지지 않도록 주의<br>
+                                • 사진은 메타데이터만 생성 (실제 이미지 생성 X)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: QA Generation -->
+        <div id="step-qa" class="mb-16">
+            <div class="step-card bg-gradient-to-br from-red-900 to-red-800 rounded-lg p-8 border border-red-600">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-4">
+                        <div class="text-5xl">❓</div>
+                        <div>
+                            <h2 class="text-3xl font-bold">Step 4: QA Generation</h2>
+                            <p class="text-red-200 mt-1">3가지 난이도 질의응답 데이터 생성</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm text-red-300">실행 시간</div>
+                        <div class="text-2xl font-bold">~20-30분</div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="flex gap-2 mb-6 border-b border-red-700">
+                    <button class="tab-button active px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="qa" data-tab="overview">개요</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="qa" data-tab="types">QA 타입</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="qa" data-tab="output">아웃풋 예시</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="qa" data-tab="tuning">수정 가이드</button>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="tab-content" data-step="qa" data-tab="overview">
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-red-300">🎯 목적</h3>
+                            <p class="text-gray-300 leading-relaxed">
+                                생성된 모든 데이터 (daily_event + phone_data)를 기반으로
+                                LLM 벤치마크용 질의응답 데이터를 생성합니다.
+                                단순 사실 확인부터 복잡한 추론까지 3가지 난이도로 구성됩니다.
+                            </p>
+                        </div>
+
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-red-300">📊 QA 타입</h3>
+                            <div class="grid grid-cols-3 gap-4 text-sm">
+                                <div class="bg-green-900/20 border border-green-700 rounded p-4">
+                                    <div class="font-bold text-green-300 mb-2">Single-hop QA</div>
+                                    <div class="text-gray-400 mb-2">100+ 문제</div>
+                                    <div class="text-xs text-gray-400">
+                                        단일 데이터 소스에서 직접 답변 가능<br>
+                                        예: "1월 1일 몇 시에 일어났나?"
+                                    </div>
+                                </div>
+                                <div class="bg-yellow-900/20 border border-yellow-700 rounded p-4">
+                                    <div class="font-bold text-yellow-300 mb-2">Multi-hop QA</div>
+                                    <div class="text-gray-400 mb-2">50+ 문제</div>
+                                    <div class="text-xs text-gray-400">
+                                        2-3개 정보 연결 필요<br>
+                                        예: "왜 에너지가 감소했나?"
+                                    </div>
+                                </div>
+                                <div class="bg-red-900/20 border border-red-700 rounded p-4">
+                                    <div class="font-bold text-red-300 mb-2">Reasoning QA</div>
+                                    <div class="text-gray-400 mb-2">20+ 문제</div>
+                                    <div class="text-xs text-gray-400">
+                                        패턴 인식, 예측 필요<br>
+                                        예: "내일 운동할 확률은?"
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-green-900/30 border border-green-700 rounded-lg p-4">
+                                <h4 class="font-semibold text-green-300 mb-2">📥 Input</h4>
+                                <div class="text-sm text-gray-300">daily_event.json + phone_data/ (모든 파일)</div>
+                            </div>
+                            <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
+                                <h4 class="font-semibold text-blue-300 mb-2">📤 Output</h4>
+                                <div class="text-sm text-gray-300">QA/*.json (3개 파일)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="qa" data-tab="types">
+                    <div class="space-y-4">
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">1. Single-hop QA (단일 홉)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900 space-y-3">
+                                    <div class="text-sm text-gray-300">
+                                        <strong class="text-green-300">특징:</strong> 하나의 데이터 소스에서 직접 답변 가능
+                                    </div>
+                                    <div class="text-sm">
+                                        <div class="text-green-300 font-semibold mb-1">카테고리:</div>
+                                        <ul class="list-disc list-inside text-gray-300 space-y-1">
+                                            <li>factual_time: "몇 시에 ~ 했나?"</li>
+                                            <li>factual_person: "누구와 만났나?"</li>
+                                            <li>factual_location: "어디에 갔나?"</li>
+                                            <li>factual_activity: "무엇을 했나?"</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-slate-800 p-3 rounded">
+                                        <div class="text-xs text-gray-400 mb-1">예시:</div>
+                                        <div class="text-sm text-gray-200">
+                                            Q: What time did Feng Haoran start his morning run on January 1st?<br>
+                                            A: 08:00<br>
+                                            Source: daily_event.json, event_id=2
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">2. Multi-hop QA (다중 홉)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900 space-y-3">
+                                    <div class="text-sm text-gray-300">
+                                        <strong class="text-yellow-300">특징:</strong> 2-3개 정보를 연결해야 답변 가능
+                                    </div>
+                                    <div class="text-sm">
+                                        <div class="text-yellow-300 font-semibold mb-1">추론 타입:</div>
+                                        <ul class="list-disc list-inside text-gray-300 space-y-1">
+                                            <li>temporal_reasoning: 시간 흐름 추론</li>
+                                            <li>causal_reasoning: 인과관계 추론</li>
+                                            <li>cross_modal: 여러 데이터 소스 통합</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-slate-800 p-3 rounded">
+                                        <div class="text-xs text-gray-400 mb-1">예시:</div>
+                                        <div class="text-sm text-gray-200">
+                                            Q: Why did Feng's energy level decrease on January 3rd?<br>
+                                            A: He stayed up late (睡觉时间: 00:00) due to work pressure, and had no exercise that day.<br>
+                                            Reasoning Steps:<br>
+                                            1. Check daily_event: 睡觉时间 = 00:00 (late bedtime)<br>
+                                            2. Check events: "Random Event: Emotional Fluctuations Due to Work Pressure"<br>
+                                            3. Check 今日运动: None<br>
+                                            Sources: daily_event.json, daily_draft.json
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">3. Reasoning QA (추론)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900 space-y-3">
+                                    <div class="text-sm text-gray-300">
+                                        <strong class="text-red-300">특징:</strong> 패턴 인식, 예측, 반사실적 추론 필요
+                                    </div>
+                                    <div class="text-sm">
+                                        <div class="text-red-300 font-semibold mb-1">추론 타입:</div>
+                                        <ul class="list-disc list-inside text-gray-300 space-y-1">
+                                            <li>pattern_recognition: 습관 패턴 파악</li>
+                                            <li>prediction: 미래 행동 예측</li>
+                                            <li>counterfactual: "만약 ~했다면?" 추론</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-slate-800 p-3 rounded">
+                                        <div class="text-xs text-gray-400 mb-1">예시:</div>
+                                        <div class="text-sm text-gray-200">
+                                            Q: Based on Feng's habits in January, what is the likelihood he will exercise on a rainy day?<br>
+                                            A: Low. Analysis of January shows he consistently canceled outdoor runs on rainy days (Jan 4, 12, 23) and did not replace them with indoor activities.<br>
+                                            Pattern Evidence:<br>
+                                            - 3 rainy days in January → 0 outdoor exercise<br>
+                                            - No gym membership or indoor exercise mentioned<br>
+                                            - ENTJ personality: efficiency-focused, prefers planned activities
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="qa" data-tab="output">
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-blue-400">📤 Output: single_hop_qa.json</h3>
+                            <pre><code class="language-json">[
+  {
+    "question": "What time did Feng Haoran wake up on January 1, 2025?",
+    "answer": "06:40",
+    "source": "daily_draft.json -> 2025-01[0].state.起床时间",
+    "category": "factual_time",
+    "difficulty": "easy"
+  }
+]</code></pre>
+                        </div>
+
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-blue-400">📤 Output: multi_hop_qa.json</h3>
+                            <pre><code class="language-json">[
+  {
+    "question": "How did Feng's sleep schedule change from January 1st to 3rd?",
+    "answer": "It shifted later. Jan 1: 23:10, Jan 2: 23:40, Jan 3: 00:00. Work pressure and overtime caused progressive delay.",
+    "reasoning_steps": [
+      "Extract sleep times from daily_draft.json",
+      "Identify trend: +30min, +20min delays",
+      "Find cause: Jan 2 overtime, Jan 3 work pressure event"
+    ],
+    "sources": [
+      "daily_draft.json -> state.睡觉时间",
+      "daily_draft.json -> events (Random Event: Overtime)"
+    ],
+    "category": "temporal_reasoning",
+    "difficulty": "medium"
+  }
+]</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="qa" data-tab="tuning">
+                    <div class="space-y-3">
+                        <p class="text-gray-300 mb-4">QA 생성 수정 가이드</p>
+                        
+                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-yellow-300 mb-2">✏️ QA 개수 조절</h4>
+                            <div class="text-sm text-gray-300">
+                                qa_generator.py에서<br>
+                                • single_hop: 100개 → 50개 (간단한 벤치마크)<br>
+                                • multi_hop: 50개 → 100개 (추론 중심 벤치마크)<br>
+                                • reasoning: 20개 → 50개 (고난이도 벤치마크)
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-yellow-300 mb-2">✏️ 질문 스타일 변경</h4>
+                            <div class="text-sm text-gray-300">
+                                프롬프트에서<br>
+                                • "Generate natural questions" → 일상적 질문<br>
+                                • "Generate precise factual questions" → 정확한 사실 확인<br>
+                                • "Generate open-ended questions" → 서술형 답변
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-blue-300 mb-2">💡 난이도 밸런스</h4>
+                            <div class="text-sm text-gray-300">
+                                현재 비율: Single(60%) : Multi(30%) : Reasoning(10%)<br>
+                                고급 벤치마크: 30% : 40% : 30%<br>
+                                초급 벤치마크: 80% : 15% : 5%
+                            </div>
+                        </div>
+
+                        <div class="bg-red-900/30 border border-red-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-red-300 mb-2">⚡ 최종 목적</h4>
+                            <div class="text-sm text-gray-300">
+                                이 QA 데이터는 LLM 평가의 최종 목적물입니다.<br>
+                                RAG 시스템이나 에이전트의 "개인 생활 이해 능력"을 테스트합니다.<br>
+                                전체 파이프라인이 이 QA 생성을 위해 존재합니다.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="bg-slate-900 border-t border-slate-700 px-6 py-8 mt-16">
+        <div class="max-w-7xl mx-auto text-center text-gray-400">
+            <p class="mb-2">LifeBench Pipeline Visualization - Complete Technical Documentation</p>
+            <p class="text-sm">Based on actual code from <span class="code-path">run/</span> and <span class="code-path">event/</span> directories</p>
+            <p class="text-xs mt-4">All prompts and data samples are from the official LifeBench repository</p>
+        </div>
+    </footer>
+
+    <script>
+        // Tab switching
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('tab-button')) {
+                const step = e.target.dataset.step;
+                const tab = e.target.dataset.tab;
+                
+                // Update active button
+                document.querySelectorAll(`.tab-button[data-step="${step}"]`).forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                e.target.classList.add('active');
+                
+                // Show/hide content
+                document.querySelectorAll(`.tab-content[data-step="${step}"]`).forEach(content => {
+                    content.classList.add('hidden');
+                });
+                document.querySelector(`.tab-content[data-step="${step}"][data-tab="${tab}"]`).classList.remove('hidden');
+                
+                // Syntax highlighting
+                document.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+            }
+        });
+
+        // Accordion toggle
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            const isOpen = content.classList.contains('open');
+            
+            // Close all accordions
+            document.querySelectorAll('.accordion-content').forEach(acc => {
+                acc.classList.remove('open');
+            });
+            
+            // Open clicked accordion
+            if (!isOpen) {
+                content.classList.add('open');
+            }
+            
+            // Update arrow
+            const arrow = header.querySelector('span:last-child');
+            arrow.textContent = isOpen ? '▼' : '▲';
+            
+            // Re-highlight code
+            setTimeout(() => {
+                document.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+            }, 50);
+        }
+
+        // Mini-map navigation
+        document.querySelectorAll('.mini-map-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const step = item.dataset.step;
+                document.getElementById(`step-${step}`).scrollIntoView({ behavior: 'smooth' });
+                
+                // Update active state
+                document.querySelectorAll('.mini-map-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+        // Scroll spy for mini-map
+        window.addEventListener('scroll', () => {
+            const sections = ['draft', 'simulator', 'phone', 'qa'];
+            const scrollPos = window.scrollY + 200;
+            
+            sections.forEach(section => {
+                const element = document.getElementById(`step-${section}`);
+                if (element) {
+                    const top = element.offsetTop;
+                    const bottom = top + element.offsetHeight;
+                    
+                    if (scrollPos >= top && scrollPos < bottom) {
+                        document.querySelectorAll('.mini-map-item').forEach(i => i.classList.remove('active'));
+                        document.querySelector(`.mini-map-item[data-step="${section}"]`).classList.add('active');
+                    }
+                }
+            });
+        });
+
+        // Initial syntax highlighting
+        document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('pre code').forEach((block) => {
                 hljs.highlightElement(block);
             });
-        }
-
-        function highlightVariables(text) {
-            return text.replace(/\{([^}]+)\}/g, '<span class="variable-highlight">{$1}</span>');
-        }
-
-        function extractVariables(text) {
-            const matches = text.matchAll(/\{([^}]+)\}/g);
-            const vars = new Set();
-            for (const match of matches) {
-                vars.add(`{${match[1]}}`);
-            }
-            return Array.from(vars);
-        }
+        });
     </script>
 </body>
 </html>
