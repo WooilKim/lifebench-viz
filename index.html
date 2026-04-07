@@ -569,6 +569,578 @@
                     <div class="space-y-4">
                         <p class="text-gray-300 mb-4">Draft Generation 단계에서 사용되는 6개 핵심 프롬프트</p>
                         
+                        <!-- Prompt 1 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">1. template_yearterm_eventgen (1단계: 100개 이벤트 생성)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900">
+                                    <div class="text-xs text-gray-500 mb-2">사용 함수: genevent_yearterm()</div>
+                                    <pre><code class="language-text">请基于下方的【人物分析】，为该人物推理生成 2025 年内可能发生的 100 件符合其画像的生活事件...
+
+## 一、核心创作原则
+
+### 1. 真实性与贴合性
+- 深度贴合人物画像：所有事件必须与人物的职业背景、家庭关系、生活习惯、性格特质、经济状况、社交圈强关联
+- 符合现实逻辑：事件需遵循时间规律（如"冬季滑雪""春节返乡"）
+- 自然的因果关联：部分事件之间应存在合理的因果关系
+
+### 2. 多样性与平衡性
+- 全面覆盖生活维度：事件需涵盖职业、家庭、社交、健康、财务、个人成长等多个领域
+- 事件类型多样化：包含短期事件（1-3天）、中期事件（1-4周）、长期事件（1-3个月）
+
+## 人物画像
+<span class="variable-highlight">{persona}</span>
+
+## 输出格式要求
+严格按「类别 + 事件数量」分组输出，每个类别独立成段。
+
+<type>Career（20 件）</type>
+参加上海零售业高峰论坛（2025-03-18 至 2025-03-19）：作为家族企业代表，学习行业趋势并拓展供应商资源。
+...</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prompt 2 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">2. template_yearterm_complete (2단계: 90개 보완 이벤트)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900">
+                                    <div class="text-xs text-gray-500 mb-2">사용 함수: genevent_yearterm()</div>
+                                    <pre><code class="language-text">请基于人物画像及你第一轮生成的 100 件事件，补充创作 90 个左右符合要求的新事件...
+
+## 一、核心创作原则
+
+### 1. 绝对去重与精准互补
+- 内容彻底差异化：新事件必须与第一轮事件完全不同
+- 填补第一轮空白：优先覆盖第一轮未涉及的人物画像信息
+
+### 2. 补充方向指南
+- 未充分利用的画像信息
+- 节日与季节特色：春节、清明、五一、端午、中秋、国庆
+- 类别多样性深化
+
+人物画像：<span class="variable-highlight">{persona}</span>
+第一轮事件：<span class="variable-highlight">{first_round_events}</span></code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prompt 3 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">3. template_yearterm_complete_2 (3단계: 80개 전문화 이벤트)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900">
+                                    <div class="text-xs text-gray-500 mb-2">사용 함수: genevent_yearterm()</div>
+                                    <pre><code class="language-text">请基于人物画像及前两轮已生成的事件，补充创作 80 个左右全新事件...
+
+## 核心创作原则
+
+### 填补空白维度策略
+
+#### （1）人群共性事件
+- 基于人物的性别、年龄、地域、人生阶段等核心标签
+- 例如：30岁职场人可能经历的"职业晋升考察期"
+
+#### （2）个人专属事件
+- 深度挖掘人物的独特性，生成体现其内心需求的事件
+- 例如："整理童年旧物（2025-08-01）：翻出小时候的照片和日记"
+
+#### （3）他人关联事件
+- 生成"因他人需求而参与"的非日常事件
+- 例如："帮邻居照顾宠物（2025-09-05 至 2025-09-10）"
+
+人物画像：<span class="variable-highlight">{persona}</span></code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prompt 4 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">4. template_yearterm_complete_3 (4단계: 10개 부정적 이벤트)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900">
+                                    <div class="text-xs text-gray-500 mb-2">사용 함수: genevent_yearterm()</div>
+                                    <pre><code class="language-text">请基于人物画像及前三轮已生成的事件，聚焦"有困难、负面性、具挑战性"的场景...
+
+## 核心创作原则
+
+### 1. 负面事件的真实性与适配性
+- 明确的负面属性：困难性、负面性、挑战性
+- 严格贴合人物画像：负面事件必须与人物的职业、生活状态紧密关联
+- 可控的负面影响：能被解决的短期波折，不会导致长期画像变动
+
+### 2. 负面事件的多样性
+- 覆盖不同生活领域（工作、家庭、健康、社交等）
+
+例如：
+"门店遭遇恶意投诉（2025-02-18 至 2025-02-22）"
+"家中水管爆裂（2025-01-15）"
+
+人物画像：<span class="variable-highlight">{persona}</span>
+事件总数：不超过10个</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prompt 5 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">5. template_extract_impact_events (중요 사건 추출)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900">
+                                    <div class="text-xs text-gray-500 mb-2">사용 함수: _extract_impact_events()</div>
+                                    <pre><code class="language-text">请基于以下人物画像和事件列表，仅提取两类重要事件：
+
+## 核心任务
+
+### 第一类：画像信息产生显著改变的事件
+判断标准：事件发生后必须需要更新人物画像的具体字段信息
+具体类型：工作生活上大的变动、职业、教育里程碑、财务、健康变化、人际关系变化
+
+### 第二类：影响近期生活习惯的事件
+判断标准：事件会导致个人在特定时间段内改变作息安排、生活习惯
+具体类型：短期出差、旅行、生病、连续加班、短期培训
+
+严格排除的事件类型：
+- 仅增进感情但未改变关系状态的社交活动
+- 未导致生活习惯改变的短期情绪波动
+- 24小时内可恢复的短暂不便
+
+## 输出格式
+<think>对这段时间事件的总结分析</think>
+<json>[
+    {{
+        "time_point": "YYYY-MM-DD",
+        "event_content": "事件描述",
+        "original_event_id": "ID",
+        "impact_category": "Career/Health/...",
+        "impact_description": "具体影响",
+        "duration": "持续时间"
+    }}
+]</json>
+
+人物画像：<span class="variable-highlight">{persona}</span>
+事件列表：<span class="variable-highlight">{events}</span></code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prompt 6 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-semibold">6. template_monthly_events_analysis (월별 이벤트 생성)</span>
+                                    <span class="text-xl">▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 bg-slate-900">
+                                    <div class="text-xs text-gray-500 mb-2">사용 함수: _analyze_monthly_events() (월 12회 실행)</div>
+                                    <pre><code class="language-text">请基于人物画像和月度主题事件，生成该月的详细日常安排...
+
+## 生成要求
+
+1. 每天至少包含 3-5 个具体事件
+2. 事件需符合人物的职业、作息、习惯
+3. 考虑工作日/周末的差异
+4. 包含日常活动（通勤、三餐、运动、睡眠）
+5. 体现月度主题事件的影响
+
+## 输出格式
+按日期顺序输出该月所有事件
+
+人物画像：<span class="variable-highlight">{persona}</span>
+月度数据：<span class="variable-highlight">{month_data}</span>
+影响事件：<span class="variable-highlight">{impact_events}</span></code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="draft" data-tab="input">
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-green-400">📥 Input: persona.json</h3>
+                            <p class="text-gray-400 text-sm mb-4">실제 샘플: Feng Haoran (27세, 금융투자 어드바이저, ENTJ)</p>
+                            <pre><code class="language-json">{
+  "name": "Feng Haoran",
+  "birth": "1994-10-29",
+  "age": 27,
+  "gender": "Male",
+  "job": "Financial Investment Advisor",
+  "occupation": "Huatai Securities Co., Ltd.",
+  "salary": 200000.0,
+  "personality": {
+    "mbti": "ENTJ",
+    "traits": ["Achievements", "Power", "Social Responsibility Orientation"]
+  },
+  "hobbies": [
+    "Photography (Street Photography)",
+    "Running (Morning Run)",
+    "Camping (Wilderness)",
+    "Collecting Stamps"
+  ],
+  "aim": [
+    "Promoted to Investment Director within 3 years",
+    "Complete an in-depth self-driving tour annually.",
+    "Build a personal investment portfolio to reach a scale of 1 million."
+  ],
+  "relation": [
+    {
+      "name": "Feng Jianguo",
+      "relation": "Father",
+      "age": 58,
+      "occupation": "Senior Engineer"
+    },
+    {
+      "name": "Li Xiuying",
+      "relation": "Mother",
+      "age": 56
+    }
+  ]
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="draft" data-tab="output">
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-blue-400">📤 Output: daily_draft.json</h3>
+                            <p class="text-gray-400 text-sm mb-4">실제 샘플: 2025년 1월 1일 (New Year's Day)</p>
+                            <pre><code class="language-json">{
+  "2025-01": [
+    {
+      "date": "2025-01-01",
+      "date_attribute": {
+        "weather": "Clear, with a light breeze",
+        "holiday": "New Year's Day",
+        "week": "Wednesday"
+      },
+      "daily_overview": "During the New Year's Day holiday, Feng Haoran ushered in the new year with a disciplined and fulfilling approach. From starting the day with a morning run to deeply reflecting on the past, connecting emotionally with family and friends, and making detailed plans for the new year...",
+      "events": [
+        {
+          "name": "New Year's Day Morning Run and Nutritious Breakfast",
+          "description": "At 7 a.m., Feng Haoran completed a 5-kilometer morning run on South Yuelu Road, breathing in the crisp winter air..."
+        },
+        {
+          "name": "Annual Personal Review and Analysis",
+          "description": "In the morning, at the desk in his study, Feng Haoran turned on his computer and opened his dedicated annual review notebook..."
+        },
+        {
+          "name": "New Year's Video Call with Family",
+          "description": "In the evening, Feng Haoran contacted his parents in Wuhan and his sister in Shanghai separately via video call..."
+        }
+      ],
+      "state": {
+        "体重": 75.0,
+        "起床时间": "06:40",
+        "睡觉时间": "23:10",
+        "今日运动": "Morning run of 5 kilometers"
+      }
+    }
+  ]
+}</code></pre>
+                        </div>
+
+                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
+                            <h4 class="font-semibold text-yellow-300 mb-2">💡 주요 특징</h4>
+                            <ul class="text-sm text-gray-300 space-y-1 list-disc list-inside">
+                                <li>각 날짜마다 3-6개의 이벤트 포함</li>
+                                <li>날씨, 공휴일, 요일 정보 자동 추가</li>
+                                <li>일일 개요(daily_overview)로 하루 전체 흐름 요약</li>
+                                <li>기본 상태 정보 (체중, 기상/취침 시간, 운동)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="draft" data-tab="tuning">
+                    <div class="space-y-3">
+                        <p class="text-gray-300 mb-4">프롬프트 수정을 통한 결과 제어 방법</p>
+                        
+                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-yellow-300 mb-2">✏️ MBTI 타입 변경의 영향</h4>
+                            <div class="text-sm text-gray-300">
+                                <strong>ENTJ</strong> → 업무 중심 이벤트 많음 (회의, 네트워킹, 성과)<br>
+                                <strong>ENFP</strong> → 사교 중심 이벤트 많음 (모임, 여행, 창의적 활동)<br>
+                                <strong>INTJ</strong> → 혼자 하는 활동 많음 (독서, 연구, 개인 프로젝트)
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-yellow-300 mb-2">✏️ 직업 변경의 영향</h4>
+                            <div class="text-sm text-gray-300">
+                                <strong>금융 어드바이저</strong> → 고객 미팅, 시장 분석, 보고서 작성<br>
+                                <strong>소프트웨어 엔지니어</strong> → 코딩, 코드 리뷰, 기술 학습<br>
+                                <strong>의사</strong> → 진료, 회진, 학회 참석
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-blue-300 mb-2">💡 이벤트 밀도 조절</h4>
+                            <div class="text-sm text-gray-300">
+                                template_yearterm_eventgen에서<br>
+                                <code class="bg-slate-800 px-2 py-1 rounded">生成 2025 年内可能发生的 100 件</code> → 숫자 변경<br>
+                                • 50개: 느슨한 일정 (여유로운 생활)<br>
+                                • 150개: 빡빡한 일정 (바쁜 생활)
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-blue-300 mb-2">💡 부정적 이벤트 비율</h4>
+                            <div class="text-sm text-gray-300">
+                                template_yearterm_complete_3에서<br>
+                                <code class="bg-slate-800 px-2 py-1 rounded">补充创作不超过 10 个</code> → 숫자 변경<br>
+                                • 5개: 평온한 1년<br>
+                                • 20개: 파란만장한 1년
+                            </div>
+                        </div>
+
+                        <div class="bg-red-900/30 border border-red-700 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-red-300 mb-2">⚠️ 주의사항</h4>
+                            <div class="text-sm text-gray-300">
+                                • 이 단계는 "큰 그림"만 그립니다 - 세부 사항은 Simulator에서 생성<br>
+                                • 프롬프트 수정 후 전체 파이프라인 재실행 필요 (~2시간)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Simulator -->
+        <div id="step-simulator" class="mb-16">
+            <div class="step-card bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-8 border border-green-600">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-4">
+                        <div class="text-5xl">🎮</div>
+                        <div>
+                            <h2 class="text-3xl font-bold">Step 2: Simulator</h2>
+                            <p class="text-green-200 mt-1">상세 이벤트 + 건강 상태 시뮬레이션</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm text-green-300">실행 시간</div>
+                        <div class="text-2xl font-bold">~1-2시간</div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="flex gap-2 mb-6 border-b border-green-700">
+                    <button class="tab-button active px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="overview">개요</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="flow">🔀 내부 플로우</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="code">코드 경로</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="prompts">프롬프트</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="input">인풋 예시</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="output">아웃풋 예시</button>
+                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="tuning">수정 가이드</button>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="tab-content" data-step="simulator" data-tab="overview">
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-green-300">🎯 목적</h3>
+                            <p class="text-gray-300 leading-relaxed">
+                                daily_draft.json의 간단한 이벤트 목록을 상세한 시간별 이벤트로 확장하고,
+                                건강 상태 (신체/정신/수면/에너지) 추적 시스템을 추가합니다.
+                                이 단계에서 "Mind" 시스템이 작동하여 인물의 주관적 계획과 객관적 제약을 반영합니다.
+                            </p>
+                        </div>
+
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-green-300">⚙️ 실행 흐름</h3>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex items-start gap-3">
+                                    <span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">1</span>
+                                    <div>
+                                        <div class="font-semibold">주관적 계획 생성</div>
+                                        <div class="text-gray-400">_generate_subjective_thought() → 인물이 하루를 어떻게 보내고 싶은지</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">2</span>
+                                    <div>
+                                        <div class="font-semibold">객관적 최적화</div>
+                                        <div class="text-gray-400">_generate_objective_events() → 현실적 제약 반영 (날씨, 교통, 시간)</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">3</span>
+                                    <div>
+                                        <div class="font-semibold">이벤트 궤적 조정</div>
+                                        <div class="text-gray-400">_adjust_event_trajectory() → 교통 시간, 동선 최적화</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">4</span>
+                                    <div>
+                                        <div class="font-semibold">POI 매핑</div>
+                                        <div class="text-gray-400">map() → 실제 지도 좌표로 장소 변환</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">5</span>
+                                    <div>
+                                        <div class="font-semibold">일일 회고 생성</div>
+                                        <div class="text-gray-400">_generate_reflection() → 하루를 돌아보는 생각</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">6</span>
+                                    <div>
+                                        <div class="font-semibold">건강 상태 분석</div>
+                                        <div class="text-gray-400">health_analysis() + life_analysis() → 건강/생활 상태 추적</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-green-900/30 border border-green-700 rounded-lg p-4">
+                                <h4 class="font-semibold text-green-300 mb-2">📥 Input</h4>
+                                <div class="text-sm text-gray-300">persona.json + daily_draft.json</div>
+                            </div>
+                            <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
+                                <h4 class="font-semibold text-blue-300 mb-2">📤 Output</h4>
+                                <div class="text-sm text-gray-300">daily_event.json (상세 이벤트 + 건강 상태)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="simulator" data-tab="code">
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-4 text-green-400">📂 실행 파일 경로</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="text-gray-400 text-sm mb-1">메인 실행 파일</div>
+                                    <div class="code-path">run/simulator.py</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-400 text-sm mb-1">핵심 로직 (Mind 시스템)</div>
+                                    <div class="code-path">event/mind.py</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-400 text-sm mb-1">건강 분석</div>
+                                    <div class="code-path">event/event_refiner.py</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-4 text-blue-400">🔧 주요 함수 목록 (mind.py)</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="function-name mb-2">_generate_subjective_thought(date, persona, context)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: 인물의 주관적 하루 계획 생성<br>
+                                        • 프롬프트: template_daily_event_subjective_plan<br>
+                                        • 예시: "오늘은 아침 운동 후 고객 미팅, 저녁에는 CFA 공부"
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-2">_generate_objective_events(subjective_plan, constraints)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: 현실적 제약 반영하여 실제 이벤트 시퀀스 생성<br>
+                                        • 프롬프트: template_daily_event_objective_optimize<br>
+                                        • 제약: 날씨(비 → 야외 운동 취소), 교통 시간, 피로도
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-2">_adjust_event_trajectory(events)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: 교통 시간 계산, 동선 최적화<br>
+                                        • 프롬프트: template_event_traffic_adjust<br>
+                                        • 예시: "집→회사 45분" 자동 추가
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-2">_extract_events(raw_output)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: LLM 출력을 구조화된 JSON으로 변환<br>
+                                        • 프롬프트: template_event_format_sequence
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-2">_generate_reflection(events)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: 하루 종료 시 회고 생성<br>
+                                        • 프롬프트: template_daily_reflection<br>
+                                        • 예시: "오늘은 피곤했지만 CFA 공부를 완료해서 뿌듯하다"
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-2">_update_long_term_memory(events, reflection)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: 장기 기억 업데이트 (중요 사건만 저장)<br>
+                                        • 프롬프트: template_update_long_term_memory
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-2">map(location_name)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: "Yuelu Mountain"을 실제 GPS 좌표로 변환<br>
+                                        • 프롬프트: template_poi_real_location_assign
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-4 text-blue-400">🔧 주요 함수 목록 (event_refiner.py)</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="function-name mb-2">health_analysis(persona, events)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: 월별 건강 상태 분석 (15일/말일 체크포인트)<br>
+                                        • 프롬프트: template_impact_events_analysis, template_initial_health_state
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="function-name mb-2">life_analysis(persona, events)</div>
+                                    <div class="text-sm text-gray-400 ml-4">
+                                        • 역할: 생활 패턴 분석 (가족, 직장, 재정 상태)<br>
+                                        • 프롬프트: template_life_initial_state, template_life_analysis
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" data-step="simulator" data-tab="prompts">
+                    <div class="space-y-4">
+                        <p class="text-gray-300 mb-4">Simulator 단계에서 사용되는 7개 핵심 프롬프트</p>
+                        
                         <div class="accordion-item">
                             <div class="accordion-header" onclick="toggleAccordion(this)">
                                 <div class="flex items-center justify-between">
@@ -581,16 +1153,16 @@
                             </div>
                             <div class="accordion-content">
                                 <div class="grid grid-cols-2 divide-x divide-slate-700">
-                                    <div class="p-4 bg-slate-900">
+                                    <div class="p-4 bg-slate-900 overflow-auto">
                                         <div class="text-xs text-slate-500 font-semibold mb-2">🇨🇳 중국어 원문</div>
-                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap overflow-auto max-h-96 leading-relaxed">## 核心任务
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">## 核心任务
 请完全代入指定角色，以**第一人称"我"**的视角进行深度思考，综合运用以下信息分析并指定今日事件安排：
 - 自我认知（性格特质、行为习惯、个人偏好）
 - 记忆数据（过往活动轨迹、重复事件模式、长期生活习惯）
 - 当下想法（近期意愿倾向、兴趣关注点）
 - 当下状态（早晨醒来地点、当前身体/精神状态）
 - 今日日期属性（明确区分工作日/休息日）
-- **今日初步计划：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{plan}</span>**（包含"今日安排参考"，你可以尽量依据该参考进行安排，尽量保证一天结束时的状态与参考状态一致，其他可灵活安排调整。对于其中的事件序列中的事件，你可以随意在今日调整发生时间、地点、人物、描述等，但一定要安排发生（如早上的航班安排到晚上执行，熬夜/早起完成所有任务等））
+- **今日初步计划：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{plan}</span>**（包含"今日安排参考"，你可以尽量依据该参考进行安排，尽量保证一天结束时的状态与参考状态一致，其他可灵活安排调整。对于其中的事件序列中的事件，你可以随意在今日调整发生时间、地点、人物、描述等，但一定要安排发生（如早上的航班安排到晚上执行，熬夜/早起完成所有任务等））
 
 最终目标：梳理出符合角色身份的今日活动安排想法，为后续生成完整日程提供基础。需确保今日计划中的所有事件都能安排执行，可灵活调整执行方式（如调整时间、改变执行形式等），不拘泥于给定的执行描述、时间、地点。但必须在本日达到执行后的效果。若今日无规划或规划稀疏、不充分、不丰富，需重点思考可新增的合理活动。
 
@@ -666,16 +1238,16 @@
    - 格式示例：家-&gt;工作地点-&gt;咖啡馆-&gt;超市-&gt;家-&gt;公园-&gt;家
 
 ## 参考数据
-日期信息：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{date}</span>（今日日期,需明确标注工作日/休息日）
-自我认知：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{cognition}</span>
-今日初始安排: <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{plan}</span>
-记忆信息：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{memory}</span>
-当下想法：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{thought}</span>
-个人画像：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{persona}</span></pre>
+日期信息：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{date}</span>（今日日期,需明确标注工作日/休息日）
+自我认知：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{cognition}</span>
+今日初始安排: <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{plan}</span>
+记忆信息：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{memory}</span>
+当下想法：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{thought}</span>
+个人画像：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{persona}</span></pre>
                                     </div>
-                                    <div class="p-4 bg-slate-800">
+                                    <div class="p-4 bg-slate-800 overflow-auto">
                                         <div class="text-xs text-green-400 font-semibold mb-2">🇰🇷 한국어 번역</div>
-                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap overflow-auto max-h-96 leading-relaxed">## 핵심 과제
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">## 핵심 과제
 지정된 역할에 완전히 몰입하여, **1인칭 "나"** 의 시각으로 깊이 생각하고,
 아래 정보를 종합 활용하여 오늘의 일정을 분석·계획하세요:
 - 자아인식 (성격 특성, 행동 습관, 개인 선호)
@@ -683,23 +1255,19 @@
 - 현재 생각 (최근 의향, 관심사)
 - 현재 상태 (아침에 깨어난 장소, 신체/정신 상태)
 - 오늘 날짜 속성 (평일/휴일 명확히 구분)
-- **오늘 초기 계획: <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{plan}</span>** (오늘 일정 참조 포함, 최대한 이 참조를 바탕으로 계획하되,
-  하루 끝의 상태가 참조와 일치하도록 유지. 이벤트 시간/장소/인물/설명은 자유롭게 조정 가능하지만
-  반드시 당일 내에 실행해야 함)
+- **오늘 초기 계획: <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{plan}</span>** (참조 일정, 최대한 이 참조 기반으로 계획.
+  이벤트 시간/장소/인물/설명 자유 조정 가능하나 반드시 당일 실행)
 
-최종 목표: 역할 정체성에 맞는 오늘의 활동 계획 아이디어를 정리하고,
-완전한 일정 생성의 기초 데이터 제공.
-오늘 계획의 모든 이벤트를 반드시 실행할 수 있도록 보장하고,
-실행 방식(시간 조정, 방식 변경 등)을 유연하게 조정 가능하며,
-주어진 실행 설명·시간·장소에 구애받지 않되 당일 내에 효과 달성 필수.
-오늘 계획이 없거나 빈약한 경우 추가 가능한 합리적 활동을 집중 검토.
+최종 목표: 역할 정체성에 맞는 오늘 활동 계획 아이디어 정리.
+오늘 계획의 모든 이벤트를 반드시 실행 가능하도록 보장하고,
+실행 방식 (시간 조정/형태 변경 등) 유연하게 조정 가능.
 
 ## 사고 프레임워크
-아래 구조적 사고 흐름에 따라 분석하세요:
+아래 구조적 사고 흐름에 따라 엄격히 분석하세요:
 
 1. **현재 상태 및 기억 회顧**
    - 기억에서 핵심 정보 추출, 아침에 깨어난 구체적 장소 명확화
-     (예: 집 침실, 출장 호텔 등)
+     (집 침실, 출장 호텔 등)
    - 현재 신체 상태 분석 (활력 충만, 피로, 신체 불편 등)</pre>
                                     </div>
                                 </div>
@@ -717,9 +1285,9 @@
                             </div>
                             <div class="accordion-content">
                                 <div class="grid grid-cols-2 divide-x divide-slate-700">
-                                    <div class="p-4 bg-slate-900">
+                                    <div class="p-4 bg-slate-900 overflow-auto">
                                         <div class="text-xs text-slate-500 font-semibold mb-2">🇨🇳 중국어 원문</div>
-                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap overflow-auto max-h-96 leading-relaxed">基于第一步生成的拟人化思考过程（个人对当日的主观安排，并不一定完全按照该安排执行），请从客观视角出发，结合当日日程、思考过程及客观合理性原则，对全天事件进行调整、补充与优化，使其更符合真实生活逻辑且内容丰富充实。需确保今日计划中的所有事件都能安排执行，可灵活调整执行方式（如调整时间、改变执行形式等），但必须在本日达到执行后的效果。你可合理新增活动、事件、地点与场景（包括非日常事件），并以客观叙事视角呈现，具体要求如下：
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">基于第一步生成的拟人化思考过程（个人对当日的主观安排，并不一定完全按照该安排执行），请从客观视角出发，结合当日日程、思考过程及客观合理性原则，对全天事件进行调整、补充与优化，使其更符合真实生活逻辑且内容丰富充实。需确保今日计划中的所有事件都能安排执行，可灵活调整执行方式（如调整时间、改变执行形式等），但必须在本日达到执行后的效果。你可合理新增活动、事件、地点与场景（包括非日常事件），并以客观叙事视角呈现，具体要求如下：
 
 一、内容生成核心要求
 1. **时段填充与事件丰富**：
@@ -769,32 +1337,32 @@
 - 事件描述需包含所有今日事件的信息与细节，不得遗漏关键内容。
 
 三、参考数据
-- 第一步拟人化思考过程：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{event}</span>
-- 今日事件计划：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{plan}</span>（包含未来事件、今日事件及昨日事件，请将未来事件与昨日事件作为分析参考，重点关注今日事件，今日事件包含"今日安排参考"，你可以尽量依据该参考安排，尽量保证一天结束时的状态与参考状态一致，其他可灵活安排调整）
-- 记忆信息：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{memory}</span>
-- 日期信息：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{date}</span>（需明确标注为工作日/休息日）
-- 个人画像：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{persona}</span></pre>
+- 第一步拟人化思考过程：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{event}</span>
+- 今日事件计划：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{plan}</span>（包含未来事件、今日事件及昨日事件，请将未来事件与昨日事件作为分析参考，重点关注今日事件，今日事件包含"今日安排参考"，你可以尽量依据该参考安排，尽量保证一天结束时的状态与参考状态一致，其他可灵活安排调整）
+- 记忆信息：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{memory}</span>
+- 日期信息：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{date}</span>（需明确标注为工作日/休息日）
+- 个人画像：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{persona}</span></pre>
                                     </div>
-                                    <div class="p-4 bg-slate-800">
+                                    <div class="p-4 bg-slate-800 overflow-auto">
                                         <div class="text-xs text-green-400 font-semibold mb-2">🇰🇷 한국어 번역</div>
-                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap overflow-auto max-h-96 leading-relaxed">의인화된 사고 과정(개인의 당일 주관적 계획, 반드시 이 계획대로 실행되지 않을 수 있음)을 기반으로,
-객관적 시각에서 당일 일정, 사고 과정, 객관적 합리성 원칙을 결합하여
-하루 종일의 이벤트를 조정·보완·최적화하고, 진실한 생활 논리에 더욱 부합하고 풍부한 내용으로 만드세요.
-오늘 계획의 모든 이벤트가 실행될 수 있도록 보장하되, 실행 방식(시간 조정, 형태 변경 등)을 유연하게 조정할 수 있습니다.
-단, 당일 내에 실행 후 효과를 달성해야 합니다. 활동·이벤트·장소·장면(비일상 이벤트 포함)을 합리적으로 추가할 수 있으며,
-객관적 서술 시각으로 제시하고, 구체적 요구사항은 다음과 같습니다:
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">의인화된 사고 과정 (개인의 당일 주관적 계획, 반드시 이 계획대로 실행되지 않을 수 있음) 을 기반으로,
+객관적 시각에서 당일 일정·사고 과정·객관적 합리성 원칙을 결합하여
+하루 전체 이벤트를 조정·보완·최적화하고, 진실한 생활 논리에 더욱 부합하고 내용이 풍부한 형태로 만드세요.
+오늘 계획의 모든 이벤트가 실행될 수 있도록 보장하되, 실행 방식 (시간 조정, 형태 변경 등) 유연하게 조정 가능.
+단, 당일 내 실행 후 효과 달성 필수. 활동·이벤트·장소·장면 (비일상 이벤트 포함) 합리적 추가 가능.
+객관적 서술 시각으로 제시. 구체적 요구사항:
 
-일、내용 생성 핵심 요구사항
+一、내용 생성 핵심 요구사항
 1. **시간대 채우기 및 이벤트 풍부화**:
-   - 모든 이벤트의 발생 시간대를 명확히 하고, 공백 시간대를 채워 내용이 공백이 되지 않도록 하며,
-     하루 전체 시간대에 합리적인 이벤트 분포 보장.
-   - 이벤트가 없는 공백 시간대에는 하루 이벤트 논리를 결합하여 다양하고 연속적인 이벤트 보완
-     (행동, 활동, 장소, 인물 등 차원), 다른 이벤트 및 당일 특성과 논리적으로 일치하도록 하며
-     **이전 며칠의 이벤트와 명확한 차이 존재**.
+   - 모든 이벤트의 발생 시간대 명확화, 공백 시간대 채워서 내용 공백 방지,
+     하루 전체 시간대에 합리적 이벤트 분포 보장.
+   - 이벤트 없는 공백 시간대: 하루 이벤트 논리 결합하여 다양하고 연속적인 이벤트 보완
+     (행동/활동/장소/인물 등 차원), 다른 이벤트 및 당일 특성과 논리 일치,
+     **이전 며칠의 이벤트와 명확한 차이 필수**.
 
 2. **일상 패턴 보완**:
-    - 개인의 주관적 사고에서는 보통 일상화된 활동 패턴(매일 업무, 고정 가족 업무, 습관 등)을 언급하지 않음,
-      일상에 있어야 할 행동 패턴 분석·보완하여 진실한 생활 규율에 부합하도록 조정
+    - 주관적 사고에서는 보통 일상화된 활동 패턴을 언급하지 않음.
+      일상에 있어야 할 행동 패턴 분석·보완하여 진실한 생활 규율 부합 조정
       (예: 평일 9:00-17:00 근무 시간대, 비휴가 기간의 매일 아이 픽업 등 고정 일정)</pre>
                                     </div>
                                 </div>
@@ -812,18 +1380,18 @@
                             </div>
                             <div class="accordion-content">
                                 <div class="grid grid-cols-2 divide-x divide-slate-700">
-                                    <div class="p-4 bg-slate-900">
+                                    <div class="p-4 bg-slate-900 overflow-auto">
                                         <div class="text-xs text-slate-500 font-semibold mb-2">🇨🇳 중국어 원문</div>
-                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap overflow-auto max-h-96 leading-relaxed">请基于以下人物画像、初始健康状态和指定时间段内的事件列表，分析并生成该月15号中间状态、结束时的健康状态记录和完整变化节点：
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">请基于以下人物画像、初始健康状态和指定时间段内的事件列表，分析并生成该月15号中间状态、结束时的健康状态记录和完整变化节点：
 
 ## 人物画像
-<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{persona}</span>
+<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{persona}</span>
 
 ## 初始健康状态
-<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{initial_health_state}</span>
+<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{initial_health_state}</span>
 
 ## 输入数据
-<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{daily_data}</span>
+<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{daily_data}</span>
 
 ## 分析要求
 请系统分析上述数据，结合客观环境变化（如四季更替、气候转换）、社会常理变化（如法定节假日、周末休息、工作周期）以及事件影响，完成以下任务：
@@ -1011,46 +1579,41 @@
 4. 所有变化必须符合人物画像和生活常理
 5. 严格遵循指定的JSON格式，确保所有字段完整</pre>
                                     </div>
-                                    <div class="p-4 bg-slate-800">
+                                    <div class="p-4 bg-slate-800 overflow-auto">
                                         <div class="text-xs text-green-400 font-semibold mb-2">🇰🇷 한국어 번역</div>
-                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap overflow-auto max-h-96 leading-relaxed">다음 인물 프로파일, 초기 건강 상태, 지정 기간 내 이벤트 목록을 기반으로,
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">다음 인물 프로파일, 초기 건강 상태, 지정 기간 내 이벤트 목록을 기반으로,
 해당 월 15일 중간 상태, 말일 건강 상태 기록 및 완전한 변화 노드를 분석·생성해주세요:
 
 ## 인물 프로파일
-<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{persona}</span>
+<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{persona}</span>
 
 ## 초기 건강 상태
-<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{initial_health_state}</span>
+<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{initial_health_state}</span>
 
 ## 입력 데이터
-<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{daily_data}</span>
+<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{daily_data}</span>
 
 ## 분석 요구사항
-아래 데이터를 체계적으로 분석하고, 객관적 환경 변화(사계절 교체, 기후 전환 등),
-사회 상식적 변화(법정 공휴일, 주말 휴식, 업무 주기 등) 및 이벤트 영향을 결합하여 다음 과제를 완성하세요:
+객관적 환경 변화 (사계절 교체, 기후 전환), 사회 상식적 변화 (법정 공휴일, 주말 휴식, 업무 주기) 및
+이벤트 영향을 결합하여 다음 과제를 완성하세요:
 
-1. **입력 데이터 변화 심층 분석**: 일별 데이터의 트렌드와 변화를 주의 깊게 파악,
-   특히 운동, 수면, 식이, 건강 상태 등에 관한 정보
+1. **입력 데이터 변화 심층 분석**: 운동/수면/식이/건강 상태 트렌드 파악
 
-2. **합리적 변화 이벤트 추가**: 인물 프로파일과 생활 상식을 기반으로,
-   입력 데이터에 명시적으로 언급되지 않았지만 논리에 부합하는 변화 이벤트 최소 3-5개 추가, 예:
+2. **합리적 변화 이벤트 추가** (최소 3-5개):
    - 임시 업무 압박으로 인한 생활 패턴 변화
    - 날씨 변화가 운동 방식에 미치는 영향
    - 사교 활동으로 인한 식이 또는 수면 변동
    - 건강 의식 향상으로 인한 습관 조정
    - 소부상 또는 불편으로 인한 운동 중단
 
-3. **15일 중간 상태 생성**: 해당 월 15일의 건강 상태 기록 생성,
-   초기 상태와 최종 상태 사이의 연속적인 변화 과정 형성
+3. **15일 중간 상태 생성**: 초기 상태와 최종 상태 사이 연속적 변화 과정 형성
 
-4. **다양성 있는 최종 상태 생성**: 월말 건강 상태가 초기 상태와 명확한 차이를 가지도록 보장
+4. **다양성 있는 최종 상태 생성**: 월말이 초기 상태와 명확히 차별화
 
-5. **완전한 변화 과정 기록**: change_nodes에 모든 변화 기록
+5. **완전한 변화 과정 기록**: change_nodes에 모든 변화 노드 기록
 
-## 출력 형식 요구사항
-- mid_month_state: 해당 월 15일 건강 상태 기록
-- end_of_month_state: 월말 건강 상태 기록
-- change_nodes: 시간 순서로 해당 월의 모든 변화 노드 기록</pre>
+## 출력 형식
+mid_month_state / end_of_month_state / change_nodes 포함 JSON</pre>
                                     </div>
                                 </div>
                             </div>
@@ -1067,9 +1630,9 @@
                             </div>
                             <div class="accordion-content">
                                 <div class="grid grid-cols-2 divide-x divide-slate-700">
-                                    <div class="p-4 bg-slate-900">
+                                    <div class="p-4 bg-slate-900 overflow-auto">
                                         <div class="text-xs text-slate-500 font-semibold mb-2">🇨🇳 중국어 원문</div>
-                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap overflow-auto max-h-96 leading-relaxed">请以「我」的第一视角展开叙述，先完整梳理并代入今日发生的所有事件（可按时间顺序或重要程度呈现关键场景），再结合以下维度自然融合表达，无需刻意罗列：
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">请以「我」的第一视角展开叙述，先完整梳理并代入今日发生的所有事件（可按时间顺序或重要程度呈现关键场景），再结合以下维度自然融合表达，无需刻意罗列：
 - 核心感受：基于今日经历产生的真实情绪（如充实、疲惫、治愈、遗憾等），可结合具体事件说明情绪触发点；
 - 自我洞察：关联自我认知、过往记忆（如某件事让你想起过去的经历）、近期规划，分析今日事件对自身状态的影响（包括洞察出康复、事件完成等结束状态，防止之后没有察觉继续执行）；
 - 事件记忆：今日事件的描述中有提到什么后续事件吗（如预约了明天的某某服务，准备周末联系某某等），记录下这些事件。同时思考是否有记忆相关内容已达到预定日期，需从想法里删除。
@@ -1080,35 +1643,35 @@
             "events": "即今日事件的所有内容的总结,请组织为一段话，同时明确发生日期不要些今天，要写清楚几月几号,注意，你要清楚全面地以客观角度描述这一天的所有事件。对每个事件可以去除一些不重要的细节信息，保留事件的主要过程和重要信息即可。对于不重要事件可简短描述。",
             "thought": "你对今日事件体验后的感受和想法，一段话描述。"
 }}
-今日事件:<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{content}</span>
-自我认知:<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{cognition}</span>
-记忆:<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{memory}</span>
-近期规划:<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{plan}</span>
-今日日期:<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{date}</span>
+今日事件:<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{content}</span>
+自我认知:<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{cognition}</span>
+记忆:<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{memory}</span>
+近期规划:<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{plan}</span>
+今日日期:<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{date}</span>
 
 输出格式严格要求,仅输出JSON格式内容，直接以{{}}作为开头结尾，不添加任何额外文本、注释或代码块标记。不要输出```json等无关字段.</pre>
                                     </div>
-                                    <div class="p-4 bg-slate-800">
+                                    <div class="p-4 bg-slate-800 overflow-auto">
                                         <div class="text-xs text-green-400 font-semibold mb-2">🇰🇷 한국어 번역</div>
-                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap overflow-auto max-h-96 leading-relaxed">"나"의 1인칭 시각으로 서술을 전개하고, 먼저 오늘 발생한 모든 이벤트를 완전히 정리하여 몰입한 뒤
-(시간 순서 또는 중요도에 따라 핵심 장면 제시), 아래 차원들을 자연스럽게 통합하여 표현하세요.
-굳이 나열할 필요 없음:
-- 핵심 감정: 오늘 경험에서 생겨난 진실한 감정(충실함, 피로, 치유, 아쉬움 등), 구체적 이벤트로 감정 유발점 설명 가능
-- 자아 통찰: 자아인식, 과거 기억(어떤 일이 과거 경험을 떠올리게 했는지) 연결,
-  최근 계획과 함께 오늘 이벤트가 자신 상태에 미친 영향 분석
-  (회복, 이벤트 완료 등 종료 상태 통찰 포함, 이후 인식하지 못한 채 계속 실행하는 것 방지)
-- 이벤트 기억: 오늘 이벤트 설명에 후속 이벤트가 언급되어 있나요
-  (예: 내일 어떤 서비스 예약, 주말에 누군가와 연락 예정 등), 이러한 이벤트 기록.
-  동시에 기억 관련 내용이 예정 날짜에 도달했는지 검토하여 생각에서 삭제 필요 여부 판단.
-- 생각 반성: 오늘 및 최근 관련 이벤트에 대한 사고와 감상, 다음 참고 방향 포함 가능:
-  가장 인상 깊은 일 1-2가지 간략 코멘트, 또는 오늘의 개선점 반성;
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">"나"의 1인칭 시각으로 서술 전개. 먼저 오늘 발생한 모든 이벤트를 완전히 정리하여 몰입한 뒤
+(시간 순서 또는 중요도에 따라 핵심 장면 제시), 아래 차원들을 자연스럽게 통합 표현하세요
+(굳이 나열할 필요 없음):
+- 핵심 감정: 오늘 경험에서 생겨난 진실한 감정 (충실함/피로/치유/아쉬움 등),
+  구체적 이벤트로 감정 유발점 설명 가능
+- 자아 통찰: 자아인식·과거 기억 연결, 최근 계획과 함께 오늘 이벤트가 자신 상태에 미친 영향 분석
+  (회복/이벤트 완료 등 종료 상태 통찰 포함, 이후 인식 못한 채 계속 실행하는 것 방지)
+- 이벤트 기억: 오늘 이벤트에 후속 이벤트 언급 여부 확인
+  (예: 내일 서비스 예약, 주말 누군가와 연락 예정 등), 해당 이벤트 기록.
+  기억 관련 내용이 예정 날짜에 도달했는지 검토하여 생각에서 삭제 필요 여부 판단.
+- 생각 반성: 오늘 및 최근 관련 이벤트에 대한 사고와 감상:
+  가장 인상 깊은 일 1-2가지 간략 코멘트, 오늘의 개선점 반성;
   최근 활동 규율 요약; 미래 시도 방향 제시; 오늘 경험에서 얻은 소감 정리 등.
-  주의: 미래와 관련된 생각은 반드시 발생 날짜를 명확히 할 것, 예: 2025-XX-XX.
+  ※주의: 미래 관련 생각은 반드시 발생 날짜 명시 (예: 2025-XX-XX).
 
-최종 출력 형식:
+출력 형식:
 {
   "date": "XX-XX-XX",
-  "thought": "...",
+  "thought": "오늘...",
   "future_plans": [{"date": "2025-XX-XX", "plan": "..."}]
 }</pre>
                                     </div>
@@ -1127,9 +1690,9 @@
                             </div>
                             <div class="accordion-content">
                                 <div class="grid grid-cols-2 divide-x divide-slate-700">
-                                    <div class="p-4 bg-slate-900">
+                                    <div class="p-4 bg-slate-900 overflow-auto">
                                         <div class="text-xs text-slate-500 font-semibold mb-2">🇨🇳 중국어 원문</div>
-                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap overflow-auto max-h-96 leading-relaxed">现在你将基于今日生活数据&lt;life&gt;更新个人长期记忆&lt;memory&gt;，可参考&lt;ref&gt;中的自我认知和近期记忆，聚焦今日生活带来的变化与原长期记忆，按以下规则完成更新：
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">现在你将基于今日生活数据&lt;life&gt;更新个人长期记忆&lt;memory&gt;，可参考&lt;ref&gt;中的自我认知和近期记忆，聚焦今日生活带来的变化与原长期记忆，按以下规则完成更新：
 
 ### 一、长期记忆更新核心规则
 1. 筛选标准（仅保留以下高价值信息）：
@@ -1159,38 +1722,40 @@
 }}
 
 ### 三、参考数据
-&lt;life&gt;今日生活:<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{now}</span>&lt;/life&gt;
-&lt;memory&gt;长期记忆<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{memory}</span>&lt;/memory&gt;
-&lt;ref&gt;今日日期<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{date}</span>，自我认知<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{cognition}</span>，近期事件<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{history}</span>&lt;/ref&gt;</pre>
+&lt;life&gt;今日生活:<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{now}</span>&lt;/life&gt;
+&lt;memory&gt;长期记忆<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{memory}</span>&lt;/memory&gt;
+&lt;ref&gt;今日日期<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{date}</span>，自我认知<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{cognition}</span>，近期事件<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{history}</span>&lt;/ref&gt;</pre>
                                     </div>
-                                    <div class="p-4 bg-slate-800">
+                                    <div class="p-4 bg-slate-800 overflow-auto">
                                         <div class="text-xs text-green-400 font-semibold mb-2">🇰🇷 한국어 번역</div>
-                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap overflow-auto max-h-96 leading-relaxed">이제 오늘의 생활 데이터 &lt;life&gt;를 기반으로 개인 장기기억 &lt;memory&gt;를 업데이트하고,
-&lt;ref&gt;의 자아인식과 최근 기억을 참고하여, 오늘 생활이 가져온 변화와 기존 장기기억에 집중하여
-아래 규칙에 따라 업데이트를 완성하세요:
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">오늘의 생활 데이터 &lt;life&gt;를 기반으로 개인 장기기억 &lt;memory&gt;를 업데이트하고,
+&lt;ref&gt;의 자아인식과 최근 기억을 참고하여, 오늘 생활이 가져온 변화에 집중하여 업데이트를 완성하세요:
 
 ### 一、장기기억 업데이트 핵심 규칙
 1. 선별 기준 (아래 고가치 정보만 보존):
    - 일정 기간 생활에 대한 요약 개요;
-   - 오늘 이벤트에서 명확한 미래 계획 (구체적 날짜 기록 필수, "내일" "주말" 등 모호한 표현 금지);
-   - 객관적 사실과 고정 선호 (예: "자주 가는 XX 피트니스센터 회원권" "집 근처 마트 영업시간 8:00-22:00");
-   - 인상 깊은 핵심 이벤트 (예: "2025-11-15 첫 독립 프로젝트 납품" "2025-11-20 가족과 설 여행지 확정");
-   - 반복 이벤트 요약 (예: "2025-11-16~2025-11-22 연속 7일 18:30 운동, 최근 고빈도 단련").
+   - 오늘 이벤트의 명확한 미래 계획 (구체적 날짜 기록 필수, "내일"/"주말" 등 모호한 표현 금지);
+   - 객관적 사실과 고정 선호
+     (예: "자주 가는 XX 피트니스센터 회원권" "집 근처 마트 영업시간 8:00-22:00");
+   - 인상 깊은 핵심 이벤트
+     (예: "2025-11-15 첫 독립 프로젝트 납품" "2025-11-20 가족과 설 여행지 확정");
+   - 반복 이벤트 요약
+     (예: "2025-11-16~2025-11-22 연속 7일 18:30 운동, 최근 고빈도 단련").
 
 2. 동적 업데이트 원칙:
-   - 중요한 이벤트가 없을 때는 잠정적으로 업데이트하지 않을 수 있음,
-     가치 없고 후속 연관 없는 내용 삭제 (예: 1회성 임시 쇼핑, 후속 없는 우연한 이벤트);
-   - 이미 발생한 미래 이벤트, 시효 지난 중요하지 않은 구 기억 제거,
-     고가치 정보만 보존, 내용 요약 압축 가능;
-   - 자아인식과 중복 불가 (장기기억은 생활 요약과 인식, 자아인식은 고정 자아 설명).
+   - 중요한 이벤트 없을 때는 잠정적으로 업데이트하지 않을 수 있음;
+   - 가치 없고 후속 연관 없는 내용 삭제
+     (예: 1회성 임시 쇼핑, 후속 없는 우연한 이벤트);
+   - 이미 발생한 미래 이벤트·시효 지난 구 기억 제거, 고가치 정보만 보존;
+   - 자아인식과 중복 불가.
 
 3. 내용 요구사항:
-   - 모든 기억 이벤트에 날짜 명시 필수 (형식: YYYY-MM-DD), 정보 간결·명확, 검색 편의성 확보;
-   - 발생한 사실, 과거 요약, 미래 명확 계획에 집중, 관련 없는 내용 추가 금지.
+   - 모든 기억 이벤트에 날짜 명시 필수 (형식: YYYY-MM-DD);
+   - 발생한 사실/과거 요약/미래 명확 계획에 집중.
 
 입력:
-- &lt;life&gt;<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{life}</span>&lt;/life&gt;
-- &lt;memory&gt;<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{memory}</span>&lt;/memory&gt;</pre>
+- &lt;life&gt;<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{life}</span>&lt;/life&gt;
+- &lt;memory&gt;<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{memory}</span>&lt;/memory&gt;</pre>
                                     </div>
                                 </div>
                             </div>
@@ -1207,14 +1772,14 @@
                             </div>
                             <div class="accordion-content">
                                 <div class="grid grid-cols-2 divide-x divide-slate-700">
-                                    <div class="p-4 bg-slate-900">
+                                    <div class="p-4 bg-slate-900 overflow-auto">
                                         <div class="text-xs text-slate-500 font-semibold mb-2">🇨🇳 중국어 원문</div>
-                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap overflow-auto max-h-96 leading-relaxed">请基于「此前生成的全天事件列表」，提取并生成新的格式化事件序列，具体要求如下：
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">请基于「此前生成的全天事件列表」，提取并生成新的格式化事件序列，具体要求如下：
 
 1）事件提取规则：从“时间区间 + 描述”中对事件描述和标题进行优化调整，需完整覆盖所有信息，能清晰反映全天生活状态；
 2）事件数量控制：最终输出事件个数不超过20个。当事件较多时，可合理合并事件，优先按时间邻近度合并，其次按地点合并，确保信息全面覆盖。合并事件的描述可适当详细，重要事件的关键信息不可省略；
 
-**今日日期<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{date}</span>**
+**今日日期<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{date}</span>**
 ---
 
 输出格式严格要求：
@@ -1254,39 +1819,41 @@
 }}]
 
 ------
-此前生成的全天事件列表：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{content}</span>
-位置参考数据<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{poi}</span></pre>
+此前生成的全天事件列表：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{content}</span>
+位置参考数据<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{poi}</span></pre>
                                     </div>
-                                    <div class="p-4 bg-slate-800">
+                                    <div class="p-4 bg-slate-800 overflow-auto">
                                         <div class="text-xs text-green-400 font-semibold mb-2">🇰🇷 한국어 번역</div>
-                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap overflow-auto max-h-96 leading-relaxed">"이전에 생성된 하루 종일 이벤트 목록"을 기반으로, 새로운 형식화된 이벤트 시퀀스를 추출·생성하세요:
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">"이전에 생성된 하루 전체 이벤트 목록"을 기반으로, 새로운 형식화된 이벤트 시퀀스를 추출·생성하세요:
 
 1) 이벤트 추출 규칙: "시간 구간 + 설명"에서 이벤트 설명과 제목을 최적화 조정,
    모든 정보를 완전히 포함하고 하루 전체 생활 상태를 명확히 반영;
 2) 이벤트 수량 제한: 최종 출력 이벤트 수는 20개 이하.
    이벤트가 많을 경우 합리적 병합 가능, 우선적으로 시간 인접성에 따라 병합,
-   다음으로 장소에 따라 병합, 정보의 전면적 포함 보장. 병합 이벤트 설명은 적당히 상세하게,
-   중요 이벤트의 핵심 정보 생략 불가;
+   다음으로 장소에 따라 병합, 정보의 전면적 포함 보장.
+   병합 이벤트 설명은 적당히 상세하게, 중요 이벤트의 핵심 정보 생략 불가;
 
-**오늘 날짜: <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:1px 3px;border-radius:2px;">{date}</span>**
+**오늘 날짜: <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{date}</span>**
 ---
 
 출력 형식 엄격 요구:
-- type 필드: 반드시 다음 중 하나: Career, Education, Relationships, Family&amp;Living Situation,
-  Personal Life, Finance, Health, Unexpected Events, Other
+- type 필드: 반드시 다음 중 하나: Career, Education, Relationships,
+  Family&amp;Living Situation, Personal Life, Finance, Health, Unexpected Events, Other
 - description 필드: 이벤트에 대한 상세 설명, 정보 완전성 보장
-- participant 필드: 참여자 이름과 관계, 형식: [{{"name":"이름","relation":"관계"}},...].
-  본인 참여 시 형식: [{{"name":"본인 이름","relation":"자신"}}],
+- participant 필드: 참여자 이름과 관계,
+  형식: [{"name":"이름","relation":"관계"},...]
+  본인 참여 시: [{"name":"본인 이름","relation":"자신"}]
   관계 데이터 부족 시 합리적 추정 가능
-- location 필드: 이벤트 발생 상세 주소, POI 데이터 참조하여 설명
-- date 필드: 시간 구간, 형식: "XX-XX-XX XX:XX:XX至XX-XX-XX XX:XX:XX"
+- location 필드: 이벤트 발생 상세 주소, POI 데이터 참조
+- date 필드: 시간 구간,
+  형식: "XX-XX-XX XX:XX:XX至XX-XX-XX XX:XX:XX"
 - name 필드: 이벤트 이름</pre>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                                <div class="tab-content hidden" data-step="simulator" data-tab="input">
+                <div class="tab-content hidden" data-step="simulator" data-tab="input">
                     <div class="space-y-4">
                         <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
                             <h3 class="text-xl font-bold mb-3 text-green-400">📥 Input 1: persona.json</h3>
