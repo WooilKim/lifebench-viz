@@ -258,70 +258,315 @@
                         ⚠️ 모든 프롬프트는 <strong>중국어</strong>로 작성되어 있어요. LifeBench가 중국어 기반 프로젝트이기 때문입니다.
                     </div>
 
-                    <div class="accordion-item mb-4">
-                        <div class="accordion-header bg-slate-800 p-4 rounded-t cursor-pointer" onclick="toggleAccordion(this)">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <span class="font-semibold text-white">template</span>
-                                    <span class="text-xs text-slate-400 ml-3">persona_gen.py — 1단계 페르소나 생성</span>
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="font-semibold text-purple-300">template_refine</span>
+                                        <span class="text-xs text-slate-400 ml-2">논리 검증 및 정제 — PersonaGenerator.refine()</span>
+                                    </div>
+                                    <span>▼</span>
                                 </div>
-                                <span>▼</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="grid grid-cols-2 divide-x divide-slate-700">
+                                    <div class="p-4 bg-slate-900 overflow-auto">
+                                        <div class="text-xs text-slate-500 font-semibold mb-2">🇨🇳 중국어 원문</div>
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">你是一个人类分析师、作家、逻辑专家。你的任务是处理一份模型生成个人信息 JSON 数据，目标是判断该生成数据是否存在不真实、不合理、逻辑错误、幻觉、人物不丰富、特征过于大众等问题，并进行修改，以生成真实、合理、自洽、多样的个人信息。这份个人信息将用于模拟生成个人两年活动数据。修改要求如下：
+
+1. **严格字段要求**：
+   - **不能增加或删除任何字段**，必须严格按照输入 JSON 的 key 生成。
+   - 只针对每个字段进行丰富或修改，保持原有 JSON 结构完整。
+   - 所有 key 保持英文，value 使用中文文本或标准数字。
+2. **信息修改策略**：
+   - 检查字段之间有没有逻辑不一致的问题。
+   - 检查描述文本有没有重大逻辑错误、不合理的地方。
+   - 检查字段间的联系，年龄、教育背景、职业、职位名称、收入要匹配，家庭情况（婚姻、子女数量）与年龄、职业、收入相符，居住城市、收入、职业、教育水平合理对应，兴趣爱好、生活方式、健康状况与年龄、职业、家庭协调，过往经历要协调出生地和现居地。
+   - 检查有没有现实中出现可能性非常小的情况，不真实的情况。
+   - 检查个人特征是否合理真实。
+   - 以原信息为参考。
+   - 年龄为截止到2021年的年龄。
+   - **对于非描述字段，除非出现很不合理现象，否则尽量不做修改。**
+   - **对于性格特质（价值观），爱好字段，非特别不合理，不做删除。**
+   - 爱好可考虑加入一个独特性小众性的数值。
+   - **对于性格特质（价值观），不要增加。**
+   - 一旦进行修改，则需根据修改的数值重新检查爱好，目标，mbti，价值观，描述等部分，若出现不合理则参考原文并修改使其一致，若可解释则尽量不修改，针对家庭年收入不能只考虑该个体，若该个体有配偶，要总收入应为该个体加上其配偶输入。
+   - **desc字段描述的信息、主题、内容都要尽量保留，只可以修改细节保证一致性，不可删除任何信息，但是可以增加信息。针对经历部分可以扩写充实一些**
+
+3. **字段含义描述**：
+   - **具体化生成策略**：
+     - **name**：中文姓名。
+     - **birth**：出生日期，YYYY-MM-DD 格式。
+     - **age**：与出生日期对应。
+     - **gender**：性别。
+     - **home_address** 和 **birth_place**：住址和出生地的省、市、区、街道、门牌号。
+     - **education**：具体教育层次。
+     - **job**：具体岗位名称及职责描述。
+     - **occupation**：个人的从属组织，如公司、机构、机关等。
+     - **workplace**：具体工作/学习单位，包含省市区、街道、门牌号。
+     - **work_desc**：描述工作相关信息。
+     - **belief**：宗教信仰。
+     - **salary**：年薪。
+     - **body**：身高、体重、BMI。
+     - **family**：家庭成员数量及关系。
+     - **personality**：具体个性化性格特质及MBTI，其中traits表示其价值观。
+     - **hobbies**：具体个性化兴趣爱好及活动类型。
+     - **favorite_foods**：具体喜欢的食物。
+     - **memory_date**：纪念日。
+     - **aim**：个人目标或发展方向。
+     - **healthy_desc**：描述个人整体健康状况、慢性病情况、体检就医习惯和运动、个人护理习惯。
+     - **lifestyle_desc**：描述个人生活习惯行为特征，如休闲活动、媒体使用习惯、出游次数、运动频率，日常生活习惯，生活风格等。
+     - **economic_desc**：描述个人经济情况，如家庭收入、资产、投资活动、消费习惯、金融相关个人特征、汽车、房产等。
+     - **experience_desc**：个人过往经历的描写。
+     - **description**：综合性全面描述。
+     - **relation**：个人可能的社交关系。下面是relation字段内的具体字段描述。
+     - - **name**：联系人姓名。
+     - -**relaton**：两人间的社交关系。
+     - -**age**：与出生日期对应。
+     - -**birth_date**: 出生日期。
+     - -**gender**：性别。
+     - -**home_address** 家庭住址。
+     - -**birth_place** 出生地。
+     - -**social circle**：社交圈。
+     - -**job**：具体岗位名称。
+     - -**occupation**：个人的从属组织，如公司、机构、机关等。
+     - -**personality**：MBTI。
+     - -**description**：综合性全面关系描述。
+     
+4. **清理格式问题**：
+   - 数值字段使用标准类型（int 或 float），日期字段统一 YYYY-MM-DD。
+   - 文本字段自然、正式、可读，符合中文书面表达。
+
+5. **输出要求**：
+   - 输出 JSON 格式，不允许输出其他文本。
+   - 直接以json括号作为开头结尾，不要生成```json```字段
+   - JSON 中字段必须完整，包括原始的所有 key，**不允许新增或删除字段**。
+   - 字段与已有信息逻辑一致，保证整体自洽。
+   - 每个字段尽量具体化，生成结果多样化但合理。
+   - **强调字段间协调性**：年龄、职业、职位、收入、家庭、教育、城市、兴趣、生活方式等必须互相匹配。
+   - **输出的“relation”字段值为空[]，即你不需要检查relation的错误。**
+   - **输出在json中新增“note”字段，描述你做了哪些修改以及为什么。
+
+下面是待处理的原个人信息 JSON 数据：
+ <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{JSON}</span>
+
+请根据上述要求生成完整补全和清理后的 JSON。</pre>
+                                    </div>
+                                    <div class="p-4 bg-slate-800 overflow-auto">
+                                        <div class="text-xs text-green-400 font-semibold mb-2">🇰🇷 한국어 번역</div>
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">당신은 인류학자, 작가, 논리 전문가입니다. 당신의 과제는 모델이 생성한 개인 정보 JSON 데이터를 처리하는 것입니다.
+목표: 해당 생성 데이터에 비현실적이거나 불합리하거나 논리 오류, 환각, 인물이 풍부하지 않거나,
+특징이 너무 대중적인 등의 문제가 있는지 판단하고 수정하여,
+진실하고 합리적이며 자기일관적이고 다양한 개인 정보를 생성하는 것입니다.
+이 개인 정보는 개인의 2년 활동 데이터를 시뮬레이션 생성하는 데 사용됩니다.
+
+## 수정 요구사항:
+1. 엄격한 필드 요구사항: 필드 추가/삭제 불가, 반드시 입력 JSON의 key에 따라 생성
+2. 정보 수정 전략:
+   - 필드 간 논리 불일치 여부 확인
+   - 설명 텍스트의 중대한 논리 오류·불합리 여부 확인
+   - 연령/교육배경/직업/직위/수입 일치 여부, 가족 상황과 연령/직업/수입 부합 여부
+   - 현실에서 발생 가능성이 매우 낮은 상황 확인
+3. 필드 의미 설명: name, birth, age, gender, home_address, education, job, salary,
+   personality(mbti+traits), hobbies, healthy_desc, lifestyle_desc 등 각 필드의 세부 설명
+
+처리할 원본 개인 정보 JSON 데이터:
+<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{JSON}</span>
+
+요구사항에 따라 완전히 보완·정제된 JSON을 생성하세요.
+(note 필드에 수정 내용 및 이유 기록)</pre>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="accordion-content bg-slate-900 rounded-b p-4">
-                            <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap overflow-auto max-h-64">당신은 인물 프로파일 생성 전문가입니다.
-다음 기반 정보를 바탕으로 상세한 인물 프로파일을 생성하세요:
-
-{person_data}
-
-## 랜덤 속성 풀
-{ref_data}
-
-## 요구사항
-- 연령/직업/수입/주소 일관성 유지
-- 취미는 4-8개 선택
-- 성격(MBTI) 및 가치관 지정
-- 경력, 건강상태, 경제상황 상세 기술
-- 인간관계망 (relation[]) 유형 목록 제시
-
-## 출력 형식
-{문서 구조 JSON}</pre>
-                            <p class="text-xs text-slate-500 mt-2">실제 프롬프트는 한국어 요약 버전입니다. 원문은 persona/gen_utils/template.py에 있어요.</p>
-                        </div>
-                    </div>
-
-                    <div class="accordion-item mb-4">
-                        <div class="accordion-header bg-slate-800 p-4 rounded-t cursor-pointer" onclick="toggleAccordion(this)">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <span class="font-semibold text-white">template_refine</span>
-                                    <span class="text-xs text-slate-400 ml-3">논리 검증 및 정제</span>
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="font-semibold text-purple-300">template_relation_1</span>
+                                        <span class="text-xs text-slate-400 ml-2">인간관계망 생성 — PersonaGenerator.gen_relations()</span>
+                                    </div>
+                                    <span>▼</span>
                                 </div>
-                                <span>▼</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="grid grid-cols-2 divide-x divide-slate-700">
+                                    <div class="p-4 bg-slate-900 overflow-auto">
+                                        <div class="text-xs text-slate-500 font-semibold mb-2">🇨🇳 중국어 원문</div>
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">你是一个人类分析师、故事作家、数据补全与清洗专家、社交网络专家。你的任务是处理一份个人信息 JSON 数据，目标是根据该个人信息，推断并生成真实、合理、自洽、多样的该个体可能保持联系的关系。用于填充个人信息空出来的relation字段。这份个人信息和其联系人将用于模拟生成个人两年活动数据。生成要求如下：
+
+1. **联系人推断生成要求**：
+   - 不使用历史对话或私人信息，仅根据输入 JSON 和现实常识推理生成或进行想象创造，追求多样化。
+   - 补全内容要真实、合理、内部自洽，可以考虑到个体独特性，为个人生成随机小众特征。
+   - 允许生成多种合理版本，每次生成独立自洽。
+   - 请先推断该个人从小到大经历了哪些阶段，可能会接触哪些社交圈子，圈子里的人可能互相认识（如童年圈子，小学圈子，大学圈子，工作圈子，爱好圈子，家庭圈子，医疗圈子，理财圈子，客户圈等）然后基于每个圈子填充该用户应该具有的具体联系人，每个圈子要全面，圈子要多样。
+   - 考虑同一个圈子的可能认识的人或者说群体关系（如三人闺蜜，四人舍友），全面生成圈子内的人物。
+   - 虽然圈子要尽量多样，但不需要针对每个爱好每个目标都生成圈子，针对一些个人即可进行的爱好不需要圈子，对于社交性强或需要多人进行的爱好可以生成圈子。
+   - 对于理财和健康方面，如描述说明其没有进行相关活动则不需要生成相关圈子，如描述说明用户有这方面的活动则可推断生成圈子。
+   - 请你仔细考虑哪些人会作为联系人被用户保存。要筛选出会保持经常联系的关系。同时考虑关系的数量分布，对于某些关系可以会有多个人。比如朋友会有许多个。 
+   - 可以从家庭、人生阶段（出生、童年、小学、初中、高中、大学、生活等）、个人个性化特征、生活/金融/健康/服务、个人活动、工作、个人经历等方面进行考虑。 
+   - 请你思考并筛选出用户可能在接下来两年的生活中可能会保持联系的人，而不是将所有可能的关系列出。 
+   - 不要出现其他人的朋友这种二级关系描述（如父母朋友）。
+   - 请你根据该用户的学历，工作，描述等信息进行合理的关系生成，不要出现如用户只上过小学、初中、高中却出现大学同学的关系。
+   - 最终生成总计20到26个左右联系人。
+   - 不要出现其他人的朋友（如父亲朋友）这种二级关系，可以较多地生成同学朋友。
+   - 生成的人物关系应该是对于这个人比较重要，或有所需求，或经常见面，或曾经有过深厚经历的，像远方亲戚、泛泛之交等一般关系不要生成。
+
+2. **个人信息JSON字段描述**：
+     - **name**：中文姓名。
+     - **birth**：出生日期。
+     - **age**：与出生日期对应。
+     - **gender**：性别。
+     - **home_address** 和 **birth_place**：家庭住址和出生地的省、市、区、街道、门牌号。
+     - **education**：具体教育层次。
+     - **job**：具体岗位名称。
+     - **occupation**：个人的从属组织，如公司、机构、机关等。
+     - **workplace**：具体工作/学习单位，包含省市区、街道、门牌号。
+     - **work_desc**：描述工作相关信息。
+     - **belief**：宗教信仰。
+     - **salary**：年薪。
+     - **body**：身高、体重、BMI。
+     - **family**：个人家庭状况。
+     - **personality**：个性化性格特质及MBTI。
+     - **hobbies**：个性化兴趣爱好及活动类型。
+     - **favorite_foods**：喜欢的食物。
+     - **memory_date**：纪念日。
+     - **aim**：个人目标。
+     - **healthy_desc**：描述个人整体健康状况、慢性病情况、体检就医习惯和运动、个人护理习惯。
+     - **lifestyle_desc**：描述个人生活习惯行为特征，如休闲活动、媒体使用习惯、出游次数、运动频率，日常生活习惯，生活风格等。
+     - **economic_desc**：描述个人经济情况，如家庭收入、资产、投资活动、消费习惯、金融相关个人特征、汽车、房产等。
+     - **experience_desc**：个人过往经历。
+     - **description**：综合性全面描述描述。
+     - **relation**：个人可能的社交关系。
+
+3. **输出要求**：
+   - 输出为如下格式的json格式数据：
+    <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{example}</span>
+   ，不允许输出其他文本。
+   - 直接以括号作为开头结尾，不要生成```json```字段
+   - JSON 中字段必须完整，包括原始的所有 key，**不允许新增或删除字段**。
+   - 关系要与已有信息逻辑一致，保证整体自洽。
+   - relation用一个词来简洁表示。
+   - social circle可以用具体组织、具体爱好或类别的圈表示。比如大学同学圈，小学同学圈，初中同学圈，家庭圈，亲戚圈、发小圈，羽毛球圈等。
+
+下面是个人信息的 JSON 数据：
+ <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{JSON}</span>
+
+请根据上述要求生成根据个人信息的 JSON生成的该个体可能的联系人JSON。</pre>
+                                    </div>
+                                    <div class="p-4 bg-slate-800 overflow-auto">
+                                        <div class="text-xs text-green-400 font-semibold mb-2">🇰🇷 한국어 번역</div>
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">당신은 인류학자, 스토리 작가, 데이터 보완·정제 전문가, 소셜 네트워크 전문가입니다.
+당신의 과제는 개인 정보 JSON 데이터를 처리하고,
+해당 개인 정보에 근거하여 진실하고 합리적이며 자기일관적이고 다양한
+해당 개인이 연락을 유지할 수 있는 관계를 추론·생성하는 것입니다.
+
+## 생성 요구사항:
+1. 가족 관계 (가족, 부모, 형제 등)
+2. 직업 관계 (직장 동료, 상사, 부하)
+3. 사교 관계 (친구, 동창, 이웃)
+4. 각 관계 유형의 사람 수는 현실적으로 합리적으로 설정
+5. 관계의 다양성과 현실성 보장
+
+입력 개인 정보:
+<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{persona}</span></pre>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="accordion-content bg-slate-900 rounded-b p-4">
-                            <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap overflow-auto max-h-64">당신은 인물 프로파일 검증 전문가입니다.
-생성된 페르소나를 검토하여 다음을 확인하세요:
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="font-semibold text-purple-300">template_person</span>
+                                        <span class="text-xs text-slate-400 ml-2">연락처 세부 정보 생성 — PersonaGenerator.gen_persons()</span>
+                                    </div>
+                                    <span>▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="grid grid-cols-2 divide-x divide-slate-700">
+                                    <div class="p-4 bg-slate-900 overflow-auto">
+                                        <div class="text-xs text-slate-500 font-semibold mb-2">🇨🇳 중국어 원문</div>
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">你是一个人类分析师、故事作家、数据补全与清洗专家。你的任务是处理一份个人信息 JSON 数据，根据已有的个人信息和联系人关系，生成真实、合理、自洽、多样的联系人信息。这份个人信息将用于模拟生成个人两年活动数据。生成要求如下：
 
-{JSON}
+1. **严格字段要求**：
+   - **不能增加或删除任何字段**，必须严格按照人物参考数据格式的 JSON 的 key 生成。
+   - 所有 key 保持英文，value 使用中文文本或标准数字。
+2. **生成联系人信息**：
+   - 对所有字段进行合理推测。
+   - 不使用历史对话或私人信息，仅根据输入 JSON 和现实常识推理生成或进行想象创造，追求多样化。
+   - 补全内容要真实、合理、内部自洽，可以考虑到个体独特性，为个人生成随机小众特征。
+   - 允许生成多种合理版本，每次生成独立自洽。
+   - 对于同一个圈子的人可能彼此之间有联系，生成每个人的数据时需要协调经历、信息的一致性。描述关系部分在描述过往经历和现在保持联系或聚会的方式频率的时候可以加入同圈子其他人（推测可能相互都认识）。
+   - **不能增加或删除任何关系，严格按照关系序列中给出的关系生成人物，人物个数和关系序列中关系个数一致**
+   - 对于线上认识的朋友和很久未见的朋友他们可能在不同的省份城市发展，所以生成住址时可以随机生成不同的省份，省份可以距离该个人居住省份较远，不用和该个人在一个地区。
+3. **字段具体化与逻辑协调**：
+   - **字段间协调**：生成时必须考虑字段之间的联系，例如：
+     - 年龄、教育背景、职业、职位名称要匹配。
+     - 居住城市、收入、职业、教育水平合理对应。
+   - **具体化生成策略**：
+     - **name**：联系人姓名，请你参考关系序列数据后进行具体化，针对关系序列数据中不合理的地方如父亲儿子不同姓、儿子跟母亲同姓可以进行重新生成。
+     - **relaton**：两人间的社交关系，参考关系序列数据。
+     - **age**：与出生日期对应。
+     - **birth_date**: 出生日期，合理生成。
+     - **gender**：性别，与姓名和职业匹配。
+     - **home_address** 家庭住址，根据两人的经历合理生成。考虑到城市多样性，对一些朋友亲友要考虑分隔两地的情况（如老同学，网友，亲戚等）即生成的住址省份和个人信息的住址省份不同，主要通过网络联系。
+     - **birth_place** 出生地，根据两人的经历合理生成，要考虑城市多样性。
+     - **social circle**：社交圈，参考关系序列数据。
+     - **job**：具体岗位名称及职责描述。
+     - **occupation**：个人的从属组织，如公司、机构、机关等。
+     - **personality**：MBTI。
+     - **description**：综合性全面关系描述，包含相识方式，相处习惯，会因什么而联系，见面一般做什么，现在是在不同的城市发展还是在一个城市生活，现在大概会以什么样的形式和频率联系（频率安排要合理）。不要叙述推理过程，用一段客观描述文本的形式展示，对于同一个圈子的可能认识的人或者说群体关系（如三人闺蜜，四人舍友）可考虑在描述中融入。
 
-## 검증 요소
-1. 연령/직업/직위/수입 합리성
-2. 가족 상황 일관성 (결혼 여부, 자녀 수)
-3. 거주 도시와 직업 연관성
-4. 취미와 성격의 일관성
-5. 논리 모순 점 확인 및 수정
 
-## 제약
-- 필드 추가/삭제 금지
-- key는 영어, value는 중국어
-- JSON만 출력
-- note 필드에 수정 내역 기록
+4. **清理格式问题**：
+   - 数值字段使用标准类型（int 或 float），日期字段统一 YYYY-MM-DD。
+   - 文本字段自然、正式、可读，符合中文书面表达。
 
-(persona/gen_utils/template.py 에서 template_refine 확인)</pre>
+5. **输出要求**：
+   - 输出 JSON数组 格式，不允许输出其他文本。
+   - 直接以json数组括号作为开头结尾，不要生成```json```字段
+   - JSON 中字段必须完整，**不允许新增或删除字段**。
+   - 补全字段与已有个人信息逻辑一致，保证整体自洽。
+   - 每个字段尽量具体化，生成结果多样化但合理。
+   - **强调字段间协调性**：联系人的字段信息必须与个体信息以及他们的经历互相匹配。
+
+
+下面是个人信息的 JSON 数据：
+ <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{profile}</span>
+ 
+下面是关系序列数据：
+ <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{JSON}</span>
+ 
+下面是输出的关系具体人物参考数据格式：
+<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{example}</span>
+
+请根据上述要求生成完整补全后的关系人物 JSON数组。</pre>
+                                    </div>
+                                    <div class="p-4 bg-slate-800 overflow-auto">
+                                        <div class="text-xs text-green-400 font-semibold mb-2">🇰🇷 한국어 번역</div>
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">당신은 인류학자, 스토리 작가, 데이터 보완·정제 전문가입니다.
+당신의 과제는 개인 정보 JSON 데이터를 처리하고, 기존 개인 정보와 연락처 관계를 바탕으로
+진실하고 합리적이며 자기일관적이고 다양한 연락처 정보를 생성하는 것입니다.
+
+## 생성 요구사항:
+1. 엄격한 필드 요구사항: 인물 참조 데이터 형식의 JSON key에 따라 생성
+2. 연락처 정보 생성:
+   - 모든 필드에 대해 합리적으로 추론
+   - 역사적 대화나 사적 정보 사용 금지, 입력 JSON과 현실 상식으로만 추론
+   - 보완 내용은 진실하고 합리적이며 내부 자기일관적
+   - 같은 그룹의 사람들은 서로 연결될 수 있음, 각 인물 데이터 생성 시 경험·정보 일관성 조율
+3. 필드 구체화 및 논리 조율:
+   - 연령/직업/직위/수입/가족/교육/도시/취미/생활방식 등 필드 간 반드시 일치
+   - 온라인으로 알게 된 친구나 오래 못 만난 친구는 다른 성/도시에 있을 수 있음
+
+개인 정보: <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{persona}</span>
+관계 목록: <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{relations}</span></pre>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
                 </div>
 
                 <!-- 인풋 예시 -->
@@ -569,218 +814,616 @@
                     <div class="space-y-4">
                         <p class="text-gray-300 mb-4">Draft Generation 단계에서 사용되는 6개 핵심 프롬프트</p>
                         
-                        <!-- Prompt 1 -->
                         <div class="accordion-item">
                             <div class="accordion-header" onclick="toggleAccordion(this)">
                                 <div class="flex items-center justify-between">
-                                    <span class="font-semibold">1. template_yearterm_eventgen (1단계: 100개 이벤트 생성)</span>
-                                    <span class="text-xl">▼</span>
+                                    <div>
+                                        <span class="font-semibold text-purple-300">template_yearterm_eventgen</span>
+                                        <span class="text-xs text-slate-400 ml-2">연간 이벤트 1차 생성 (100개) — Scheduler.genevent_yearterm()</span>
+                                    </div>
+                                    <span>▼</span>
                                 </div>
                             </div>
                             <div class="accordion-content">
-                                <div class="p-4 bg-slate-900">
-                                    <div class="text-xs text-gray-500 mb-2">사용 함수: genevent_yearterm()</div>
-                                    <pre><code class="language-text">请基于下方的【人物分析】，为该人物推理生成 2025 年内可能发生的 100 件符合其画像的生活事件...
+                                <div class="grid grid-cols-2 divide-x divide-slate-700">
+                                    <div class="p-4 bg-slate-900 overflow-auto">
+                                        <div class="text-xs text-slate-500 font-semibold mb-2">🇨🇳 중국어 원문</div>
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">请基于下方的【人物分析】，为该人物推理生成 2025 年内可能发生的 100 件符合其画像的生活事件，需严格遵循以下要求，确保内容兼具真实性、连贯性、多样性与结构化：
 
 ## 一、核心创作原则
 
 ### 1. 真实性与贴合性
-- 深度贴合人物画像：所有事件必须与人物的职业背景、家庭关系、生活习惯、性格特质、经济状况、社交圈强关联
-- 符合现实逻辑：事件需遵循时间规律（如"冬季滑雪""春节返乡"）
-- 自然的因果关联：部分事件之间应存在合理的因果关系
+- **深度贴合人物画像**：所有事件必须与人物的职业背景、家庭关系、生活习惯、性格特质、经济状况、社交圈强关联，避免任何与画像矛盾的内容。
+- **符合现实逻辑**：事件需遵循时间规律（如“冬季滑雪”“春节返乡”）、生活常识（如“装修需1-2个月工期”“资格证备考需1-3个月”）与社会规则（如“商业谈判需多次沟通”“医疗检查需提前预约”）。
+- **自然的因果关联**：部分事件之间应存在合理的因果关系（如“购买新房”→“装修设计”→“乔迁新居”），体现生活的连贯性。
 
 ### 2. 多样性与平衡性
-- 全面覆盖生活维度：事件需涵盖职业、家庭、社交、健康、财务、个人成长等多个领域
-- 事件类型多样化：包含短期事件（1-3天）、中期事件（1-4周）、长期事件（1-3个月）
+- **全面覆盖生活维度**：事件需涵盖职业、家庭、社交、健康、财务、个人成长等多个领域，避免过度集中于单一类别。
+- **事件类型多样化**：包含短期事件（1-3天）、中期事件（1-4周）、长期事件（1-3个月），以及一次性事件和周期性事件。
+- **情绪与强度层次**：事件应包含积极、中性、轻微挑战性的不同情绪和强度，体现真实生活的起伏。
 
-## 人物画像
-<span class="variable-highlight">{persona}</span>
+### 3. 非日常性与记忆点
+- 优先选择「值得记录回忆」「需要提前准备」「能体现个人特质」的场景，避免过于琐碎的日常事务。
+- 每个类别的事件应具有独特性，避免同一类别的事件内容同质化。
 
-## 输出格式要求
-严格按「类别 + 事件数量」分组输出，每个类别独立成段。
+## 二、事件细节要求
 
-<type>Career（20 件）</type>
-参加上海零售业高峰论坛（2025-03-18 至 2025-03-19）：作为家族企业代表，学习行业趋势并拓展供应商资源。
-...</code></pre>
+### 1. 时间设定规范
+- **格式统一**：所有事件必须标注具体时间（格式：2025-XX-XX 或 2025-XX-XX 至 2025-XX-XX）。
+- **周期性事件**：多次发生的事件需标注所有时间节点（格式：2025-XX-XX, 2025-XX-XX, 2025-XX-XX）。
+- **时间分布**：事件应均匀分布在全年各月份，避免过度集中或稀疏。
+- **时间重叠**：允许合理的时间重叠（如“云南旅行”期间“远程处理工作”），但需符合现实逻辑。
+
+### 2. 类别覆盖要求
+**可使用以下9个类别**，根据人物画像灵活分配各类别事件数量：
+- **Career**：职业工作相关（如“参加行业高峰论坛”“参与新产品研发项目”）
+- **Education**：教育学习相关（如“上课”“考取专业资格证”，学生角色该类事件较多，其他角色相关事件会较少）
+- **Relationships**：人际关系（如“为父母筹备生日宴”“组织闺蜜旅行”）
+- **Family&amp;Living Situation**：家庭生活与居住环境（如“家居装修”“智能家居安装”）
+- **Personal Life**：自我关怀、娱乐与生活方式（SelfCare &amp; Entertainment &amp; Lifesyle）（如“定期SPA护理”“短途旅行”“组织同学聚会”）
+- **Finance**：个人资产财务（如“购买理财产品”“汽车保养与维修”）
+- **Health**：健康管理（如“中医调理”“瑜伽静修营”）
+- **Unexpected Events**：突发应对（如“车辆小事故处理”“临时加班替班”）
+- **Other**：其他未涉及类别
+
+**类别分配原则**：
+- 优先生成与人物职业、生活状态、性格特质高度相关类别的事件
+- 对于与人物画像不相关或关联度极低的类别，可生成极少甚至不生成事件
+- 确保整体事件分布符合人物的真实生活场景（如学生的Education类事件占比高，职场人士的Career类事件占比高）
+
+### 3. 事件描述要求
+- **具体明确**：事件描述需包含who（参与者）、what（事件内容）、why（目的/意义），避免模糊不清。
+- **贴合场景**：描述需符合事件发生的时间、地点和人物身份，体现真实参与感。
+- **简洁凝练**：每个事件描述控制在15-50字，突出核心信息。
+
+## 三、输出格式要求
+
+### 1. 结构化输出
+- 严格按「类别 + 事件数量」分组输出，每个类别独立成段。
+- 每个类别下的事件按**时间先后顺序**排序。
+- 类别名称必须与上述10个类别完全一致，不得修改或缩写。
+
+### 2. 格式示例
+&lt;type&gt;Career &amp; Education（20 件）&lt;/type&gt;
+    参加上海零售业高峰论坛（2025-03-18 至 2025-03-19）：作为家族企业代表，学习行业趋势并拓展供应商资源。
+    新产品上市策划（2025-04-01 至 2025-04-15）：主导制定夏季新品推广方案，协调各部门执行。
+
+&lt;type&gt;Relationships（15 件）&lt;/type&gt;
+    为母亲筹备60岁生日宴（2025-05-20）：邀请亲友参加，准备母亲喜爱的传统菜肴和纪念相册。
+
+### 3. 关键约束
+- 输出内容**仅包含**类别标题和事件列表，不得添加任何额外分析、解释或说明文本。
+- 每个事件必须以「事件名称（时间）：描述」的格式呈现，不得使用其他格式。
+- 确保输出的文本格式清晰，易于计算机程序按类别提取事件内容。
+
+---
+
+人物分析：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{summary}</span></pre>
+                                    </div>
+                                    <div class="p-4 bg-slate-800 overflow-auto">
+                                        <div class="text-xs text-green-400 font-semibold mb-2">🇰🇷 한국어 번역</div>
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">【인물 분석】을 기반으로, 해당 인물에게 2025년 내 발생 가능한 100개의 생활 이벤트를 추론·생성하세요.
+내용의 진실성·연속성·다양성·구조화를 보장하기 위해 다음 요구사항을 엄격히 따르세요:
+
+## 一、핵심 창작 원칙
+
+### 1. 진실성과 부합성
+- **인물 프로파일 심층 반영**: 모든 이벤트는 인물의 직업 배경, 가족 관계, 생활 습관,
+  성격 특성, 경제 상황, 소셜 서클과 강하게 연결되어야 하며,
+  프로파일과 모순되는 내용은 절대 금지.
+- **현실 논리 부합**: 이벤트는 시간 규율(예: "겨울 스키", "설 귀성"), 생활 상식,
+  사회 규칙을 따라야 함.
+- **자연스러운 인과 관계**: 일부 이벤트 간 합리적 인과 관계 존재
+  (예: "새 집 구매" → "인테리어 설계" → "이사 축하").
+
+### 2. 다양성과 균형성
+- **생활 차원 전면 포함**: 직업, 가족, 사교, 건강, 재무, 개인 성장 등
+- **이벤트 유형 다양화**: 단기(1-3일), 중기(1-4주), 장기(1-3개월), 일회성/주기성 이벤트
+
+### 3. 비일상성과 기억 포인트
+- 기록할 가치 있고, 사전 준비가 필요하고, 개인 특성을 보여주는 장면 우선 선택
+
+## 二、이벤트 분류 비율 요구사항
+직업과 개인 발전 25%, 가족과 사회 관계 20%, 건강과 취미 20%,
+재무와 생활 15%, 학습과 성장 10%, 기타 10%
+
+출력 형식: [{{"date": "2025-XX", "events": [...]}}]</pre>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Prompt 2 -->
                         <div class="accordion-item">
                             <div class="accordion-header" onclick="toggleAccordion(this)">
                                 <div class="flex items-center justify-between">
-                                    <span class="font-semibold">2. template_yearterm_complete (2단계: 90개 보완 이벤트)</span>
-                                    <span class="text-xl">▼</span>
+                                    <div>
+                                        <span class="font-semibold text-purple-300">template_yearterm_complete</span>
+                                        <span class="text-xs text-slate-400 ml-2">연간 이벤트 2차 보완 (90개) — Scheduler.genevent_yearterm()</span>
+                                    </div>
+                                    <span>▼</span>
                                 </div>
                             </div>
                             <div class="accordion-content">
-                                <div class="p-4 bg-slate-900">
-                                    <div class="text-xs text-gray-500 mb-2">사용 함수: genevent_yearterm()</div>
-                                    <pre><code class="language-text">请基于人物画像及你第一轮生成的 100 件事件，补充创作 90 个左右符合要求的新事件...
+                                <div class="grid grid-cols-2 divide-x divide-slate-700">
+                                    <div class="p-4 bg-slate-900 overflow-auto">
+                                        <div class="text-xs text-slate-500 font-semibold mb-2">🇨🇳 중국어 원문</div>
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">请基于下方【人物画像】及你第一轮生成的 100 件事件，补充创作 90 个左右符合要求的新事件，需严格规避重复并实现精准互补，具体规则如下：
 
 ## 一、核心创作原则
 
 ### 1. 绝对去重与精准互补
-- 内容彻底差异化：新事件必须与第一轮事件完全不同
-- 填补第一轮空白：优先覆盖第一轮未涉及的人物画像信息
+- **内容彻底差异化**：新事件必须与第一轮事件完全不同，无论是事件主题、具体场景、参与人物还是时间安排，均需差异明显，避免任何形式的相似或变相重复。
+- **填补第一轮空白**：优先覆盖第一轮未涉及的人物画像信息、生活领域和事件类型，确保人物形象更加立体丰满。
 
 ### 2. 补充方向指南
-- 未充分利用的画像信息
-- 节日与季节特色：春节、清明、五一、端午、中秋、国庆
-- 类别多样性深化
 
-人物画像：<span class="variable-highlight">{persona}</span>
-第一轮事件：<span class="variable-highlight">{first_round_events}</span></code></pre>
+#### （1）未充分利用的画像信息
+- 深度挖掘人物画像中第一轮未涉及的细节（如特定技能、爱好、社交关系、家庭背景、职业目标等）
+- 例如：若画像提到“同事李华喜欢爬山”，可生成“与李华一起周末登山（2025-04-12）：前往城郊山脉徒步，增进同事关系”
+
+#### （2）节日与季节特色
+- **法定节假日**：春节、清明、五一、端午、中秋、国庆、元旦期间的特色事件
+- **民间传统节日**：元宵、七夕、重阳、冬至等传统习俗相关事件
+- **季节特征**：春季踏青、夏季避暑、秋季赏枫、冬季取暖等季节特有事件
+
+#### （3）类别多样性深化
+- 为每个类别挖掘第一轮未涉及的细分领域：
+  - Career &amp; Education：项目阶段性任务、跨部门协作、职业认证等
+  - Relationships：不同社交圈的互动（同事、朋友、亲戚、邻居等）
+  - Living Situation：家居维护、社区活动、居住环境改善等
+  - Health &amp; Well-being：预防保健、康复调理、健康检查等
+
+## 二、事件细节要求
+
+### 1. 时间与分布
+- **格式规范**：所有事件必须标注具体时间（格式：2025-XX-XX 或 2025-XX-XX 至 2025-XX-XX）
+- **节日结合**：优先考虑节日日期（如“端午龙舟赛观赛（2025-06-10）”）和季节时段
+- **均匀分布**：事件应均匀分布在全年各月份，避免时间集中
+- **合理重叠**：允许与第一轮事件时间重叠，但需符合现实逻辑（如“春节期间远程处理工作”可与“春节家庭聚会”重叠）
+
+### 2. 类别与数量
+   - **严格使用规范类别**：与第一轮保持一致，使用以下9个类别：
+    Career、Education、Relationships、Family&amp;Living Situation、Personal Life、Finance、Health、Unexpected Events、Other
+   - **类别灵活分配**：根据人物画像特点和第一轮事件分布灵活补充，
+     - 优先补充与人物高度相关类别的事件
+     - 对于与人物关联度低的类别，可补充极少甚至不补充事件
+     - 第一轮事件较少但与人物相关的类别可适当多补充
+ - **总数控制**：目标生成约90件新事件，可根据实际情况在85-95件之间调整
+
+### 3. 质量要求
+- **真实性**：事件需符合人物身份、生活场景和现实逻辑
+- **具体性**：描述需包含明确的人物、动作、目的，避免模糊不清
+- **连贯性**：部分事件可与第一轮事件形成合理关联（如第一轮有“购买新车”，第二轮可生成“新车首保（2025-07-15）”）
+
+## 三、输出格式要求
+
+### 1. 结构化输出
+- 严格按「类别 + 补充事件数量」分组输出，每个类别独立成段
+- 每个类别下的事件按**时间先后顺序**排序
+- 类别名称必须与规范类别完全一致，不得修改或缩写
+
+### 2. 格式示例
+&lt;type&gt;Career &amp; Education（第二轮补充 20 件）&lt;/type&gt;
+    端午商圈联合促销策划（2025-05-20 至 2025-06-10）：联动周边商家推出“端午满减套餐”，融入传统香囊DIY活动吸引客流。
+    季度销售数据分析（2025-06-15 至 2025-06-20）：整理第二季度销售数据，制作分析报告并提交给管理层。
+
+### 3. 关键约束
+- 输出内容**仅包含**类别标题和事件列表，不得添加任何额外分析、解释或说明文本
+- 每个事件必须以「事件名称（时间）：描述」的格式呈现
+- 确保输出的文本格式清晰，易于计算机程序按类别提取事件内容
+
+---
+
+画像：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{persona}</span></pre>
+                                    </div>
+                                    <div class="p-4 bg-slate-800 overflow-auto">
+                                        <div class="text-xs text-green-400 font-semibold mb-2">🇰🇷 한국어 번역</div>
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">【인물 프로파일】과 1라운드에서 생성한 100개 이벤트를 기반으로,
+요구사항에 엄격히 부합하는 새로운 이벤트 약 90개를 추가 창작하세요.
+중복을 철저히 피하고 정확한 보완을 실현하세요:
+
+## 一、핵심 창작 원칙
+
+### 1. 절대적 중복 제거와 정확한 보완
+- **내용 완전 차별화**: 새 이벤트는 1라운드 이벤트와 이벤트 주제, 구체적 장면, 참여 인물,
+  시간 배치 등 모든 면에서 명확히 달라야 하며, 어떤 형태의 유사성이나 변형 반복도 금지.
+- **1라운드 공백 채우기**: 1라운드에서 다루지 않은 생활 영역과 이벤트 유형 우선 포함.
+
+### 2. 새로운 차원 탐구
+- **다양한 인물 관계**: 1라운드에서 등장하지 않은 관계 유형
+- **미탐색 생활 영역**: 새로운 취미, 사교 서클 등
+- **다양한 감정 강도**: 도전적이거나 예상치 못한 이벤트
+
+### 3. 추가 이벤트 요구사항
+- 이벤트 수량: 85-95개
+- 중복: 0개 (이벤트 유형, 장면, 주요 참여자의 3중 검증)
+- 다양성: 1라운드보다 더 다양하고 심층적인 생활 측면 탐구
+
+1라운드 이벤트: <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{events}</span>
+인물 프로파일: <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{persona}</span></pre>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Prompt 3 -->
                         <div class="accordion-item">
                             <div class="accordion-header" onclick="toggleAccordion(this)">
                                 <div class="flex items-center justify-between">
-                                    <span class="font-semibold">3. template_yearterm_complete_2 (3단계: 80개 전문화 이벤트)</span>
-                                    <span class="text-xl">▼</span>
+                                    <div>
+                                        <span class="font-semibold text-purple-300">template_extract_impact_events</span>
+                                        <span class="text-xs text-slate-400 ml-2">영향 이벤트 추출 — Scheduler._extract_impact_events()</span>
+                                    </div>
+                                    <span>▼</span>
                                 </div>
                             </div>
                             <div class="accordion-content">
-                                <div class="p-4 bg-slate-900">
-                                    <div class="text-xs text-gray-500 mb-2">사용 함수: genevent_yearterm()</div>
-                                    <pre><code class="language-text">请基于人物画像及前两轮已生成的事件，补充创作 80 个左右全新事件...
+                                <div class="grid grid-cols-2 divide-x divide-slate-700">
+                                    <div class="p-4 bg-slate-900 overflow-auto">
+                                        <div class="text-xs text-slate-500 font-semibold mb-2">🇨🇳 중국어 원문</div>
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">请基于以下人物画像和事件列表，**仅提取两类重要事件**：
+1. **画像信息产生显著改变的事件**：需要更新人物画像信息的重大变化事件，这类事件往往会改变画像信息，导致后续事件可能与其有冲突
+2. **影响近期生活习惯的事件**：会改变个人近期生活习惯、作息安排等生活状态的事件
 
-## 核心创作原则
+可合理推理一些事件的后续发展来分析影响，并以时间线形式输出所有关键事件节点及其具体影响。**完全忽略无关痛痒的事件**，如仅增进感情、关系深化但未导致实质性改变的事件。
 
-### 填补空白维度策略
+## 一、核心任务
 
-#### （1）人群共性事件
-- 基于人物的性别、年龄、地域、人生阶段等核心标签
-- 例如：30岁职场人可能经历的"职业晋升考察期"
+### 1. 事件筛选标准
+**仅保留以下两类事件，其他事件一律忽略**：
 
-#### （2）个人专属事件
-- 深度挖掘人物的独特性，生成体现其内心需求的事件
-- 例如："整理童年旧物（2025-08-01）：翻出小时候的照片和日记"
+#### 第一类：画像信息产生显著改变的事件，要分析这个事件是否会对个人后续产生重大影响
+**判断标准**：事件发生后必须需要更新人物画像的具体字段信息，或需要依据该信息进行后续事件分析。如果不是需要改变画像或写入画像的一般事件，请忽略。
+**具体类型包括**：
+工作生活上大的变动、职业、教育里程碑、财务、健康变化、人际关系变化（只关注新认识朋友，与朋友闹掰，朋友相关的大的变动。不关心两人之间感情关系的变化）、爱好特征变化、生活习惯变化。
+#### 第二类：影响近期生活习惯的事件
+**判断标准**：事件会导致个人在特定时间段内改变作息安排、生活习惯或日常活动模式
+**具体类型包括**：
+- 短期出差、旅行
+- 短期生病
+- 连续加班
+- 短期培训、学习
+- 家庭短期变故（需要调整生活安排1周以上）
+- 其他需要改变近期生活习惯的事件
 
-#### （3）他人关联事件
-- 生成"因他人需求而参与"的非日常事件
-- 例如："帮邻居照顾宠物（2025-09-05 至 2025-09-10）"
-
-人物画像：<span class="variable-highlight">{persona}</span></code></pre>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Prompt 4 -->
-                        <div class="accordion-item">
-                            <div class="accordion-header" onclick="toggleAccordion(this)">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-semibold">4. template_yearterm_complete_3 (4단계: 10개 부정적 이벤트)</span>
-                                    <span class="text-xl">▼</span>
-                                </div>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="p-4 bg-slate-900">
-                                    <div class="text-xs text-gray-500 mb-2">사용 함수: genevent_yearterm()</div>
-                                    <pre><code class="language-text">请基于人物画像及前三轮已生成的事件，聚焦"有困难、负面性、具挑战性"的场景...
-
-## 核心创作原则
-
-### 1. 负面事件的真实性与适配性
-- 明确的负面属性：困难性、负面性、挑战性
-- 严格贴合人物画像：负面事件必须与人物的职业、生活状态紧密关联
-- 可控的负面影响：能被解决的短期波折，不会导致长期画像变动
-
-### 2. 负面事件的多样性
-- 覆盖不同生活领域（工作、家庭、健康、社交等）
-
-例如：
-"门店遭遇恶意投诉（2025-02-18 至 2025-02-22）"
-"家中水管爆裂（2025-01-15）"
-
-人物画像：<span class="variable-highlight">{persona}</span>
-事件总数：不超过10个</code></pre>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Prompt 5 -->
-                        <div class="accordion-item">
-                            <div class="accordion-header" onclick="toggleAccordion(this)">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-semibold">5. template_extract_impact_events (중요 사건 추출)</span>
-                                    <span class="text-xl">▼</span>
-                                </div>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="p-4 bg-slate-900">
-                                    <div class="text-xs text-gray-500 mb-2">사용 함수: _extract_impact_events()</div>
-                                    <pre><code class="language-text">请基于以下人物画像和事件列表，仅提取两类重要事件：
-
-## 核心任务
-
-### 第一类：画像信息产生显著改变的事件
-判断标准：事件发生后必须需要更新人物画像的具体字段信息
-具体类型：工作生活上大的变动、职业、教育里程碑、财务、健康变化、人际关系变化
-
-### 第二类：影响近期生活习惯的事件
-判断标准：事件会导致个人在特定时间段内改变作息安排、生活习惯
-具体类型：短期出差、旅行、生病、连续加班、短期培训
-
-严格排除的事件类型：
+**严格排除的事件类型**：
 - 仅增进感情但未改变关系状态的社交活动
 - 未导致生活习惯改变的短期情绪波动
+- 无实质影响的日常活动
 - 24小时内可恢复的短暂不便
+- 仅增强技能但未改变职业状态的学习
+- 未给自己带来实质变化的各类工作和活动
 
-## 输出格式
-<think>对这段时间事件的总结分析</think>
-<json>[
+### 2. 事件处理规则
+- **严格对应原始事件**：仅分析提供的事件，每个影响事件必须关联原始事件ID
+- **推理限制**：
+  - 仅对不完整事件进行合理推理后续发展
+  - 推理必须基于人物画像和常识，高合理性，明确关联原事件ID
+- **时间节点识别**：必须提取事件发生、影响开始/结束的精确时间点
+
+### 3. 影响分析要求
+#### 第一类事件（画像信息变化）分析要求：
+- **必须明确指出需要更新的画像字段**：如"新增人物关系：恋爱对象张三"、"更新健康状况：确诊高血压"、"更新职业信息：晋升为部门经理"等或明确说明个人的生活改变、里程碑事件。
+- 影响类别（从标准类别选择：Career、Education、Relationships、Family&amp;Living Situation、Personal Life、Finance、Health、Unexpected Events、Other）
+- 影响持续时间（持续存在/[开始日期]-[结束日期]）
+
+#### 第二类事件（近期生活影响）分析要求：
+- **必须明确时间范围**：具体到几号到几号（如2025-05-10至2025-05-20）
+- **必须详细描述生活安排变化**：具体说明作息、日常活动等如何改变
+- **必须对比与之前的不同**：明确说明与事件发生前的生活安排有何差异
+- 影响类别（从标准类别选择）
+- 影响持续时间
+
+### 4. 时间线构建
+- 按时间顺序排列所有事件和影响节点
+- 同一时间点相关事件分组展示
+
+## 二、输出格式
+请严格按照以下格式输出，包含&lt;think&gt;和&lt;json&gt;两部分，不要添加任何额外内容：
+
+&lt;think&gt;对这段时间事件的总结分析，概括个人生活/画像变化情况&lt;/think&gt;
+&lt;json&gt;[JSON格式的影响事件时间线]&lt;/json&gt;
+
+### JSON字段说明
+[
     {{
-        "time_point": "YYYY-MM-DD",
-        "event_content": "事件描述",
-        "original_event_id": "ID",
-        "impact_category": "Career/Health/...",
-        "impact_description": "具体影响",
-        "duration": "持续时间"
+        "time_point": "事件发生的精确时间点（YYYY-MM-DD HH:MM:SS或YYYY-MM-DD）",
+        "event_content": "事件或影响内容（简明描述）",
+        "original_event_id": "原始事件ID（推理事件需关联原ID），所有事件都要有原事件的id",
+        "impact_category": "影响类别（从标准类别选择）",
+        "impact_description": "具体影响描述，必须满足：\n1. 若为画像信息变化事件：明确指出需要更新的画像字段和具体内容\n2. 若为近期生活影响事件：明确时间范围（几号到几号）、生活安排变化、与之前的不同",
+        "impact_duration": "影响持续时间（如持续存在/2025-05-10至2025-05-20/10天）",
+        "related_events": "相关事件ID列表",
+        "is_inferred": "是否为推理事件（true/false）"
     }}
-]</json>
+]
 
-人物画像：<span class="variable-highlight">{persona}</span>
-事件列表：<span class="variable-highlight">{events}</span></code></pre>
+
+## 三、输入数据
+人物画像：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{persona}</span>
+事件列表：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{events}</span></pre>
+                                    </div>
+                                    <div class="p-4 bg-slate-800 overflow-auto">
+                                        <div class="text-xs text-green-400 font-semibold mb-2">🇰🇷 한국어 번역</div>
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">다음 인물 프로파일과 이벤트 목록을 기반으로,
+**두 가지 유형의 중요 이벤트만 추출**하세요:
+1. **프로파일 정보에 현저한 변화를 가져오는 이벤트**: 인물 프로파일 정보를 업데이트해야 할
+   중대한 변화 이벤트, 이런 이벤트는 종종 프로파일 정보를 변경하여 후속 이벤트와 충돌 가능
+2. **최근 생활 습관에 영향을 미치는 이벤트**: 개인의 최근 생활 습관, 작식 배치 등 생활 상태를
+   변화시킬 이벤트
+
+이벤트의 후속 발전을 합리적으로 추론하여 영향을 분석하고,
+타임라인 형식으로 모든 핵심 이벤트 노드와 구체적 영향을 출력하세요.
+관련 없는 이벤트는 완전히 무시.
+
+인물 프로파일: <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{persona}</span>
+이벤트 목록: <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{events}</span></pre>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Prompt 6 -->
                         <div class="accordion-item">
                             <div class="accordion-header" onclick="toggleAccordion(this)">
                                 <div class="flex items-center justify-between">
-                                    <span class="font-semibold">6. template_monthly_events_analysis (월별 이벤트 생성)</span>
-                                    <span class="text-xl">▼</span>
+                                    <div>
+                                        <span class="font-semibold text-purple-300">template_monthly_events_analysis</span>
+                                        <span class="text-xs text-slate-400 ml-2">월간 이벤트 분석 — Scheduler._analyze_monthly_events()</span>
+                                    </div>
+                                    <span>▼</span>
                                 </div>
                             </div>
                             <div class="accordion-content">
-                                <div class="p-4 bg-slate-900">
-                                    <div class="text-xs text-gray-500 mb-2">사용 함수: _analyze_monthly_events() (월 12회 실행)</div>
-                                    <pre><code class="language-text">请基于人物画像和月度主题事件，生成该月的详细日常安排...
+                                <div class="grid grid-cols-2 divide-x divide-slate-700">
+                                    <div class="p-4 bg-slate-900 overflow-auto">
+                                        <div class="text-xs text-slate-500 font-semibold mb-2">🇨🇳 중국어 원문</div>
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed"># 核心任务：针对指定月份，分析该月的重要事件和变化记录，识别事件的影响类型（固定改变和近期影响）
 
-## 生成要求
+## 任务要求：
 
-1. 每天至少包含 3-5 个具体事件
-2. 事件需符合人物的职业、作息、习惯
-3. 考虑工作日/周末的差异
-4. 包含日常活动（通勤、三餐、运动、睡眠）
-5. 体现月度主题事件的影响
+### 1. 月度事件分析
+- 筛选并分析指定月份的重要事件，包括职业、生活、学习、健康、社交等各类别
+- 结合月度相关的类别总结，对事件进行优化分析（可增删改事件），通过调整事件发生日期等各类属性，删除不合理冲突事件，增加多样性连贯事件是个人一个月的重要事件和变化被记录。
+- 确保事件描述准确、完整，时间线清晰
 
-## 输出格式
-按日期顺序输出该月所有事件
+### 2. 影响分析
+- **固定改变**：识别事件导致的长期信息改变，之后所有事件都要考虑是否与其冲突
+  - 例如：XX同事离职，之后工作上不会合作，从同事变朋友
+  - 需要明确指出具体的变化内容
+- **近期影响**：识别事件导致的短期生活状态改变（特定时间段）
+  - 例如：出差一周（XX日到XX日），这一周不在家，所以不能去常去的XX健身房，且需要早起参加XX会议
+  - 需要明确影响的时间段和具体状态变化
 
-人物画像：<span class="variable-highlight">{persona}</span>
-月度数据：<span class="variable-highlight">{month_data}</span>
-影响事件：<span class="variable-highlight">{impact_events}</span></code></pre>
+### 3. 输出格式要求
+
+请以严格的JSON格式输出月度事件分析结果，包含以下字段：
+
+{
+  "month": "[月份，格式：YYYY-MM]",
+  "month_overview": "[月度整体发展概述]",
+  "key_events": [
+    {
+      "time_point": "[具体日期，格式：YYYY-MM-DD]",
+      "event": "[事件描述]",
+      "fixed_changes": [
+        "[固定改变1描述]",
+        "[固定改变2描述]"
+      ],
+      "short_term_impacts": [
+        {
+          "start_date": "[影响开始日期，格式：YYYY-MM-DD]",
+          "end_date": "[影响结束日期，格式：YYYY-MM-DD]",
+          "impact_description": "[近期影响描述]"
+        }
+      ]
+    }
+  ]
+}
+
+## 输入数据：
+### 人物画像：
+<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{character_profile}</span>
+
+### 指定月份：
+<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{target_month}</span>
+
+### 该月份的事件列表：
+<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{monthly_events}</span>
+
+### 各类别年度事件总结：
+<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{category_summaries}</span></pre>
+                                    </div>
+                                    <div class="p-4 bg-slate-800 overflow-auto">
+                                        <div class="text-xs text-green-400 font-semibold mb-2">🇰🇷 한국어 번역</div>
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed"># 핵심 과제: 지정 월의 중요 이벤트와 변화 기록 분석,
+이벤트의 영향 유형 식별 (고정 변화와 근접 영향)
+
+## 과제 요구사항:
+
+### 1. 월간 이벤트 분석
+- 지정 월의 중요 이벤트 선별·분석 (직업, 생활, 학습, 건강, 사교 등 각 카테고리)
+- 월간 관련 카테고리 요약과 결합하여 이벤트 최적화 분석
+  (이벤트 추가·삭제·수정 가능), 이벤트 발생 날짜 등 속성 조정으로 불합리한 충돌 이벤트 삭제,
+  다양성·연속성 이벤트 추가
+
+### 2. 영향 분류 분석
+각 선별된 이벤트에 대해 다음을 분석:
+- **고정 변화 영향**: 프로파일 정보를 영구적으로 변경하는 이벤트
+  (예: 이직, 이사, 결혼 등 인물 기본 상태 변화)
+- **근접 영향**: 단기간 생활 상태에만 영향을 미치는 이벤트
+  (예: 출장, 친구 방문, 일시적 건강 문제 등)
+
+인물 프로파일: <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{persona}</span>
+월간 이벤트: <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{events}</span>
+월: <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{month}</span></pre>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="font-semibold text-purple-300">template_timeline_conflict_resolution</span>
+                                        <span class="text-xs text-slate-400 ml-2">타임라인 충돌 해결 — Scheduler.optimize_merged_timelines()</span>
+                                    </div>
+                                    <span>▼</span>
+                                </div>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="grid grid-cols-2 divide-x divide-slate-700">
+                                    <div class="p-4 bg-slate-900 overflow-auto">
+                                        <div class="text-xs text-slate-500 font-semibold mb-2">🇨🇳 중국어 원문</div>
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">请分析以下多个主题时间线之间的冲突，并进行冲突解决，确保每个时间线内容合理且时间线之间不存在逻辑冲突，不要合并时间线：
+
+## 人物画像
+<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{persona}</span>
+
+## 时间线列表
+<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{timelines_list}</span>
+
+## 任务要求
+1. **冲突识别**：仔细分析各时间线之间的矛盾点、不一致之处，包括：
+   - 事件时间、地点、活动安排等直接冲突
+   - 事件的长期影响导致的冲突（如某个时间线带来三月之后和朋友互不联系，但另一个时间线四月在和朋友联系）
+2. **冲突处理**：
+   - **保持时间线独立性**：不要合并不同的时间线，每个原始时间线应作为独立条目保留
+   - 解决时间线之间的逻辑冲突（如一个时间线要求2月在家，另一个时间线要求2月在三亚的矛盾）
+   - 解决时间线影响导致的冲突（如长期互不联系与后续联系的矛盾）
+   - 冲突解决方法：
+     - 选择一个时间线删除冲突事件
+     - 新增事件来消除冲突（如新增和好事件解决互不联系与后续联系的冲突）
+   - 无论新增或删除事件，都要重写该时间线之后的事件来保证合理性和连贯性
+   - 调整事件时间、地点或内容，确保所有时间线之间逻辑一致
+   - 保留最符合人物画像的事件和发展路径
+3. **主题优化**：确保每个时间线都有明确的核心内容和独特的发展路径
+4. **修改记录**：为每个时间线条目提供详细的修改说明：
+   - 明确记录对原始时间线进行的所有主要修改
+   - 解释修改的原因和依据，包括冲突解决的思路
+   - 确保修改记录清晰易懂，便于后续参考
+5. **全年每月总结**：生成一个全面的2025年每月总结，从全年视角概述每个月的主要事件和影响：
+   - 每个月的整体发展趋势
+   - 当月发生的核心事件（汇总所有时间线）
+   - 这些事件对人物生活产生的核心影响
+   - 确保每月总结逻辑连贯，反映事件的发展脉络
+
+## 输出格式要求
+请严格按照以下JSON对象格式输出结果，包含两个主要模块：
+
+{{
+  "conflict_resolution_result": [
+    {{
+      "topic": "优化后的主题名称",
+      "detailed_description": "优化后的主题详细描述",
+      "modification_content": "对原始时间线进行的主要修改内容",
+      "modification_reason": "进行这些修改的原因和依据"
+    }},
+    {{
+      "topic": "第二个优化后的主题",
+      "detailed_description": "...",
+      "modification_content": "...",
+      "modification_reason": "..."
+    }}
+  ],
+  "annual_overview": {{
+    "一月": {{
+      "monthly_description": "当月整体发展趋势描述",
+      "core_events": ["核心事件1", "核心事件2"],
+      "core_impacts": ["核心影响1", "核心影响2"]
+    }},
+    "二月": {{
+      "monthly_description": "当月整体发展趋势描述",
+      "core_events": ["核心事件1", "核心事件2"],
+      "core_impacts": ["核心影响1", "核心影响2"]
+    }},
+    "三月": {{
+      "monthly_description": "当月整体发展趋势描述",
+      "core_events": ["核心事件1", "核心事件2"],
+      "core_impacts": ["核心影响1", "核心影响2"]
+    }},
+    "四月": {{
+      "monthly_description": "当月整体发展趋势描述",
+      "core_events": ["核心事件1", "核心事件2"],
+      "core_impacts": ["核心影响1", "核心影响2"]
+    }},
+    "五月": {{
+      "monthly_description": "当月整体发展趋势描述",
+      "core_events": ["核心事件1", "核心事件2"],
+      "core_impacts": ["核心影响1", "核心影响2"]
+    }},
+    "六月": {{
+      "monthly_description": "当月整体发展趋势描述",
+      "core_events": ["核心事件1", "核心事件2"],
+      "core_impacts": ["核心影响1", "核心影响2"]
+    }},
+    "七月": {{
+      "monthly_description": "当月整体发展趋势描述",
+      "core_events": ["核心事件1", "核心事件2"],
+      "core_impacts": ["核心影响1", "核心影响2"]
+    }},
+    "八月": {{
+      "monthly_description": "当月整体发展趋势描述",
+      "core_events": ["核心事件1", "核心事件2"],
+      "core_impacts": ["核心影响1", "核心影响2"]
+    }},
+    "九月": {{
+      "monthly_description": "当月整体发展趋势描述",
+      "core_events": ["核心事件1", "核心事件2"],
+      "core_impacts": ["核心影响1", "核心影响2"]
+    }},
+    "十月": {{
+      "monthly_description": "当月整体发展趋势描述",
+      "core_events": ["核心事件1", "核心事件2"],
+      "core_impacts": ["核心影响1", "核心影响2"]
+    }},
+    "十一月": {{
+      "monthly_description": "当月整体发展趋势描述",
+      "core_events": ["核心事件1", "核心事件2"],
+      "core_impacts": ["核心影响1", "核心影响2"]
+    }},
+    "十二月": {{
+      "monthly_description": "当月整体发展趋势描述",
+      "core_events": ["核心事件1", "核心事件2"],
+      "core_impacts": ["核心影响1", "核心影响2"]
+    }}
+  }}
+}}
+
+## 注意事项
+1. 严格遵循JSON格式规范，在JSON字符串值中避免使用双引号，如果需要表示引号，请使用[]或其他替代符号，或者使用转义字符\\"，只输出JSON对象，不要输出任何额外的文本或注释。以{{}}开头。
+2. **保持时间线独立性**：不要合并不同的时间线，每个原始时间线应作为独立条目保留
+3. 确保每个时间线都有清晰的核心内容和发展脉络
+4. 所有调整必须符合人物画像设定，保持逻辑一致性
+5. 解决冲突时应优先选择符合人物画像和实际情况的方案
+6. annual_overview模块应提供全年视角的每月总结，帮助理解整体发展趋势</pre>
+                                    </div>
+                                    <div class="p-4 bg-slate-800 overflow-auto">
+                                        <div class="text-xs text-green-400 font-semibold mb-2">🇰🇷 한국어 번역</div>
+                                        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-96 overflow-auto leading-relaxed">다음 여러 주제 타임라인 간의 충돌을 분석하고 충돌을 해결하세요.
+각 타임라인의 내용이 합리적이고 타임라인 간 논리 충돌이 없도록 보장하세요.
+타임라인을 합병하지 마세요:
+
+## 인물 프로파일
+<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{persona}</span>
+
+## 타임라인 목록
+<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{timelines_list}</span>
+
+## 과제 요구사항
+1. **충돌 식별**: 각 타임라인 간의 모순점·불일치 점 분석:
+   - 이벤트 시간, 장소, 활동 배치 등 직접 충돌
+   - 이벤트의 장기 영향으로 인한 충돌
+   - 인물 상태 변화 충돌
+
+2. **충돌 해결 원칙**:
+   - 시간 충돌: 합리적으로 일정 조정, 일부 이벤트 지연 또는 취소
+   - 상태 충돌: 논리에 맞는 우선순위에 따라 해결
+   - 관계 충돌: 현실적 합리성 유지
+
+3. **출력 형식**:
+   각 타임라인에 대해 출력:
+   - 발견된 충돌 목록
+   - 수정된 타임라인 (날짜·이벤트·설명 포함)</pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                 </div>
 
                 <div class="tab-content hidden" data-step="draft" data-tab="input">
