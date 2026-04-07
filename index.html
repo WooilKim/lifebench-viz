@@ -776,7 +776,7 @@
 
 ---
 
-人物分析：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{summary}</span></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto">인물 분석을 기반으로 2025년 발생 가능한 100개 생활 이벤트를 생성합니다.
+人物分析：<span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{summary}</span></pre></div><div class="p-3 bg-slate-800"><div class="text-green-400 font-semibold mb-1">🇰🇷 번역</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto">인물 분석을 기반으로 2025년 내 발생 가능한 100개의 생활 이벤트를 생성합니다.
 내용의 진실성·연속성·다양성·구조화를 보장하기 위해 다음 요구사항을 엄격히 따르세요:
 
 ## 一、핵심 창작 원칙
@@ -784,21 +784,74 @@
 ### 1. 진실성과 부합성
 - **인물 프로파일 심층 반영**: 모든 이벤트는 인물의 직업 배경, 가족 관계, 생활 습관,
   성격 특성, 경제 상황, 소셜 서클과 강하게 연결되어야 함.
-- **현실 논리 부합**: 이벤트는 시간 규율(예: "겨울 스키", "설 귀성"), 생활 상식,
-  사회 규칙을 따라야 함.
+- **현실 논리 부합**: 이벤트는 시간 규율(예: "겨울 스키", "설 귀성"), 생활 상식
+  (예: "인테리어는 1-2개월 소요", "자격증 시험 준비는 1-3개월"), 사회 규칙을 따라야 함.
 - **자연스러운 인과 관계**: 일부 이벤트 간 합리적 인과 관계 존재
   (예: "새 집 구매" → "인테리어 설계" → "이사 축하").
 
 ### 2. 다양성과 균형성
 - **생활 차원 전면 포함**: 직업, 가족, 사교, 건강, 재무, 개인 성장 등
 - **이벤트 유형 다양화**: 단기(1-3일), 중기(1-4주), 장기(1-3개월), 일회성/주기성
+- **감정과 강도 층차**: 긍정적/중립적/경미한 도전적 이벤트 포함
 
-### 3. 분류 비율 요구사항
-- 직업과 개인 발전 25%, 가족과 사회 관계 20%, 건강과 취미 20%,
-  재무와 생활 15%, 학습과 성장 10%, 기타 10%
+### 3. 비일상성과 기억 포인트
+- 기록할 가치 있고, 사전 준비가 필요하고, 개인 특성을 보여주는 장면 우선 선택.
+- 각 카테고리의 이벤트는 독특성을 가지며, 동일 카테고리 내 동질화 금지.
 
-인물 분석: <span style=\"background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;\">{persona}</span>
-출력 형식: [{"date": "2025-XX", "events": [...]}]</pre></div></div></div></div>
+## 二、이벤트 세부 요구사항
+
+### 1. 시간 설정 규범
+- **형식 통일**: 모든 이벤트에 구체적 시간 표시 (형식: 2025-XX-XX 또는 2025-XX-XX 至 2025-XX-XX).
+- **주기성 이벤트**: 여러 번 발생하는 이벤트는 모든 시간 노드 표시.
+- **시간 분포**: 이벤트는 전년도 각 월에 균등하게 분포, 과도한 집중이나 희소화 금지.
+- **시간 중복**: 합리적 시간 중복 허용 (예: "윈난 여행" 기간 중 "원격 업무 처리").
+
+### 2. 카테고리 포함 요구사항
+**다음 9개 카테고리 사용**:
+- **Career**: 직업/업무 관련 (예: "업계 포럼 참석", "신제품 R&amp;D 프로젝트 참여")
+- **Education**: 교육/학습 관련 (예: "수업", "전문 자격증 취득")
+- **Relationships**: 인간 관계 (예: "부모님 생일 파티 준비", "친구 여행 조직")
+- **Family&amp;Living Situation**: 가족 생활 및 거주 환경 (예: "주택 인테리어", "스마트홈 설치")
+- **Personal Life**: 자기 관리/오락/생활방식 (예: "정기 스파", "단기 여행", "동창 모임 조직")
+- **Finance**: 개인 자산/재무 (예: "금융 상품 구매", "자동차 유지 보수")
+- **Health**: 건강 관리 (예: "한방 치료", "요가 정기 수련")
+- **Unexpected Events**: 돌발 대응 (예: "차량 소사고 처리", "임시 초과 근무")
+- **Other**: 기타 미포함 카테고리
+
+**카테고리 배분 원칙**:
+- 인물의 직업/생활 상태/성격 특성과 높게 관련된 카테고리 우선 생성
+- 인물 프로파일과 관련성이 매우 낮은 카테고리는 이벤트를 적게 또는 생성하지 않을 수 있음
+- 전체 이벤트 분포가 인물의 진실한 생활 장면에 부합하도록 보장
+  (예: 학생은 Education 비율 높음, 직장인은 Career 비율 높음)
+
+### 3. 이벤트 설명 요구사항
+- **구체적이고 명확하게**: 이벤트 설명에 who(참여자)/what(내용)/why(목적/의미) 포함.
+- **장면 부합**: 이벤트 발생 시간, 장소, 인물 신분에 부합, 진실한 참여감 표현.
+- **간결하게**: 각 이벤트 설명은 15-50자, 핵심 정보 강조.
+
+## 三、출력 형식 요구사항
+
+### 1. 구조화 출력
+- 엄격하게 「카테고리 + 이벤트 수」로 그룹화하여 출력, 각 카테고리 독립 단락.
+- 각 카테고리 아래 이벤트는 **시간 순서**로 정렬.
+- 카테고리 이름은 위의 9개 카테고리와 완전히 일치해야 함.
+
+### 2. 형식 예시
+&lt;type&gt;Career（20개）&lt;/type&gt;
+    업계 고봉 포럼 참가 (2025-03-18 至 2025-03-19): 가족 기업 대표로 업계 트렌드 학습 및 공급업체 자원 확장.
+    신제품 출시 기획 (2025-04-01 至 2025-04-15): 여름 신제품 홍보 방안 주도 수립, 각 부서 실행 조율.
+
+&lt;type&gt;Relationships（15개）&lt;/type&gt;
+    어머니 60세 생일 파티 준비 (2025-05-20): 친척·친구 초대, 어머니가 좋아하는 전통 요리와 기념 앨범 준비.
+
+### 3. 핵심 제약
+- 출력 내용에는 카테고리 제목과 이벤트 목록만 포함, 추가 분석/설명 텍스트 금지.
+- 각 이벤트는 반드시 「이벤트명（시간）: 설명」 형식으로 제시.
+- 출력 텍스트 형식이 명확하고 프로그램이 카테고리별로 이벤트 내용을 추출하기 쉬워야 함.
+
+---
+
+인물 분석: <span style="background:rgba(251,191,36,0.2);color:#fcd34d;padding:0 3px;border-radius:2px;">{summary}</span></pre></div></div></div></div>
                         <div class="flex items-center my-1 pl-2"><div class="w-0.5 h-5 bg-slate-600"></div></div>
                         <div class="bg-purple-900 border border-purple-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-purple-700 text-purple-200 px-2 py-0.5 rounded">LLM</span><span class="font-semibold text-white text-sm">genevent_yearterm() 2라운드</span></div><div class="text-xs text-slate-400 font-mono mb-2">event/scheduler.py <span class="text-yellow-400 text-xs">→ template_yearterm_complete</span></div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">1라운드 이벤트 + persona</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">보완 이벤트 90개</span></div></div>
                             <div class="mt-2"><button onclick="var e=document.getElementById('p-template-yearterm-complete');e.classList.toggle('hidden')" class="text-xs px-2 py-0.5 bg-purple-900 hover:bg-purple-700 text-purple-300 rounded border border-purple-700">📋 template_yearterm_complete</button><div id="p-template-yearterm-complete" class="hidden mt-2 grid grid-cols-2 divide-x divide-slate-600 border border-slate-600 rounded overflow-hidden text-xs"><div class="p-3 bg-slate-900"><div class="text-slate-500 font-semibold mb-1">🇨🇳 원문</div><pre class="text-slate-300 font-mono whitespace-pre-wrap max-h-72 overflow-auto">请基于下方【人物画像】及你第一轮生成的 100 件事件，补充创作 90 个左右符合要求的新事件，需严格规避重复并实现精准互补，具体规则如下：
