@@ -162,8 +162,6 @@
                 <div class="flex gap-1 mb-0 border-b border-teal-700">
                     <button class="tab-button active px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="persona" data-tab="overview">개요</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="persona" data-tab="flow">🔀 내부 플로우</button>
-                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="persona" data-tab="input">인풋 예시</button>
-                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="persona" data-tab="output">아웃풋 예시</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="persona" data-tab="tuning">수정 가이드</button>
                 </div>
 
@@ -208,8 +206,11 @@
                         <div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">출력</span><span class="font-semibold text-white text-sm">persona.json 저장</span></div><div class="text-xs text-slate-400 font-mono mb-2">각 사용자 폴더</div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">완성된 페르소나 + 인간관계망</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">persona.json</span></div></div></div>
                     </div>
                 </div>
-<div class="tab-content hidden" data-step="persona" data-tab="input">
-                    <div class="mb-4">
+                    <!-- 인풋/아웃풋 예시 -->
+                    <div class="mt-6 grid grid-cols-2 gap-4">
+                        <div class="bg-slate-800 rounded-lg p-4">
+                            <h4 class="font-semibold text-teal-300 mb-3 text-sm">📥 인풋 예시</h4>
+                            <div class="text-xs"><div class="mb-4">
                         <h4 class="font-semibold text-teal-300 mb-2">data/person.json — 실제 수집된 기반 데이터</h4>
                         <pre class="text-xs font-mono bg-slate-900 p-4 rounded overflow-auto max-h-64"><code class="language-json">{
   "name": "冯浩然",
@@ -241,9 +242,11 @@
                     </div>
                 </div>
 
-                <!-- 아웃풋 예시 -->
-                <div class="tab-content hidden" data-step="persona" data-tab="output">
-                    <h4 class="font-semibold text-teal-300 mb-2">persona.json — 생성된 상세 페르소나 (영어 버전)</h4>
+                <!-- 아웃풋 예시 --></div>
+                        </div>
+                        <div class="bg-slate-800 rounded-lg p-4">
+                            <h4 class="font-semibold text-teal-300 mb-3 text-sm">📤 아웃풋 예시</h4>
+                            <div class="text-xs"><h4 class="font-semibold text-teal-300 mb-2">persona.json — 생성된 상세 페르소나 (영어 버전)</h4>
                     <pre class="text-xs font-mono bg-slate-900 p-4 rounded overflow-auto max-h-96"><code class="language-json">{
   "name": "Feng Haoran",
   "birth": "1994-10-29",
@@ -266,8 +269,12 @@
 }</code></pre>
                 </div>
 
-                <!-- 수정 가이드 -->
-                <div class="tab-content hidden" data-step="persona" data-tab="tuning">
+                <!-- 수정 가이드 --></div>
+                        </div>
+                    </div>
+
+                
+<div class="tab-content hidden" data-step="persona" data-tab="tuning">
                     <div class="space-y-4">
                         <div class="bg-slate-800 rounded-lg p-4">
                             <div class="font-semibold text-teal-300 mb-2">person.json 수정 → 전혀 다른 인물</div>
@@ -319,8 +326,6 @@
                     <button class="tab-button active px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="draft" data-tab="overview">개요</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="draft" data-tab="flow">🔀 내부 플로우</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="draft" data-tab="code">코드 경로</button>
-                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="draft" data-tab="input">인풋 예시</button>
-                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="draft" data-tab="output">아웃풋 예시</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="draft" data-tab="tuning">수정 가이드</button>
                 </div>
 
@@ -406,6 +411,111 @@
                         <div class="bg-slate-900 border border-slate-600 rounded-lg p-4 w-full"><div class="flex items-center gap-2 mb-1"><span class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded">출력</span><span class="font-semibold text-white text-sm">daily_draft.json</span></div><div class="text-xs text-slate-400 font-mono mb-2">각 사용자 폴더</div><div class="grid grid-cols-2 gap-3 text-xs"><div><span class="text-blue-400 font-semibold">IN:</span> <span class="text-slate-300">충돌 해결된 타임라인</span></div><div><span class="text-orange-400 font-semibold">OUT:</span> <span class="text-slate-300">daily_draft.json</span></div></div></div>
                     </div>
                 </div>
+                    <!-- 인풋/아웃풋 예시 -->
+                    <div class="mt-6 grid grid-cols-2 gap-4">
+                        <div class="bg-slate-800 rounded-lg p-4">
+                            <h4 class="font-semibold text-purple-300 mb-3 text-sm">📥 인풋 예시</h4>
+                            <div class="text-xs"><div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-green-400">📥 Input: persona.json</h3>
+                            <p class="text-gray-400 text-sm mb-4">실제 샘플: Feng Haoran (27세, 금융투자 어드바이저, ENTJ)</p>
+                            <pre><code class="language-json">{
+  "name": "Feng Haoran",
+  "birth": "1994-10-29",
+  "age": 27,
+  "gender": "Male",
+  "job": "Financial Investment Advisor",
+  "occupation": "Huatai Securities Co., Ltd.",
+  "salary": 200000.0,
+  "personality": {
+    "mbti": "ENTJ",
+    "traits": ["Achievements", "Power", "Social Responsibility Orientation"]
+  },
+  "hobbies": [
+    "Photography (Street Photography)",
+    "Running (Morning Run)",
+    "Camping (Wilderness)",
+    "Collecting Stamps"
+  ],
+  "aim": [
+    "Promoted to Investment Director within 3 years",
+    "Complete an in-depth self-driving tour annually.",
+    "Build a personal investment portfolio to reach a scale of 1 million."
+  ],
+  "relation": [
+    {
+      "name": "Feng Jianguo",
+      "relation": "Father",
+      "age": 58,
+      "occupation": "Senior Engineer"
+    },
+    {
+      "name": "Li Xiuying",
+      "relation": "Mother",
+      "age": 56
+    }
+  ]
+}</code></pre>
+                        </div>
+                    </div>
+                </div></div>
+                        </div>
+                        <div class="bg-slate-800 rounded-lg p-4">
+                            <h4 class="font-semibold text-purple-300 mb-3 text-sm">📤 아웃풋 예시</h4>
+                            <div class="text-xs"><div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-blue-400">📤 Output: daily_draft.json</h3>
+                            <p class="text-gray-400 text-sm mb-4">실제 샘플: 2025년 1월 1일 (New Year's Day)</p>
+                            <pre><code class="language-json">{
+  "2025-01": [
+    {
+      "date": "2025-01-01",
+      "date_attribute": {
+        "weather": "Clear, with a light breeze",
+        "holiday": "New Year's Day",
+        "week": "Wednesday"
+      },
+      "daily_overview": "During the New Year's Day holiday, Feng Haoran ushered in the new year with a disciplined and fulfilling approach. From starting the day with a morning run to deeply reflecting on the past, connecting emotionally with family and friends, and making detailed plans for the new year...",
+      "events": [
+        {
+          "name": "New Year's Day Morning Run and Nutritious Breakfast",
+          "description": "At 7 a.m., Feng Haoran completed a 5-kilometer morning run on South Yuelu Road, breathing in the crisp winter air..."
+        },
+        {
+          "name": "Annual Personal Review and Analysis",
+          "description": "In the morning, at the desk in his study, Feng Haoran turned on his computer and opened his dedicated annual review notebook..."
+        },
+        {
+          "name": "New Year's Video Call with Family",
+          "description": "In the evening, Feng Haoran contacted his parents in Wuhan and his sister in Shanghai separately via video call..."
+        }
+      ],
+      "state": {
+        "体重": 75.0,
+        "起床时间": "06:40",
+        "睡觉时间": "23:10",
+        "今日运动": "Morning run of 5 kilometers"
+      }
+    }
+  ]
+}</code></pre>
+                        </div>
+
+                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
+                            <h4 class="font-semibold text-yellow-300 mb-2">💡 주요 특징</h4>
+                            <ul class="text-sm text-gray-300 space-y-1 list-disc list-inside">
+                                <li>각 날짜마다 3-6개의 이벤트 포함</li>
+                                <li>날씨, 공휴일, 요일 정보 자동 추가</li>
+                                <li>일일 개요(daily_overview)로 하루 전체 흐름 요약</li>
+                                <li>기본 상태 정보 (체중, 기상/취침 시간, 운동)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div></div>
+                        </div>
+                    </div>
+
+                
 
                 <div class="tab-content hidden" data-step="draft" data-tab="code">
                     <div class="space-y-4">
@@ -469,104 +579,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tab-content hidden" data-step="draft" data-tab="input">
-                    <div class="space-y-4">
-                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                            <h3 class="text-xl font-bold mb-3 text-green-400">📥 Input: persona.json</h3>
-                            <p class="text-gray-400 text-sm mb-4">실제 샘플: Feng Haoran (27세, 금융투자 어드바이저, ENTJ)</p>
-                            <pre><code class="language-json">{
-  "name": "Feng Haoran",
-  "birth": "1994-10-29",
-  "age": 27,
-  "gender": "Male",
-  "job": "Financial Investment Advisor",
-  "occupation": "Huatai Securities Co., Ltd.",
-  "salary": 200000.0,
-  "personality": {
-    "mbti": "ENTJ",
-    "traits": ["Achievements", "Power", "Social Responsibility Orientation"]
-  },
-  "hobbies": [
-    "Photography (Street Photography)",
-    "Running (Morning Run)",
-    "Camping (Wilderness)",
-    "Collecting Stamps"
-  ],
-  "aim": [
-    "Promoted to Investment Director within 3 years",
-    "Complete an in-depth self-driving tour annually.",
-    "Build a personal investment portfolio to reach a scale of 1 million."
-  ],
-  "relation": [
-    {
-      "name": "Feng Jianguo",
-      "relation": "Father",
-      "age": 58,
-      "occupation": "Senior Engineer"
-    },
-    {
-      "name": "Li Xiuying",
-      "relation": "Mother",
-      "age": 56
-    }
-  ]
-}</code></pre>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tab-content hidden" data-step="draft" data-tab="output">
-                    <div class="space-y-4">
-                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                            <h3 class="text-xl font-bold mb-3 text-blue-400">📤 Output: daily_draft.json</h3>
-                            <p class="text-gray-400 text-sm mb-4">실제 샘플: 2025년 1월 1일 (New Year's Day)</p>
-                            <pre><code class="language-json">{
-  "2025-01": [
-    {
-      "date": "2025-01-01",
-      "date_attribute": {
-        "weather": "Clear, with a light breeze",
-        "holiday": "New Year's Day",
-        "week": "Wednesday"
-      },
-      "daily_overview": "During the New Year's Day holiday, Feng Haoran ushered in the new year with a disciplined and fulfilling approach. From starting the day with a morning run to deeply reflecting on the past, connecting emotionally with family and friends, and making detailed plans for the new year...",
-      "events": [
-        {
-          "name": "New Year's Day Morning Run and Nutritious Breakfast",
-          "description": "At 7 a.m., Feng Haoran completed a 5-kilometer morning run on South Yuelu Road, breathing in the crisp winter air..."
-        },
-        {
-          "name": "Annual Personal Review and Analysis",
-          "description": "In the morning, at the desk in his study, Feng Haoran turned on his computer and opened his dedicated annual review notebook..."
-        },
-        {
-          "name": "New Year's Video Call with Family",
-          "description": "In the evening, Feng Haoran contacted his parents in Wuhan and his sister in Shanghai separately via video call..."
-        }
-      ],
-      "state": {
-        "体重": 75.0,
-        "起床时间": "06:40",
-        "睡觉时间": "23:10",
-        "今日运动": "Morning run of 5 kilometers"
-      }
-    }
-  ]
-}</code></pre>
-                        </div>
-
-                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
-                            <h4 class="font-semibold text-yellow-300 mb-2">💡 주요 특징</h4>
-                            <ul class="text-sm text-gray-300 space-y-1 list-disc list-inside">
-                                <li>각 날짜마다 3-6개의 이벤트 포함</li>
-                                <li>날씨, 공휴일, 요일 정보 자동 추가</li>
-                                <li>일일 개요(daily_overview)로 하루 전체 흐름 요약</li>
-                                <li>기본 상태 정보 (체중, 기상/취침 시간, 운동)</li>
-                            </ul>
                         </div>
                     </div>
                 </div>
@@ -647,8 +659,6 @@
                     <button class="tab-button active px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="overview">개요</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="flow">🔀 내부 플로우</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="code">코드 경로</button>
-                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="input">인풋 예시</button>
-                    <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="output">아웃풋 예시</button>
                     <button class="tab-button px-5 py-3 rounded-t-lg text-sm font-semibold" data-step="simulator" data-tab="tuning">수정 가이드</button>
                 </div>
 
@@ -826,78 +836,6 @@
                     </div>
                 </div>
 
-                <div class="tab-content hidden" data-step="simulator" data-tab="input">
-                    <div class="space-y-4">
-                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                            <h3 class="text-xl font-bold mb-3 text-green-400">📥 Input 1: persona.json</h3>
-                            <p class="text-gray-400 text-sm mb-2">(Step 1과 동일)</p>
-                        </div>
-
-                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                            <h3 class="text-xl font-bold mb-3 text-green-400">📥 Input 2: daily_draft.json</h3>
-                            <p class="text-gray-400 text-sm mb-4">2025-01-01 샘플 (간단 버전)</p>
-                            <pre><code class="language-json">{
-  "date": "2025-01-01",
-  "events": [
-    {
-      "name": "New Year's Day Morning Run",
-      "description": "5km run at Yuelu Mountain"
-    },
-    {
-      "name": "Annual Personal Review",
-      "description": "Reflect on 2024 achievements"
-    }
-  ]
-}</code></pre>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tab-content hidden" data-step="simulator" data-tab="output">
-                    <div class="space-y-4">
-                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                            <h3 class="text-xl font-bold mb-3 text-blue-400">📤 Output: daily_event.json</h3>
-                            <p class="text-gray-400 text-sm mb-4">2025-01-01 샘플 (상세 버전)</p>
-                            <pre><code class="language-json">[
-  {
-    "event_id": "1",
-    "name": "Morning Preparations and Departure for Yuelu Mountain",
-    "date": ["From 06:40:00 to 08:00:00 on January 1, 2025"],
-    "type": "Personal Life",
-    "description": "Awakened by the biological clock on time, I washed up and changed into running gear. After checking my phone, earphones, and sports watch, I took my keys and access card. Before leaving home, I used a mobile app to browse overnight global major stock indices and financial headlines. I then walked for 15 minutes to the bus stop and took a short bus ride of about 10 minutes to the foot of Yuelu Mountain...",
-    "participant": [
-      { "name": "Feng Haoran", "relation": "Self" }
-    ],
-    "location": "From Jinsing Residential Community, Yuelu District, Changsha City to Yuelu Mountain Scenic Area"
-  },
-  {
-    "event_id": "2",
-    "name": "New Year's Day Morning Run",
-    "date": ["From 08:00:00 to 09:00:00 on January 1, 2025"],
-    "type": "Health",
-    "description": "A 5-kilometer jog along the Yuelu Mountain trail, where sunlight disperses the morning mist and the air is rich in negative oxygen ions. While running, focus on the rhythm of your breath and pace, with New Year-themed music playing through your headphones...",
-    "participant": [
-      { "name": "Feng Haoran", "relation": "Self" },
-      { "name": "Other morning exercisers", "relation": "Passerby" }
-    ],
-    "location": "58 Denghao Road, Yuelu District, Changsha City, Hunan Province, Circular Trail of Yuelu Mountain Scenic Area"
-  }
-]</code></pre>
-                        </div>
-
-                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
-                            <h4 class="font-semibold text-yellow-300 mb-2">💡 주요 변화</h4>
-                            <ul class="text-sm text-gray-300 space-y-1 list-disc list-inside">
-                                <li>간단한 "Morning Run" → 준비(1시간 20분) + 실제 운동(1시간)으로 분해</li>
-                                <li>정확한 시간 (06:40-08:00, 08:00-09:00)</li>
-                                <li>상세한 설명 (무엇을 챙겼는지, 어떻게 이동했는지)</li>
-                                <li>실제 장소 주소 + GPS 좌표 (자동 매핑)</li>
-                                <li>참여자 목록 (본인 + 기타 운동하는 사람들)</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="tab-content hidden" data-step="simulator" data-tab="tuning">
                     <div class="space-y-3">
                         <p class="text-gray-300 mb-4">Simulator 프롬프트 수정 가이드</p>
@@ -1015,6 +953,85 @@
                 </div>
 
                 <!-- Tab Content -->
+                    <!-- 인풋/아웃풋 예시 -->
+                    <div class="mt-6 grid grid-cols-2 gap-4">
+                        <div class="bg-slate-800 rounded-lg p-4">
+                            <h4 class="font-semibold text-green-300 mb-3 text-sm">📥 인풋 예시</h4>
+                            <div class="text-xs"><div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-green-400">📥 Input 1: persona.json</h3>
+                            <p class="text-gray-400 text-sm mb-2">(Step 1과 동일)</p>
+                        </div>
+
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-green-400">📥 Input 2: daily_draft.json</h3>
+                            <p class="text-gray-400 text-sm mb-4">2025-01-01 샘플 (간단 버전)</p>
+                            <pre><code class="language-json">{
+  "date": "2025-01-01",
+  "events": [
+    {
+      "name": "New Year's Day Morning Run",
+      "description": "5km run at Yuelu Mountain"
+    },
+    {
+      "name": "Annual Personal Review",
+      "description": "Reflect on 2024 achievements"
+    }
+  ]
+}</code></pre>
+                        </div>
+                    </div>
+                </div></div>
+                        </div>
+                        <div class="bg-slate-800 rounded-lg p-4">
+                            <h4 class="font-semibold text-green-300 mb-3 text-sm">📤 아웃풋 예시</h4>
+                            <div class="text-xs"><div class="space-y-4">
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
+                            <h3 class="text-xl font-bold mb-3 text-blue-400">📤 Output: daily_event.json</h3>
+                            <p class="text-gray-400 text-sm mb-4">2025-01-01 샘플 (상세 버전)</p>
+                            <pre><code class="language-json">[
+  {
+    "event_id": "1",
+    "name": "Morning Preparations and Departure for Yuelu Mountain",
+    "date": ["From 06:40:00 to 08:00:00 on January 1, 2025"],
+    "type": "Personal Life",
+    "description": "Awakened by the biological clock on time, I washed up and changed into running gear. After checking my phone, earphones, and sports watch, I took my keys and access card. Before leaving home, I used a mobile app to browse overnight global major stock indices and financial headlines. I then walked for 15 minutes to the bus stop and took a short bus ride of about 10 minutes to the foot of Yuelu Mountain...",
+    "participant": [
+      { "name": "Feng Haoran", "relation": "Self" }
+    ],
+    "location": "From Jinsing Residential Community, Yuelu District, Changsha City to Yuelu Mountain Scenic Area"
+  },
+  {
+    "event_id": "2",
+    "name": "New Year's Day Morning Run",
+    "date": ["From 08:00:00 to 09:00:00 on January 1, 2025"],
+    "type": "Health",
+    "description": "A 5-kilometer jog along the Yuelu Mountain trail, where sunlight disperses the morning mist and the air is rich in negative oxygen ions. While running, focus on the rhythm of your breath and pace, with New Year-themed music playing through your headphones...",
+    "participant": [
+      { "name": "Feng Haoran", "relation": "Self" },
+      { "name": "Other morning exercisers", "relation": "Passerby" }
+    ],
+    "location": "58 Denghao Road, Yuelu District, Changsha City, Hunan Province, Circular Trail of Yuelu Mountain Scenic Area"
+  }
+]</code></pre>
+                        </div>
+
+                        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
+                            <h4 class="font-semibold text-yellow-300 mb-2">💡 주요 변화</h4>
+                            <ul class="text-sm text-gray-300 space-y-1 list-disc list-inside">
+                                <li>간단한 "Morning Run" → 준비(1시간 20분) + 실제 운동(1시간)으로 분해</li>
+                                <li>정확한 시간 (06:40-08:00, 08:00-09:00)</li>
+                                <li>상세한 설명 (무엇을 챙겼는지, 어떻게 이동했는지)</li>
+                                <li>실제 장소 주소 + GPS 좌표 (자동 매핑)</li>
+                                <li>참여자 목록 (본인 + 기타 운동하는 사람들)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div></div>
+                        </div>
+                    </div>
+
+                
                 <div class="tab-content" data-step="phone" data-tab="overview">
                     <div class="space-y-4">
                         <div class="bg-slate-900 rounded-lg p-6 border border-slate-700">
