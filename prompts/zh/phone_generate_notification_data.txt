@@ -1,0 +1,28 @@
+请根据以下事件信息和生成指导生成手机推送通知数据。
+        
+        ## 输入信息
+        - 日期: {date}
+        - 事件信息: {json.dumps(event_info, ensure_ascii=False)}
+        - 生成指导: {generate_guide}
+        - 事件ID: {event_id}
+        - 原子事件ID: {json.dumps(atomic_id, ensure_ascii=False)}
+        
+        ## 输出格式要求
+        仅输出JSON数组，严格遵循以下格式，不添加任何额外文本：
+        [
+            {{
+                "type": "push",
+                "event_id": "{event_id}",
+                "title": "<通知标题>",
+                "content": "<通知内容>",
+                "datetime": "<日期时间，格式为YYYY-MM-DD HH:MM:SS>",
+                "source": "<应用名称>",
+                "push_status": "<未读/已读>",
+                "jump_path": "<跳转路径>",
+                "summarized_info": "<通知内容总结>",
+                "atomic_id": {json.dumps(atomic_id, ensure_ascii=False)},
+                "phone_id": <手机ID，整数>
+            }}
+        ]
+        
+        请确保生成的数据与事件信息相关且合理。

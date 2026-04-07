@@ -1,0 +1,27 @@
+请根据以下事件信息和生成指导生成通话数据。
+        
+        ## 输入信息
+        - 日期: {date}
+        - 事件信息: {json.dumps(event_info, ensure_ascii=False)}
+        - 生成指导: {generate_guide}
+        - 事件ID: {event_id}
+        - 原子事件ID: {json.dumps(atomic_id, ensure_ascii=False)}
+        
+        ## 输出格式要求
+        仅输出JSON数组，严格遵循以下格式，不添加任何额外文本：
+        [
+            {{
+                "type": "call",
+                "event_id": "{event_id}",
+                "phoneNumber": "<电话号码>",
+                "contactName": "<联系人姓名>",
+                "datetime": "<开始时间，格式为YYYY-MM-DD HH:MM:SS>",
+                "datetime_end": "<结束时间，格式为YYYY-MM-DD HH:MM:SS>",
+                "direction": <1表示接收，0表示发送>,
+                "call_result": "<接通/未接通/拒接>",
+                "atomic_id": {json.dumps(atomic_id, ensure_ascii=False)},
+                "phone_id": 0
+            }}
+        ]
+        
+        请确保生成的数据与事件信息相关且合理。

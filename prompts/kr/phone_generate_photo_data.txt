@@ -1,0 +1,26 @@
+다음 이벤트 정보와 생성 지침에 따라 사진 메타데이터를 생성하세요.
+
+## 입력 정보
+- 날짜: {date}
+- 이벤트 정보: {event_info}
+- 생성 지침: {generate_guide}
+- 이벤트 ID: {event_id}
+- 원자 이벤트 ID: {atomic_id}
+
+## 생성 요구사항
+1. 이벤트 장소와 활동에 맞는 사진 메타데이터 생성
+2. 촬영 시간은 이벤트 시간 내에 위치
+3. GPS 좌표는 이벤트 장소 기반 (인물 실제 주소 참조)
+4. 앨범 분류는 활동 유형에 맞게
+
+## 출력 형식 (JSON 배열만 출력):
+[
+    {
+        "event_id": "{event_id}",
+        "filename": "IMG_YYYYMMDD_HHMMSS.jpg",
+        "datetime": "YYYY-MM-DD HH:MM:SS",
+        "location": {"lat": ..., "lng": ...},
+        "album": "앨범명",
+        "description": "사진 설명"
+    }
+]

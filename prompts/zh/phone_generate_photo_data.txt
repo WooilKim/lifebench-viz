@@ -1,0 +1,38 @@
+请根据以下事件信息和生成指导生成图片数据。
+        
+        ## 输入信息
+        - 日期: {date}
+        - 事件信息: {json.dumps(event_info, ensure_ascii=False)}
+        - 生成指导: {generate_guide}
+        - 事件ID: {event_id}
+        - 原子事件ID: {json.dumps(atomic_id, ensure_ascii=False)}
+        
+        ## 输出格式要求
+        仅输出JSON数组，严格遵循以下格式，不添加任何额外文本：
+        [
+            {{
+                "event_id": "{event_id}",
+                "type": "photo",
+                "caption": "<图片描述>",
+                "title": "IMG_<年月日>_<时分秒>",
+                "datetime": "<日期时间，格式为YYYY-MM-DD HH:MM:SS>",
+                "location": {{
+                    "province": "<省份>",
+                    "city": "<城市>",
+                    "district": "<区县>",
+                    "streetName": "<街道>",
+                    "streetNumber": "<门牌号>",
+                    "poi": "<POI名称>"
+                }},
+                "faceRecognition": ["<识别到的人脸>", ...] or [],
+                "imageTag": ["<标签1>", "<标签2>", ...],
+                "ocrText": "<OCR识别文本>",
+                "shoot_mode": "<拍摄模式>",
+                "image_size": "<图片尺寸>",
+                "summarized_info": "<图片操作总结>",
+                "atomic_id": {json.dumps(atomic_id, ensure_ascii=False)},
+                "phone_id": 0
+            }}
+        ]
+        
+        请确保生成的数据与事件信息相关且合理。

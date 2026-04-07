@@ -1,0 +1,27 @@
+请根据以下事件信息和生成指导生成日历数据。
+        
+        ## 输入信息
+        - 日期: {date}
+        - 事件信息: {json.dumps(event_info, ensure_ascii=False)}
+        - 生成指导: {generate_guide}
+        - 事件ID: {event_id}
+        - 原子事件ID: {json.dumps(atomic_id, ensure_ascii=False)}
+        
+        ## 输出格式要求
+        仅输出JSON数组，严格遵循以下格式，不添加任何额外文本：
+        [
+            {{
+                "type": "calendar",
+                "event_id": "{event_id}",
+                "title": "<日历标题>",
+                "description": "<日历描述>",
+                "start_time": "<开始时间，格式为YYYY-MM-DD HH:MM:SS>",
+                "end_time": "<结束时间，格式为YYYY-MM-DD HH:MM:SS>",
+                "datetime": "<创建时间，格式为YYYY-MM-DD HH:MM:SS>",
+                "summarized_info": "<日历操作总结>",
+                "atomic_id": {json.dumps(atomic_id, ensure_ascii=False)},
+                "phone_id": 0
+            }}
+        ]
+        
+        请确保生成的数据与事件信息相关且合理。
