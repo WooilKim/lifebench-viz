@@ -1,0 +1,25 @@
+{
+  "name": "lifebench-viz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "prompts_data.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WooilKim/lifebench-viz.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/WooilKim/lifebench-viz/issues"
+  },
+  "homepage": "https://github.com/WooilKim/lifebench-viz#readme",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.2.0"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd ~/source/lifebench-viz && [[ \"$CLAUDE_FILE_PATH\" == *.js ]] && prettier --write \"$CLAUDE_FILE_PATH\" 2>/dev/null || true"
+          },
+          {
+            "type": "command",
+            "command": "cd ~/source/lifebench-viz && [[ \"$CLAUDE_FILE_PATH\" == *.js ]] && eslint --fix \"$CLAUDE_FILE_PATH\" 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  }
+}
